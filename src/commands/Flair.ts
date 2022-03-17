@@ -16,7 +16,7 @@ export class FlairCommand extends Command {
     registry.registerChatInputCommand(
       {
         name: this.name,
-        description: "Change your flair",
+        description: "Change your flair.",
         options: [
           {
             name: "flair",

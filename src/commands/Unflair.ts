@@ -16,7 +16,7 @@ export class UnflairCommand extends Command {
     registry.registerChatInputCommand(
       {
         name: this.name,
-        description: "Remove your flair",
+        description: "Remove your flair.",
       },
       {
         guildIds: Constants.GUILD_IDS,
