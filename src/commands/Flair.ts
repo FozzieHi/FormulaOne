@@ -1,9 +1,15 @@
 import { ApplicationCommandRegistry, Awaitable, Command } from "@sapphire/framework";
 import { CommandInteraction, GuildMember } from "discord.js";
-import { replyInteraction } from "../utility/Sender";
+import { replyInteraction, replyInteractionError } from "../utility/Sender";
 import { Constants } from "../utility/Constants";
 
 export class FlairCommand extends Command {
+  public constructor(context: Command.Context) {
+    super(context, {
+      requiredClientPermissions: ["MANAGE_NICKNAMES"],
+    });
+  }
+
   public override registerApplicationCommands(
     registry: ApplicationCommandRegistry
   ): Awaitable<void> {
@@ -34,10 +40,9 @@ export class FlairCommand extends Command {
     }
     const newNickname = `${interaction.user.username} [${flair}]`;
     if (newNickname.length > 32) {
-      return replyInteraction(
+      return replyInteractionError(
         interaction,
-        "The nickname length (username, brackets and flair) must not exceed 32 characters.",
-        { color: Constants.ERROR_COLOR }
+        "The nickname length (username, brackets and flair) must not exceed 32 characters."
       );
     }
 
