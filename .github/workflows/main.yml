@@ -35,5 +35,5 @@ jobs:
         run: npm ci
       - name: Run linting
         run: |
-          - npm run prettier:check
-          - npm run eslint:check
+          npm run prettier:check
+          npm run eslint:check
