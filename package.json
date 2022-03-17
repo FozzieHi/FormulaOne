@@ -1,0 +1,28 @@
+{
+  "name": "formula_one",
+  "version": "1.0.0",
+  "description": "The Formula One Discord Bot.",
+  "main": "src/index.ts",
+  "scripts": {
+    "prettier:write": "prettier --write .",
+    "prettier:check": "prettier --check .",
+    "eslint:write": "eslint . --fix",
+    "eslint:check": "eslint ."
+  },
+  "author": "Fozzie#0001",
+  "license": "AGPL-3.0",
+  "dependencies": {
+    "@sapphire/framework": "^3.0.0-next.7ef7ac9.0",
+    "@sapphire/plugin-logger": "^2.2.0",
+    "discord.js": "^13.6.0"
+  },
+  "devDependencies": {
+    "@tsconfig/node17": "^1.0.0",
+    "@typescript-eslint/eslint-plugin": "^5.15.0",
+    "@typescript-eslint/parser": "^5.15.0",
+    "eslint": "^8.11.0",
+    "eslint-config-prettier": "^8.5.0",
+    "prettier": "^2.6.0",
+    "typescript": "^4.6.2"
+  }
+}
