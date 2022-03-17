@@ -18,7 +18,7 @@ export class PermissionService {
     for (const commandId of marshalCommands) {
       const command = await guild.commands.fetch(commandId);
       if (command != null) {
-        await command.permissions.add({ permissions: marshalPermissions });
+        await command.permissions.set({ permissions: marshalPermissions });
       }
     }
   }
