@@ -1,0 +1,11 @@
+# Packages
+node_modules/
+
+# Authentication
+credentials.json
+
+# Miscellaneous
+.vscode/
+logs/
+.idea/
+*.md
