@@ -13,6 +13,7 @@ export class SlowmodeCommand extends Command {
     super(context, {
       requiredClientPermissions: ["MANAGE_CHANNELS"],
       runIn: CommandOptionsRunTypeEnum.GuildText,
+      preconditions: ['Marshals']
     });
   }
 
