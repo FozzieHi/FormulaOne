@@ -11,7 +11,7 @@ export class MarshalsPrecondition extends Precondition {
 }
 
 declare module "@sapphire/framework" {
-    interface Preconditions {
-        Marshals: never;
-    }
+  interface Preconditions {
+    Marshals: never;
+  }
 }
