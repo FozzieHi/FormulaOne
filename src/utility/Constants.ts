@@ -1,4 +1,4 @@
-import { Intents, PresenceData } from "discord.js";
+import { Intents, PresenceData, Snowflake } from "discord.js";
 
 export class Constants {
   static readonly DEFAULT_COLORS: Array<number> = [
@@ -7,7 +7,7 @@ export class Constants {
   ];
   static readonly ERROR_COLOR = 0xff0000;
 
-  static readonly GUILD_IDS = ["177387572505346048"];
+  static readonly GUILD_IDS: Array<Snowflake> = ["177387572505346048"];
 
   static readonly ROLES = {
     BOT_DEV: "424590836777484291",
@@ -16,7 +16,7 @@ export class Constants {
     MARSHALS: "293845938764644352",
   };
 
-  static readonly MOD_ROLES = [
+  static readonly MOD_ROLES: Array<{ id: Snowflake; permissionLevel: number }> = [
     { id: this.ROLES.BOT_DEV, permissionLevel: 3 },
     { id: this.ROLES.ADMIN, permissionLevel: 3 },
     { id: this.ROLES.STEWARDS, permissionLevel: 2 },
