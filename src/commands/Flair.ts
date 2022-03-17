@@ -46,7 +46,7 @@ export class FlairCommand extends Command {
       );
     }
 
-    await (interaction.member as GuildMember).setNickname(newNickname);
+    await (interaction.member as GuildMember).setNickname(newNickname, "Flair command");
     return replyInteraction(interaction, `Successfully set your flair to ${flair}.`);
   }
 }
