@@ -42,7 +42,7 @@ export function modLog(guild: Guild, moderator: User, fieldsAndValues: Array<str
 
   embedOptions.fields = [];
 
-  for (let i = 0; i < fieldsAndValues.length - 1; i+=1) {
+  for (let i = 0; i < fieldsAndValues.length - 1; i += 1) {
     if (NumberUtil.isEven(i)) {
       embedOptions.fields.push({
         name: fieldsAndValues[i],

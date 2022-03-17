@@ -25,7 +25,10 @@ module.exports = {
       rules: {
         "class-methods-use-this": ["error", { exceptMethods: ["chatInputRun"] }],
         "import/prefer-default-export": "off",
-        "no-param-reassign": ["error", { ignorePropertyModificationsFor: ["embedOptions", "messageOptions"] }]
+        "no-param-reassign": [
+          "error",
+          { ignorePropertyModificationsFor: ["embedOptions", "messageOptions"] },
+        ],
       },
     },
   ],
