@@ -8,7 +8,7 @@ export class ModerationService {
     );
 
     let permLevel = 0;
-    modRoles.forEach(modRole => {
+    modRoles.forEach((modRole) => {
       if (member.roles.cache.has(modRole.id)) {
         permLevel = modRole.permissionLevel;
       }
