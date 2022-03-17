@@ -7,6 +7,7 @@ import {
   container,
 } from "@sapphire/framework";
 import { Constants } from "./utility/Constants";
+import { PermissionService } from "./services/PermissionService";
 
 (async () => {
   const client = new SapphireClient({
@@ -20,4 +21,5 @@ import { Constants } from "./utility/Constants";
     RegisterBehavior.Overwrite
   );
   await client.login(credentials.token);
+  await PermissionService.register();
 })().catch((err: Error) => container.logger.error(err));

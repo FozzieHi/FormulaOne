@@ -1,5 +1,6 @@
 import {
   CommandInteraction,
+  InteractionReplyOptions,
   Message,
   MessageEmbedOptions,
   TextBasedChannel,
@@ -37,6 +38,19 @@ export async function replyInteraction(
   return sendInteraction(
     interaction,
     `${StringUtil.boldify(interaction.user.tag)}, ${description}`,
+    embedOptions,
+    { ephemeral: true }
+  );
+}
+
+export async function replyInteractionPublic(
+  interaction: CommandInteraction,
+  description: string,
+  embedOptions: MessageEmbedOptions = {}
+) {
+  return sendInteraction(
+    interaction,
+    `${StringUtil.boldify(interaction.user.tag)}, ${description}`,
     embedOptions
   );
 }
@@ -66,11 +80,10 @@ async function send(
 async function sendInteraction(
   interaction: CommandInteraction,
   description: string,
-  embedOptions: MessageEmbedOptions = {}
+  embedOptions: MessageEmbedOptions = {},
+  messageOptions: InteractionReplyOptions = {}
 ) {
   embedOptions.description = description;
-  return interaction.reply({
-    embeds: [new Embed(embedOptions)],
-    ephemeral: true,
-  });
+  messageOptions.embeds = [new Embed(embedOptions)];
+  return interaction.reply(messageOptions);
 }

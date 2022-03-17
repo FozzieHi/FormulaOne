@@ -1,7 +1,7 @@
 import { ApplicationCommandRegistry, Awaitable, Command } from "@sapphire/framework";
 import { CommandInteraction, GuildMember } from "discord.js";
-import { replyInteraction, replyInteractionError } from "../utility/Sender";
-import { Constants } from "../utility/Constants";
+import { replyInteraction, replyInteractionError } from "../../utility/Sender";
+import { Constants } from "../../utility/Constants";
 
 export class FlairCommand extends Command {
   public constructor(context: Command.Context) {
