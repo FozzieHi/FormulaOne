@@ -27,6 +27,6 @@ export class UnflairCommand extends Command {
 
   public async chatInputRun(interaction: CommandInteraction) {
     await (interaction.member as GuildMember).setNickname(null, "Unflair command");
-    return replyInteraction(interaction, `Successfully removed your flair.`);
+    await replyInteraction(interaction, `Successfully removed your flair.`);
   }
 }

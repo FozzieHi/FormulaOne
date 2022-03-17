@@ -63,7 +63,7 @@ export class SlowmodeCommand extends Command {
         interaction,
         `Successfully disabled slowmode in ${interaction.channel.toString()}.`
       );
-      return modLog(interaction.guild as Guild, interaction.user, [
+      await modLog(interaction.guild as Guild, interaction.user, [
         "Action",
         "Toggled Slowmode",
         "Status",
@@ -74,7 +74,7 @@ export class SlowmodeCommand extends Command {
       interaction,
       `Successfully enabled slowmode in ${interaction.channel.toString()} for ${seconds} seconds.`
     );
-    return modLog(interaction.guild as Guild, interaction.user, [
+    await modLog(interaction.guild as Guild, interaction.user, [
       "Action",
       "Toggled Slowmode",
       "Status",

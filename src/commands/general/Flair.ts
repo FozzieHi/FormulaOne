@@ -40,13 +40,13 @@ export class FlairCommand extends Command {
     }
     const newNickname = `${interaction.user.username} [${flair}]`;
     if (newNickname.length > 32) {
-      return replyInteractionError(
+      await replyInteractionError(
         interaction,
         "The nickname length (username, brackets and flair) must not exceed 32 characters."
       );
     }
 
     await (interaction.member as GuildMember).setNickname(newNickname, "Flair command");
-    return replyInteraction(interaction, `Successfully set your flair to ${flair}.`);
+    await replyInteraction(interaction, `Successfully set your flair to ${flair}.`);
   }
 }

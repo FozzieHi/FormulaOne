@@ -5,8 +5,8 @@ import {
   MessageEmbedOptions,
   User,
 } from "discord.js";
-import { Constants } from "../utility/Constants";
 import { container } from "@sapphire/framework";
+import { Constants } from "../utility/Constants";
 import { send } from "../utility/Sender";
 import { NumberUtil } from "../utility/NumberUtil";
 
@@ -42,7 +42,7 @@ export function modLog(guild: Guild, moderator: User, fieldsAndValues: Array<str
 
   embedOptions.fields = [];
 
-  for (let i = 0; i < fieldsAndValues.length - 1; i++) {
+  for (let i = 0; i < fieldsAndValues.length - 1; i+=1) {
     if (NumberUtil.isEven(i)) {
       embedOptions.fields.push({
         name: fieldsAndValues[i],

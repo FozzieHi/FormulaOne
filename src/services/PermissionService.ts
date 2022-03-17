@@ -1,6 +1,6 @@
-import { Constants } from "../utility/Constants";
 import { container } from "@sapphire/framework";
 import { ApplicationCommandPermissionData } from "discord.js";
+import { Constants } from "../utility/Constants";
 
 export class PermissionService {
   public static async register() {
@@ -15,11 +15,12 @@ export class PermissionService {
     if (guild == null) {
       return;
     }
-    for (const commandId of marshalCommands) {
-      const command = await guild.commands.fetch(commandId);
-      if (command != null) {
-        await command.permissions.set({ permissions: marshalPermissions });
-      }
-    }
+    await Promise.all(
+      (
+        await Promise.all(
+          marshalCommands.map((commandId) => guild.commands.fetch(commandId))
+        )
+      ).map((command) => command.permissions.set({ permissions: marshalPermissions }))
+    );
   }
 }
