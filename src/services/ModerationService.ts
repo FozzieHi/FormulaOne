@@ -8,11 +8,11 @@ export class ModerationService {
     );
 
     let permLevel = 0;
-    for (const modRole of modRoles) {
+    modRoles.forEach(modRole => {
       if (member.roles.cache.has(modRole.id)) {
         permLevel = modRole.permissionLevel;
       }
-    }
+    });
     return member.permissions.has("ADMINISTRATOR") && permLevel < 2 ? 2 : permLevel;
   }
 }
