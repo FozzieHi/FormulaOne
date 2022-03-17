@@ -64,7 +64,8 @@ export async function replyInteractionError(
   return sendInteraction(
     interaction,
     `${StringUtil.boldify(interaction.user.tag)}, ${description}`,
-    embedOptions
+    embedOptions,
+    { ephemeral: true }
   );
 }
 
