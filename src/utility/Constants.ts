@@ -37,7 +37,7 @@ export class Constants {
     ],
   };
 
-  static regexes = {
+  static readonly regexes = {
     markdown: /([*~`_])+/g,
   };
 }
