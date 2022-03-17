@@ -23,6 +23,10 @@ export class Constants {
     { id: this.ROLES.MARSHALS, permissionLevel: 1 },
   ];
 
+  static readonly CHANNELS = {
+    MOD_LOGS: "447397947261452288",
+  };
+
   static readonly PREFIX = "t$";
   static readonly INTENTS: Intents = new Intents([
     Intents.FLAGS.GUILDS,

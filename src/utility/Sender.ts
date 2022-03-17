@@ -69,12 +69,14 @@ export async function replyInteractionError(
   );
 }
 
-async function send(
+export async function send(
   channel: TextBasedChannel,
-  description: string,
+  description: string | undefined,
   embedOptions: MessageEmbedOptions = {}
 ): Promise<Message> {
-  embedOptions.description = description;
+  if (description != null) {
+    embedOptions.description = description;
+  }
   return channel.send({ embeds: [new Embed(embedOptions)] });
 }
 

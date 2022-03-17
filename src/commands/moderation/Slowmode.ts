@@ -4,9 +4,10 @@ import {
   Command,
   CommandOptionsRunTypeEnum,
 } from "@sapphire/framework";
-import { CommandInteraction, TextChannel } from "discord.js";
+import { CommandInteraction, Guild, TextChannel } from "discord.js";
 import { replyInteractionPublic } from "../../utility/Sender";
 import { Constants } from "../../utility/Constants";
+import { modLog } from "../../services/ModerationService";
 
 export class SlowmodeCommand extends Command {
   public constructor(context: Command.Context) {
@@ -58,14 +59,28 @@ export class SlowmodeCommand extends Command {
       `Slowmode ${seconds > 0 ? "enabled" : "disabled"} by ${interaction.user.tag}`
     );
     if (seconds === 0) {
-      return replyInteractionPublic(
+      await replyInteractionPublic(
         interaction,
         `Successfully disabled slowmode in ${interaction.channel.toString()}.`
       );
+      return modLog(interaction.guild as Guild, interaction.user, [
+        "Action",
+        "Toggled Slowmode",
+        "Status",
+        "Disabled",
+      ]);
     }
-    return replyInteractionPublic(
+    await replyInteractionPublic(
       interaction,
       `Successfully enabled slowmode in ${interaction.channel.toString()} for ${seconds} seconds.`
     );
+    return modLog(interaction.guild as Guild, interaction.user, [
+      "Action",
+      "Toggled Slowmode",
+      "Status",
+      "Enabled",
+      "Duration",
+      `${seconds} seconds`,
+    ]);
   }
 }
