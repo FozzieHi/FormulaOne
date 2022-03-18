@@ -27,12 +27,24 @@ export class SlowmodeCommand extends Command {
         description: "Change the current channel's slowmode.",
         options: [
           {
-            name: "seconds",
-            description: "The new slowmode duration in seconds",
-            type: "NUMBER",
-            required: true,
-            minValue: 0,
-            maxValue: 21600,
+            name: "set",
+            description: "Set a slowmode duration.",
+            type: "SUB_COMMAND",
+            options: [
+              {
+                name: "seconds",
+                description: "The new slowmode duration in seconds",
+                type: "NUMBER",
+                required: true,
+                minValue: 1,
+                maxValue: 21600,
+              },
+            ],
+          },
+          {
+            name: "remove",
+            description: "Remove the channel's slowmode.",
+            type: "SUB_COMMAND",
           },
         ],
         defaultPermission: false,
@@ -45,20 +57,36 @@ export class SlowmodeCommand extends Command {
   }
 
   public async chatInputRun(interaction: CommandInteraction) {
-    const seconds = interaction.options.getNumber("seconds");
-    if (
-      seconds == null ||
-      interaction.channel == null ||
-      seconds < 0 ||
-      seconds > 21600
-    ) {
+    if (interaction.channel == null) {
       return;
     }
-    await (interaction.channel as TextChannel).setRateLimitPerUser(
-      seconds,
-      `Slowmode ${seconds > 0 ? "enabled" : "disabled"} by ${interaction.user.tag}`
-    );
-    if (seconds === 0) {
+    const subcommand = interaction.options.getSubcommand();
+    if (subcommand === "set") {
+      const seconds = interaction.options.getNumber("seconds");
+      if (seconds == null || seconds < 1 || seconds > 21600) {
+        return;
+      }
+      await (interaction.channel as TextChannel).setRateLimitPerUser(
+        seconds,
+        `Slowmode enabled by ${interaction.user.tag}`
+      );
+      await replyInteractionPublic(
+        interaction,
+        `Successfully enabled slowmode in ${interaction.channel.toString()} for ${seconds} seconds.`
+      );
+      await modLog(interaction.guild as Guild, interaction.user, [
+        "Action",
+        "Changed Slowmode",
+        "Status",
+        "Enabled",
+        "Duration",
+        `${seconds} seconds`,
+      ]);
+    } else if (subcommand === "remove") {
+      await (interaction.channel as TextChannel).setRateLimitPerUser(
+        0,
+        `Slowmode disabled by ${interaction.user.tag}`
+      );
       await replyInteractionPublic(
         interaction,
         `Successfully disabled slowmode in ${interaction.channel.toString()}.`
@@ -70,17 +98,5 @@ export class SlowmodeCommand extends Command {
         "Disabled",
       ]);
     }
-    await replyInteractionPublic(
-      interaction,
-      `Successfully enabled slowmode in ${interaction.channel.toString()} for ${seconds} seconds.`
-    );
-    await modLog(interaction.guild as Guild, interaction.user, [
-      "Action",
-      "Changed Slowmode",
-      "Status",
-      "Enabled",
-      "Duration",
-      `${seconds} seconds`,
-    ]);
   }
 }
