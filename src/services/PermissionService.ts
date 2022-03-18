@@ -4,7 +4,10 @@ import { Constants } from "../utility/Constants";
 
 export class PermissionService {
   public static async register() {
-    const marshalCommands: Array<Snowflake> = ["954020435652128848", "954305075306717194"];
+    const marshalCommands: Array<Snowflake> = [
+      "954020435652128848",
+      "954305075306717194",
+    ];
     const marshalPermissions: Array<ApplicationCommandPermissionData> = [];
     Constants.MOD_ROLES.filter(
       (marshalRole) => marshalRole.permissionLevel > 0

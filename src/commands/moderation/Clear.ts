@@ -4,11 +4,7 @@ import {
   Command,
   CommandOptionsRunTypeEnum,
 } from "@sapphire/framework";
-import {
-  CommandInteraction,
-  Guild,
-  GuildTextBasedChannel,
-} from "discord.js";
+import { CommandInteraction, Guild, GuildTextBasedChannel } from "discord.js";
 import { replyInteractionPublic } from "../../utility/Sender";
 import { Constants } from "../../utility/Constants";
 import { modLog } from "../../services/ModerationService";

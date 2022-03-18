@@ -65,7 +65,7 @@ export class SlowmodeCommand extends Command {
       );
       await modLog(interaction.guild as Guild, interaction.user, [
         "Action",
-        "Toggled Slowmode",
+        "Changed Slowmode",
         "Status",
         "Disabled",
       ]);
@@ -76,7 +76,7 @@ export class SlowmodeCommand extends Command {
     );
     await modLog(interaction.guild as Guild, interaction.user, [
       "Action",
-      "Toggled Slowmode",
+      "Changed Slowmode",
       "Status",
       "Enabled",
       "Duration",

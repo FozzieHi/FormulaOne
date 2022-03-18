@@ -5,7 +5,7 @@ import {
 } from "@sapphire/framework";
 import { replyInteractionError } from "../utility/Sender";
 
-export class ApplicationCommandDeniedListener extends Listener {
+export class ChatInputCommandDeniedListener extends Listener {
   public async run(error: UserError, { interaction }: ChatInputCommandDeniedPayload) {
     await replyInteractionError(interaction, error.message);
     this.container.logger.info(
