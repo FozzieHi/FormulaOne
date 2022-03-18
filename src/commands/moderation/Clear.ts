@@ -45,7 +45,7 @@ export class ClearCommand extends Command {
   }
 
   public async chatInputRun(interaction: CommandInteraction) {
-    const amount = interaction.options.getNumber("amount");
+    const amount = interaction.options.getInteger("amount");
     if (amount == null || interaction.channel == null || amount < 1 || amount > 200) {
       return;
     }

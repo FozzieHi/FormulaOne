@@ -62,7 +62,7 @@ export class SlowmodeCommand extends Command {
     }
     const subcommand = interaction.options.getSubcommand();
     if (subcommand === "set") {
-      const seconds = interaction.options.getNumber("seconds");
+      const seconds = interaction.options.getInteger("seconds");
       if (seconds == null || seconds < 1 || seconds > 21600) {
         return;
       }
