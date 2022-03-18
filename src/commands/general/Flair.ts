@@ -19,10 +19,20 @@ export class FlairCommand extends Command {
         description: "Change your flair.",
         options: [
           {
-            name: "flair",
-            description: "The flair",
-            type: "STRING",
-            required: true,
+            name: "set",
+            description: "Set a new flair.",
+            type: "SUB_COMMAND",
+            options: [{
+              name: "flair",
+              description: "The flair to set",
+              type: "STRING",
+              required: true,
+            }]
+          },
+          {
+            name: "remove",
+            description: "Remove your flair.",
+            type: "SUB_COMMAND"
           },
         ],
       },
@@ -34,19 +44,25 @@ export class FlairCommand extends Command {
   }
 
   public async chatInputRun(interaction: CommandInteraction) {
-    const flair = interaction.options.getString("flair");
-    if (flair == null) {
-      return;
-    }
-    const newNickname = `${interaction.user.username} [${flair}]`;
-    if (newNickname.length > 32) {
-      await replyInteractionError(
-        interaction,
-        "The nickname length (username, brackets and flair) must not exceed 32 characters."
-      );
-    }
+    const subcommand = interaction.options.getSubcommand();
+    if (subcommand === "set") {
+      const flair = interaction.options.getString("flair");
+      if (flair == null) {
+        return;
+      }
+      const newNickname = `${interaction.user.username} [${flair}]`;
+      if (newNickname.length > 32) {
+        await replyInteractionError(
+          interaction,
+          "The nickname length (username, brackets and flair) must not exceed 32 characters."
+        );
+      }
 
-    await (interaction.member as GuildMember).setNickname(newNickname, "Flair command");
-    await replyInteraction(interaction, `Successfully set your flair to ${flair}.`);
+      await (interaction.member as GuildMember).setNickname(newNickname, "Flair set command");
+      await replyInteraction(interaction, `Successfully set your flair to ${flair}.`);
+    } else if (subcommand === "remove") {
+      await (interaction.member as GuildMember).setNickname(null, "Flair remove command");
+      await replyInteraction(interaction, `Successfully removed your flair.`);
+    }
   }
 }
