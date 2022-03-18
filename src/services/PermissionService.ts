@@ -7,6 +7,7 @@ export class PermissionService {
     const marshalCommands: Array<Snowflake> = [
       "954020435652128848",
       "954305075306717194",
+      "954332128408113173",
     ];
     const marshalPermissions: Array<ApplicationCommandPermissionData> = [];
     Constants.MOD_ROLES.filter(
