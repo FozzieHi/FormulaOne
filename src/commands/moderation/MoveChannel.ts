@@ -4,7 +4,11 @@ import {
   Command,
   CommandOptionsRunTypeEnum,
 } from "@sapphire/framework";
-import { CommandInteraction, GuildTextBasedChannel } from "discord.js";
+import {
+  CommandInteraction,
+  GuildBasedChannel,
+  GuildTextBasedChannel,
+} from "discord.js";
 import { replyInteraction, send } from "../../utility/Sender";
 import { Constants } from "../../utility/Constants";
 
@@ -47,9 +51,14 @@ export class MoveChannelCommand extends Command {
   }
 
   public async chatInputRun(interaction: CommandInteraction) {
-    const toChannel = interaction.options.getChannel("to");
-    const fromChannel = interaction.options.getChannel("from");
-    if (toChannel == null || fromChannel == null) {
+    const toChannel = interaction.options.getChannel("to") as GuildBasedChannel;
+    const fromChannel = interaction.options.getChannel("from") as GuildBasedChannel;
+    if (
+      toChannel == null ||
+      fromChannel == null ||
+      !toChannel.isText() ||
+      !fromChannel.isText()
+    ) {
       return;
     }
     await send(
