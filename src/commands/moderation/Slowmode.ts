@@ -34,7 +34,7 @@ export class SlowmodeCommand extends Command {
               {
                 name: "seconds",
                 description: "The new slowmode duration in seconds",
-                type: "NUMBER",
+                type: "INTEGER",
                 required: true,
                 minValue: 1,
                 maxValue: 21600,

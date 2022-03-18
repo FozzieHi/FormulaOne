@@ -29,7 +29,7 @@ export class ClearCommand extends Command {
           {
             name: "amount",
             description: "The amount of messages to delete",
-            type: "NUMBER",
+            type: "INTEGER",
             required: true,
             minValue: 1,
             maxValue: 200,
