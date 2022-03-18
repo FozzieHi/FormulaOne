@@ -22,17 +22,19 @@ export class FlairCommand extends Command {
             name: "set",
             description: "Set a new flair.",
             type: "SUB_COMMAND",
-            options: [{
-              name: "flair",
-              description: "The flair to set",
-              type: "STRING",
-              required: true,
-            }]
+            options: [
+              {
+                name: "flair",
+                description: "The flair to set",
+                type: "STRING",
+                required: true,
+              },
+            ],
           },
           {
             name: "remove",
             description: "Remove your flair.",
-            type: "SUB_COMMAND"
+            type: "SUB_COMMAND",
           },
         ],
       },
@@ -58,10 +60,16 @@ export class FlairCommand extends Command {
         );
       }
 
-      await (interaction.member as GuildMember).setNickname(newNickname, "Flair set command");
+      await (interaction.member as GuildMember).setNickname(
+        newNickname,
+        "Flair set command"
+      );
       await replyInteraction(interaction, `Successfully set your flair to ${flair}.`);
     } else if (subcommand === "remove") {
-      await (interaction.member as GuildMember).setNickname(null, "Flair remove command");
+      await (interaction.member as GuildMember).setNickname(
+        null,
+        "Flair remove command"
+      );
       await replyInteraction(interaction, `Successfully removed your flair.`);
     }
   }
