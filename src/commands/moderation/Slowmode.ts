@@ -28,7 +28,7 @@ export class SlowmodeCommand extends Command {
         options: [
           {
             name: "set",
-            description: "Set a slowmode duration.",
+            description: "Set a new slowmode duration.",
             type: "SUB_COMMAND",
             options: [
               {
