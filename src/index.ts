@@ -1,5 +1,6 @@
 import "@sapphire/plugin-logger/register";
 import credentials from "./credentials.json";
+import db from "./database";
 import {
   ApplicationCommandRegistries,
   RegisterBehavior,
@@ -10,6 +11,7 @@ import { Constants } from "./utility/Constants";
 import { PermissionService } from "./services/PermissionService";
 
 (async () => {
+  await db.connect();
   const client = new SapphireClient({
     defaultPrefix: Constants.PREFIX,
     intents: Constants.INTENTS,
@@ -22,4 +24,4 @@ import { PermissionService } from "./services/PermissionService";
   );
   await client.login(credentials.token);
   await PermissionService.register();
-})().catch((err: Error) => container.logger.error(err));
+})().catch((err) => console.error(err));

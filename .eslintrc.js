@@ -9,7 +9,7 @@ module.exports = {
   overrides: [
     {
       files: ["*.ts", "*.tsx"],
-      excludedFiles: "index.ts",
+      excludedFiles: ["index.ts", "database/index.ts"],
       extends: [
         "eslint:recommended",
         "plugin:@typescript-eslint/recommended",
@@ -29,6 +29,7 @@ module.exports = {
           "error",
           { ignorePropertyModificationsFor: ["embedOptions", "messageOptions"] },
         ],
+        "no-underscore-dangle": ["off"],
       },
     },
   ],
