@@ -21,7 +21,7 @@ import { PermissionService } from "./services/PermissionService";
   ApplicationCommandRegistries.setDefaultBehaviorWhenNotIdentical(
     RegisterBehavior.Overwrite
   );
-  await db.connect();
+  await db.connect(credentials.mongodbConnectionURL, credentials.dbName);
   await client.login(credentials.token);
   await PermissionService.register();
 })().catch((err) => container.logger.error(err));

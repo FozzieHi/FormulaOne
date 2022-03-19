@@ -8,10 +8,6 @@ import { SafeBrowsingCacheRepository } from "../repositories/SafeBrowsingCacheRe
 import { YouTubeChannelCacheRepository } from "../repositories/YouTubeChannelCacheRepository";
 
 export class Database {
-  private readonly connectionURL: string;
-
-  private readonly dbName: string;
-
   private guildRepo: GuildRepository | undefined;
 
   private userRepo: UserRepository | undefined;
@@ -26,14 +22,9 @@ export class Database {
 
   private youtubeChannelCacheRepo: YouTubeChannelCacheRepository | undefined;
 
-  constructor(connectionURL: string, dbName: string) {
-    this.connectionURL = connectionURL;
-    this.dbName = dbName;
-  }
-
-  async connect() {
-    const connection = await MongoClient.connect(this.connectionURL);
-    const db = connection.db(this.dbName);
+  async connect(connectionURL: string, dbName: string) {
+    const connection = await MongoClient.connect(connectionURL);
+    const db = connection.db(dbName);
 
     this.guildRepo = new GuildRepository(db.collection("guilds"));
     this.userRepo = new UserRepository(db.collection("users"));
