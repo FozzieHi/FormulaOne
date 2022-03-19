@@ -79,6 +79,8 @@ export class SlowmodeCommand extends Command {
         "Changed Slowmode",
         "Status",
         "Enabled",
+        "Channel",
+        interaction.channel.toString(),
         "Duration",
         `${seconds} seconds`,
       ]);
@@ -96,6 +98,8 @@ export class SlowmodeCommand extends Command {
         "Changed Slowmode",
         "Status",
         "Disabled",
+        "Channel",
+        interaction.channel.toString(),
       ]);
     }
   }

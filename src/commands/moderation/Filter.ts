@@ -84,6 +84,8 @@ export class FilterCommand extends Command {
         "Toggled One Word Filter",
         "Status",
         "Enabled",
+        "Channel",
+        interaction.channel.toString(),
       ]);
       if (channelDescription != null) {
         await (interaction.channel as TextChannel).setTopic(
@@ -111,6 +113,8 @@ export class FilterCommand extends Command {
         "Toggled One Word Filter",
         "Status",
         "Disabled",
+        "Channel",
+        interaction.channel.toString(),
       ]);
       if (channelDescription != null) {
         await (interaction.channel as TextChannel).setTopic(
