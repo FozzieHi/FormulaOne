@@ -11,7 +11,6 @@ import { Constants } from "./utility/Constants";
 import { PermissionService } from "./services/PermissionService";
 
 (async () => {
-  await db.connect();
   const client = new SapphireClient({
     defaultPrefix: Constants.PREFIX,
     intents: Constants.INTENTS,
@@ -22,6 +21,7 @@ import { PermissionService } from "./services/PermissionService";
   ApplicationCommandRegistries.setDefaultBehaviorWhenNotIdentical(
     RegisterBehavior.Overwrite
   );
+  await db.connect();
   await client.login(credentials.token);
   await PermissionService.register();
-})().catch((err) => console.error(err));
+})().catch((err) => container.logger.error(err));
