@@ -1,19 +1,21 @@
 import { Snowflake } from "discord.js";
-import { Document } from "mongodb";
 import { BaseRepository } from "./BaseRepository";
 import { GuildQuery } from "../queries/GuildQuery";
-import { Guild } from "../models/Guild";
+import { DBGuild, Guild } from "../models/Guild";
 
 export class GuildRepository extends BaseRepository {
   async anyGuild(guildId: Snowflake) {
     return this.any(new GuildQuery(guildId));
   }
 
-  async getGuild(guildId: Snowflake): Promise<Document> {
+  async getGuild(guildId: Snowflake): Promise<DBGuild> {
     const query = new GuildQuery(guildId);
     const fetchedGuild = await this.findOne(query);
 
-    return fetchedGuild ?? (await this.findOneAndReplace(query, new Guild(guildId)));
+    return (
+      (fetchedGuild as DBGuild) ??
+      (await this.findOneAndReplace(query, new Guild(guildId)))
+    );
   }
 
   async updateGuild(guildId: Snowflake, update: object) {

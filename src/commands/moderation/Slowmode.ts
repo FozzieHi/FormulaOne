@@ -4,7 +4,7 @@ import {
   Command,
   CommandOptionsRunTypeEnum,
 } from "@sapphire/framework";
-import { CommandInteraction, Guild, TextChannel } from "discord.js";
+import { CommandInteraction, TextChannel } from "discord.js";
 import { replyInteractionPublic } from "../../utility/Sender";
 import { Constants } from "../../utility/Constants";
 import { modLog } from "../../services/ModerationService";
@@ -57,7 +57,7 @@ export class SlowmodeCommand extends Command {
   }
 
   public async chatInputRun(interaction: CommandInteraction) {
-    if (interaction.channel == null) {
+    if (interaction.guild == null || interaction.channel == null) {
       return;
     }
     const subcommand = interaction.options.getSubcommand();
@@ -74,7 +74,7 @@ export class SlowmodeCommand extends Command {
         interaction,
         `Successfully enabled slowmode in ${interaction.channel.toString()} for ${seconds} seconds.`
       );
-      await modLog(interaction.guild as Guild, interaction.user, [
+      await modLog(interaction.guild, interaction.user, [
         "Action",
         "Changed Slowmode",
         "Status",
@@ -91,7 +91,7 @@ export class SlowmodeCommand extends Command {
         interaction,
         `Successfully disabled slowmode in ${interaction.channel.toString()}.`
       );
-      await modLog(interaction.guild as Guild, interaction.user, [
+      await modLog(interaction.guild, interaction.user, [
         "Action",
         "Changed Slowmode",
         "Status",

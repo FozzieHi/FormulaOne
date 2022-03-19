@@ -8,19 +8,19 @@ import { SafeBrowsingCacheRepository } from "../repositories/SafeBrowsingCacheRe
 import { YouTubeChannelCacheRepository } from "../repositories/YouTubeChannelCacheRepository";
 
 export class Database {
-  private guildRepo: GuildRepository | undefined;
+  public guildRepo: GuildRepository | undefined;
 
-  private userRepo: UserRepository | undefined;
+  public userRepo: UserRepository | undefined;
 
-  private muteRepo: MuteRepository | undefined;
+  public muteRepo: MuteRepository | undefined;
 
-  private punRepo: PunishmentRepository | undefined;
+  public punRepo: PunishmentRepository | undefined;
 
-  private banRepo: BanRepository | undefined;
+  public banRepo: BanRepository | undefined;
 
-  private safeBrowsingCacheRepo: SafeBrowsingCacheRepository | undefined;
+  public safeBrowsingCacheRepo: SafeBrowsingCacheRepository | undefined;
 
-  private youtubeChannelCacheRepo: YouTubeChannelCacheRepository | undefined;
+  public youtubeChannelCacheRepo: YouTubeChannelCacheRepository | undefined;
 
   async connect(connectionURL: string, dbName: string) {
     const connection = await MongoClient.connect(connectionURL);

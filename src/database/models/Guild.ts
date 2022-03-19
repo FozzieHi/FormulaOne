@@ -1,4 +1,13 @@
 import { Snowflake } from "discord.js";
+import { Document, WithId } from "mongodb";
+
+export interface DBGuild extends WithId<Document> {
+  guildId: Snowflake;
+  caseNumber: number;
+  lockdown: boolean;
+  enabledChannels: Array<Snowflake>;
+  youtubeChannels: { blocklisted: Array<string> };
+}
 
 export class Guild {
   guildId: Snowflake;

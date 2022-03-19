@@ -1,4 +1,18 @@
 import { Snowflake } from "discord.js";
+import { Document, WithId } from "mongodb";
+
+export interface DBUser extends WithId<Document> {
+  userId: Snowflake;
+  guildId: Snowflake;
+  currentPunishment: number;
+  warns: number;
+  mutes: number;
+  kicks: number;
+  bans: number;
+  punishments: Array<Punishment>;
+  blocklisted: boolean;
+  leftRoles: Array<Snowflake>;
+}
 
 type Punishment = {
   date: Date;

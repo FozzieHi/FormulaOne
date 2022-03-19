@@ -1,20 +1,20 @@
 import { Snowflake } from "discord.js";
-import { Document } from "mongodb";
 import { BaseRepository } from "./BaseRepository";
 import { UserQuery } from "../queries/UserQuery";
-import { User } from "../models/User";
+import { DBUser, User } from "../models/User";
 
 export class UserRepository extends BaseRepository {
   async anyUser(userId: Snowflake, guildId: Snowflake) {
     return this.any(new UserQuery(userId, guildId));
   }
 
-  async getUser(userId: Snowflake, guildId: Snowflake): Promise<Document> {
+  async getUser(userId: Snowflake, guildId: Snowflake): Promise<DBUser> {
     const query = new UserQuery(userId, guildId);
     const fetchedUser = await this.findOne(query);
 
     return (
-      fetchedUser ?? (await this.findOneAndReplace(query, new User(userId, guildId)))
+      (fetchedUser as DBUser) ??
+      (await this.findOneAndReplace(query, new User(userId, guildId)))
     );
   }
 
