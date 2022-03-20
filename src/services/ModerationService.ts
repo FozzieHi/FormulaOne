@@ -49,6 +49,10 @@ export function modLog(
     timestamp: new Date(),
   };
 
+  if (color != null) {
+    embedOptions.color = color;
+  }
+
   if (target != null) {
     const buttons = [
       [
