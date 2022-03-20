@@ -3,21 +3,30 @@ import {
   InteractionReplyOptions,
   Message,
   MessageEmbedOptions,
+  MessageOptions,
   TextBasedChannel,
+  User,
 } from "discord.js";
 import { StringUtil } from "./StringUtil";
 import { Embed } from "../structures/Embed";
 import { Constants } from "./Constants";
+import Try from "./Try";
 
 export async function send(
-  channel: TextBasedChannel,
+  channel: TextBasedChannel | User,
   description: string | undefined,
-  embedOptions: MessageEmbedOptions = {}
+  embedOptions: MessageEmbedOptions = {},
+  messageOptions: MessageOptions = {}
 ): Promise<Message> {
   if (description != null) {
     embedOptions.description = description;
   }
-  return channel.send({ embeds: [new Embed(embedOptions)] });
+  messageOptions.embeds = [new Embed(embedOptions)];
+  return channel.send(messageOptions);
+}
+
+export async function dm(user: User, description: string): Promise<boolean> {
+  return Try(send(user, description));
 }
 
 async function sendInteraction(

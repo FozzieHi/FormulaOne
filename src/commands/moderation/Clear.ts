@@ -4,7 +4,7 @@ import {
   Command,
   CommandOptionsRunTypeEnum,
 } from "@sapphire/framework";
-import { CommandInteraction, Guild, GuildTextBasedChannel } from "discord.js";
+import { CommandInteraction, GuildTextBasedChannel } from "discord.js";
 import { replyInteractionPublic } from "../../utility/Sender";
 import { Constants } from "../../utility/Constants";
 import { modLog } from "../../services/ModerationService";
@@ -46,7 +46,13 @@ export class ClearCommand extends Command {
 
   public async chatInputRun(interaction: CommandInteraction) {
     const amount = interaction.options.getInteger("amount");
-    if (amount == null || interaction.channel == null || amount < 1 || amount > 200) {
+    if (
+      amount == null ||
+      interaction.channel == null ||
+      interaction.guild == null ||
+      amount < 1 ||
+      amount > 200
+    ) {
       return;
     }
     await (interaction.channel as GuildTextBasedChannel).bulkDelete(amount);
@@ -54,7 +60,7 @@ export class ClearCommand extends Command {
       interaction,
       `Successfully cleared ${amount} message${amount > 1 ? "s" : ""}.`
     );
-    await modLog(interaction.guild as Guild, interaction.user, [
+    await modLog(interaction.guild, interaction.user, [
       "Action",
       "Clear",
       "Amount",

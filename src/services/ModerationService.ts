@@ -2,7 +2,9 @@ import {
   Guild,
   GuildMember,
   GuildTextBasedChannel,
+  MessageButton,
   MessageEmbedOptions,
+  MessageOptions,
   User,
 } from "discord.js";
 import { container } from "@sapphire/framework";
@@ -26,12 +28,18 @@ export class ModerationService {
   }
 }
 
-export function modLog(guild: Guild, moderator: User, fieldsAndValues: Array<string>) {
+export function modLog(
+  guild: Guild,
+  moderator: User,
+  fieldsAndValues: Array<string>,
+  target?: User
+) {
   const logChannel = guild.channels.cache.get(Constants.CHANNELS.MOD_LOGS);
   if (logChannel == null) {
     container.logger.error("logChannel is null or undefined.");
   }
 
+  const messageOptions: MessageOptions = {};
   const embedOptions: MessageEmbedOptions = {
     author: {
       name: moderator.tag,
@@ -39,6 +47,18 @@ export function modLog(guild: Guild, moderator: User, fieldsAndValues: Array<str
     },
     timestamp: new Date(),
   };
+
+  if (target != null) {
+    const buttons = [
+      [
+        new MessageButton()
+          .setCustomId(`userid-${target.id}`)
+          .setLabel("User ID")
+          .setStyle("SECONDARY"),
+      ],
+    ];
+    messageOptions.components = buttons.map((b) => ({ type: 1, components: b }));
+  }
 
   embedOptions.fields = [];
 
@@ -51,7 +71,12 @@ export function modLog(guild: Guild, moderator: User, fieldsAndValues: Array<str
     }
   }
 
-  return send(logChannel as GuildTextBasedChannel, undefined, embedOptions);
+  return send(
+    logChannel as GuildTextBasedChannel,
+    undefined,
+    embedOptions,
+    messageOptions
+  );
 }
 
 export function modLogCustom(guild: Guild, message: string, author: User) {

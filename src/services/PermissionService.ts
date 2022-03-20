@@ -9,6 +9,7 @@ export class PermissionService {
       "954305075306717194",
       "954332128408113173",
       "954752295218843728",
+      "955204850902265986",
     ];
     const marshalPermissions: Array<ApplicationCommandPermissionData> = [];
     Constants.MOD_ROLES.filter(
