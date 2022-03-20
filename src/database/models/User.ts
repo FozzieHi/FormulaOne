@@ -15,7 +15,7 @@ export interface DBUser extends WithId<Document> {
 }
 
 type Punishment = {
-  date: Date;
+  date: number;
   escalation: string;
   reason: string;
   mod: string;

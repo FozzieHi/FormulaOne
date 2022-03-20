@@ -5,10 +5,12 @@ import {
   CommandOptionsRunTypeEnum,
 } from "@sapphire/framework";
 import { CommandInteraction } from "discord.js";
+import db from "../../database";
 import { dm, replyInteractionPublic } from "../../utility/Sender";
 import { Constants } from "../../utility/Constants";
 import { modLog } from "../../services/ModerationService";
 import { StringUtil } from "../../utility/StringUtil";
+import { PushUpdate } from "../../database/updates/PushUpdate";
 
 export class BanCommand extends Command {
   public constructor(context: Command.Context) {
@@ -72,6 +74,18 @@ export class BanCommand extends Command {
     await replyInteractionPublic(
       interaction,
       `Successfully banned ${StringUtil.boldify(user.tag)}.`
+    );
+    await db.userRepo?.upsertUser(user.id, interaction.guild.id, { $inc: { bans: 1 } });
+    await db.userRepo?.upsertUser(
+      user.id,
+      interaction.guild.id,
+      new PushUpdate("punishments", {
+        date: Date.now(),
+        escalation: "Ban",
+        reason,
+        mod: interaction.user.tag,
+        channelId: interaction.channel.id,
+      })
     );
     await modLog(
       interaction.guild,
