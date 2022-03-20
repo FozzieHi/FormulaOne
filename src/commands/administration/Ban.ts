@@ -62,13 +62,12 @@ export class BanCommand extends Command {
     ) {
       return;
     }
-    if (interaction.guild.members.cache.has(user.id)) {
-      await dm(
-        interaction.user,
-        `A moderator has banned you for the reason: ${reason}.`,
-        interaction.channel
-      );
-    }
+    await dm(
+      interaction.user,
+      `A moderator has banned you for the reason: ${reason}.`,
+      interaction.channel,
+      interaction.guild.members.cache.has(user.id)
+    );
     await interaction.guild.members.ban(user, {
       reason: `(${interaction.user.tag}) ${reason}`,
     });
