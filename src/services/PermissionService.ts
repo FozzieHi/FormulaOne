@@ -10,7 +10,10 @@ export class PermissionService {
       "954332128408113173",
       "954752295218843728",
     ];
-    const stewardsCommands: Array<Snowflake> = ["955204850902265986"];
+    const stewardsCommands: Array<Snowflake> = [
+      "955204850902265986",
+      "955230109890146404",
+    ];
     const marshalPermissions: Array<ApplicationCommandPermissionData> = [];
     Constants.MOD_ROLES.filter((role) => role.permissionLevel > 0).forEach(
       (marshalRole) => {

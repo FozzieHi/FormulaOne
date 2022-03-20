@@ -5,14 +5,17 @@ import {
   CommandOptionsRunTypeEnum,
 } from "@sapphire/framework";
 import { CommandInteraction } from "discord.js";
-import db from "../../database";
-import { dm, replyInteractionPublic } from "../../utility/Sender";
+import {
+  dm,
+  replyInteractionError,
+  replyInteractionPublic,
+} from "../../utility/Sender";
 import { Constants } from "../../utility/Constants";
 import { modLog } from "../../services/ModerationService";
 import { StringUtil } from "../../utility/StringUtil";
-import { PushUpdate } from "../../database/updates/PushUpdate";
+import Try from "../../utility/Try";
 
-export class BanCommand extends Command {
+export class UnbanCommand extends Command {
   public constructor(context: Command.Context) {
     super(context, {
       requiredClientPermissions: ["BAN_MEMBERS"],
@@ -27,17 +30,17 @@ export class BanCommand extends Command {
     registry.registerChatInputCommand(
       {
         name: this.name,
-        description: "Ban a user indefinitely.",
+        description: "Unban a user.",
         options: [
           {
             name: "user",
-            description: "The user to ban",
+            description: "The user to unban",
             type: "USER",
             required: true,
           },
           {
             name: "reason",
-            description: "The reason for the ban",
+            description: "The reason for the unban",
             type: "STRING",
             required: true,
           },
@@ -46,7 +49,7 @@ export class BanCommand extends Command {
       },
       {
         guildIds: Constants.GUILD_IDS,
-        idHints: ["955204850902265986"],
+        idHints: ["955230109890146404"],
       }
     );
   }
@@ -62,38 +65,28 @@ export class BanCommand extends Command {
     ) {
       return;
     }
-    if (interaction.guild.members.cache.has(user.id)) {
-      await dm(
-        interaction.user,
-        `A moderator has banned you for the reason: ${reason}.`,
-        interaction.channel
-      );
+    const ban = await Try(interaction.guild.bans.fetch(user));
+    if (!ban) {
+      await replyInteractionError(interaction, "Banned user not found.");
+      return;
     }
-    await interaction.guild.members.ban(user, {
-      reason: `(${interaction.user.tag}) ${reason}`,
-    });
+    await dm(
+      interaction.user,
+      `A moderator has unbanned you for the reason: ${reason}.`,
+      undefined,
+      false
+    );
+    await interaction.guild.members.unban(user, `(${interaction.user.tag}) ${reason}`);
     await replyInteractionPublic(
       interaction,
-      `Successfully banned ${StringUtil.boldify(user.tag)}.`
-    );
-    await db.userRepo?.upsertUser(user.id, interaction.guild.id, { $inc: { bans: 1 } });
-    await db.userRepo?.upsertUser(
-      user.id,
-      interaction.guild.id,
-      new PushUpdate("punishments", {
-        date: Date.now(),
-        escalation: "Ban",
-        reason,
-        mod: interaction.user.tag,
-        channelId: interaction.channel.id,
-      })
+      `Successfully unbanned ${StringUtil.boldify(user.tag)}.`
     );
     await modLog(
       interaction.guild,
       interaction.user,
       [
         "Action",
-        "Ban",
+        "Unban",
         "User",
         `${user.tag.toString()} (${user.id})`,
         "Reason",
@@ -101,7 +94,7 @@ export class BanCommand extends Command {
         "Channel",
         interaction.channel.toString(),
       ],
-      Constants.BAN_COLOR,
+      Constants.UNBAN_COLOR,
       user
     );
   }

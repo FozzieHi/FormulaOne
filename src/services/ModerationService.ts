@@ -32,6 +32,7 @@ export function modLog(
   guild: Guild,
   moderator: User,
   fieldsAndValues: Array<string>,
+  color: number,
   target?: User
 ) {
   const logChannel = guild.channels.cache.get(Constants.CHANNELS.MOD_LOGS);

@@ -60,13 +60,18 @@ export class ClearCommand extends Command {
       interaction,
       `Successfully cleared ${amount} message${amount > 1 ? "s" : ""}.`
     );
-    await modLog(interaction.guild, interaction.user, [
-      "Action",
-      "Clear",
-      "Amount",
-      `${amount} message${amount > 1 ? "s" : ""}`,
-      "Channel",
-      interaction.channel.toString(),
-    ]);
+    await modLog(
+      interaction.guild,
+      interaction.user,
+      [
+        "Action",
+        "Clear",
+        "Amount",
+        `${amount} message${amount > 1 ? "s" : ""}`,
+        "Channel",
+        interaction.channel.toString(),
+      ],
+      Constants.WARN_COLOR
+    );
   }
 }

@@ -8,6 +8,12 @@ export class Constants {
 
   static readonly ERROR_COLOR = 0xff0000;
 
+  static readonly BAN_COLOR = 0xea0c00;
+
+  static readonly UNBAN_COLOR = 0x13ff19;
+
+  static readonly WARN_COLOR = 0xffb620;
+
   static readonly GUILD_IDS: Array<Snowflake> = ["177387572505346048"];
 
   static readonly ROLES = {

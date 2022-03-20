@@ -74,16 +74,21 @@ export class SlowmodeCommand extends Command {
         interaction,
         `Successfully enabled slowmode in ${interaction.channel.toString()} for ${seconds} seconds.`
       );
-      await modLog(interaction.guild, interaction.user, [
-        "Action",
-        "Changed Slowmode",
-        "Status",
-        "Enabled",
-        "Channel",
-        interaction.channel.toString(),
-        "Duration",
-        `${seconds} seconds`,
-      ]);
+      await modLog(
+        interaction.guild,
+        interaction.user,
+        [
+          "Action",
+          "Changed Slowmode",
+          "Status",
+          "Enabled",
+          "Channel",
+          interaction.channel.toString(),
+          "Duration",
+          `${seconds} seconds`,
+        ],
+        Constants.WARN_COLOR
+      );
     } else if (subcommand === "remove") {
       await (interaction.channel as TextChannel).setRateLimitPerUser(
         0,
@@ -93,14 +98,19 @@ export class SlowmodeCommand extends Command {
         interaction,
         `Successfully disabled slowmode in ${interaction.channel.toString()}.`
       );
-      await modLog(interaction.guild, interaction.user, [
-        "Action",
-        "Changed Slowmode",
-        "Status",
-        "Disabled",
-        "Channel",
-        interaction.channel.toString(),
-      ]);
+      await modLog(
+        interaction.guild,
+        interaction.user,
+        [
+          "Action",
+          "Changed Slowmode",
+          "Status",
+          "Disabled",
+          "Channel",
+          interaction.channel.toString(),
+        ],
+        Constants.WARN_COLOR
+      );
     }
   }
 }

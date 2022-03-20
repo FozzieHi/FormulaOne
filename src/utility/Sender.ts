@@ -25,8 +25,21 @@ export async function send(
   return channel.send(messageOptions);
 }
 
-export async function dm(user: User, description: string): Promise<boolean> {
-  return Try(send(user, description));
+export async function sendError(channel: TextBasedChannel | User, description: string) {
+  return send(channel, description, { color: Constants.ERROR_COLOR });
+}
+
+export async function dm(
+  user: User,
+  description: string,
+  channel: TextBasedChannel | undefined,
+  sendErrorMsg = true
+): Promise<boolean> {
+  const result = await Try(send(user, description));
+  if (!result && sendErrorMsg && channel != null) {
+    await sendError(channel, "I do not have permission to DM that user.");
+  }
+  return result;
 }
 
 async function sendInteraction(

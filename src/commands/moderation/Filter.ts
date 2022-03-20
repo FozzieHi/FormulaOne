@@ -79,14 +79,19 @@ export class FilterCommand extends Command {
         interaction,
         `Successfully enabled one word filter in ${interaction.channel.toString()}.`
       );
-      await modLog(interaction.guild, interaction.user, [
-        "Action",
-        "Toggled One Word Filter",
-        "Status",
-        "Enabled",
-        "Channel",
-        interaction.channel.toString(),
-      ]);
+      await modLog(
+        interaction.guild,
+        interaction.user,
+        [
+          "Action",
+          "Toggled One Word Filter",
+          "Status",
+          "Enabled",
+          "Channel",
+          interaction.channel.toString(),
+        ],
+        Constants.WARN_COLOR
+      );
       if (channelDescription != null) {
         await (interaction.channel as TextChannel).setTopic(
           channelDescription.replace(enabledText, "")
@@ -108,14 +113,19 @@ export class FilterCommand extends Command {
         interaction,
         `Successfully disabled one word filter in ${interaction.channel.toString()}.`
       );
-      await modLog(interaction.guild, interaction.user, [
-        "Action",
-        "Toggled One Word Filter",
-        "Status",
-        "Disabled",
-        "Channel",
-        interaction.channel.toString(),
-      ]);
+      await modLog(
+        interaction.guild,
+        interaction.user,
+        [
+          "Action",
+          "Toggled One Word Filter",
+          "Status",
+          "Disabled",
+          "Channel",
+          interaction.channel.toString(),
+        ],
+        Constants.WARN_COLOR
+      );
       if (channelDescription != null) {
         await (interaction.channel as TextChannel).setTopic(
           enabledText + channelDescription
