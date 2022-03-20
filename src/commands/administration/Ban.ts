@@ -17,7 +17,7 @@ export class BanCommand extends Command {
     super(context, {
       requiredClientPermissions: ["BAN_MEMBERS"],
       runIn: CommandOptionsRunTypeEnum.GuildText,
-      preconditions: ["Marshals"],
+      preconditions: ["Stewards"],
     });
   }
 
