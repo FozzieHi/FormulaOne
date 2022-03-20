@@ -46,12 +46,9 @@ export function modLog(
       name: moderator.tag,
       iconURL: moderator.displayAvatarURL(),
     },
+    color,
     timestamp: new Date(),
   };
-
-  if (color != null) {
-    embedOptions.color = color;
-  }
 
   if (target != null) {
     const buttons = [
