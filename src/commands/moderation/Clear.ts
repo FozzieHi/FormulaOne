@@ -5,7 +5,7 @@ import {
   CommandOptionsRunTypeEnum,
 } from "@sapphire/framework";
 import { CommandInteraction, GuildTextBasedChannel } from "discord.js";
-import { replyInteractionPublic } from "../../utility/Sender";
+import { replyInteractionError, replyInteractionPublic } from "../../utility/Sender";
 import { Constants } from "../../utility/Constants";
 import { modLog } from "../../services/ModerationService";
 
@@ -53,6 +53,13 @@ export class ClearCommand extends Command {
       amount < 1 ||
       amount > 200
     ) {
+      return;
+    }
+    if (interaction.channel.id === Constants.CHANNELS.MOD_LOGS) {
+      await replyInteractionError(
+        interaction,
+        "You may not clear messages in the log channel."
+      );
       return;
     }
     await (interaction.channel as GuildTextBasedChannel).bulkDelete(amount);
