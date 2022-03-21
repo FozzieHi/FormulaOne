@@ -9,7 +9,7 @@ export class ChatInputCommandDeniedListener extends Listener {
   public async run(error: UserError, { interaction }: ChatInputCommandDeniedPayload) {
     await replyInteractionError(interaction, error.message);
     this.container.logger.info(
-      `Unsuccessful command result - ${interaction.user.tag} - ${error.message}`
+      `Unsuccessful (denied) command result - ${interaction.user.tag} - ${interaction.commandName} - ${error.message}`
     );
   }
 }
