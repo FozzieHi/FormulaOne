@@ -6,9 +6,13 @@ import {
 } from "@sapphire/framework";
 import { CommandInteraction } from "discord.js";
 import db from "../../database";
-import { dm, replyInteractionPublic } from "../../utility/Sender";
+import {
+  dm,
+  replyInteractionError,
+  replyInteractionPublic,
+} from "../../utility/Sender";
 import { Constants } from "../../utility/Constants";
-import { modLog } from "../../services/ModerationService";
+import { ModerationService, modLog } from "../../services/ModerationService";
 import { StringUtil } from "../../utility/StringUtil";
 import { PushUpdate } from "../../database/updates/PushUpdate";
 
@@ -60,6 +64,13 @@ export class BanCommand extends Command {
       interaction.channel == null ||
       interaction.guild == null
     ) {
+      return;
+    }
+    if ((await ModerationService.getPermLevel(interaction.guild, user)) > 0) {
+      await replyInteractionError(
+        interaction,
+        "You may not use this command on a moderator."
+      );
       return;
     }
     await dm(

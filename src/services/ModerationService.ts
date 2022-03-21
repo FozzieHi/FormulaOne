@@ -11,9 +11,14 @@ import { container } from "@sapphire/framework";
 import { Constants } from "../utility/Constants";
 import { send } from "../utility/Sender";
 import { NumberUtil } from "../utility/NumberUtil";
+import TryVal from "../utility/TryVal";
 
 export class ModerationService {
-  public static getPermLevel(member: GuildMember) {
+  public static async getPermLevel(guild: Guild, user: GuildMember | User) {
+    const member = (await TryVal(guild.members.fetch(user))) as GuildMember;
+    if (!member) {
+      return 0;
+    }
     const modRoles = Constants.MOD_ROLES.sort(
       (a, b) => a.permissionLevel - b.permissionLevel
     );
