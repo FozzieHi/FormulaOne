@@ -14,7 +14,7 @@ import { NumberUtil } from "../utility/NumberUtil";
 import TryVal from "../utility/TryVal";
 
 export class ModerationService {
-  public static async getPermLevel(guild: Guild, user: GuildMember | User) {
+  public static async getPermLevel(guild: Guild, user: GuildMember) {
     const member = (await TryVal(guild.members.fetch(user))) as GuildMember;
     if (!member) {
       return 0;
