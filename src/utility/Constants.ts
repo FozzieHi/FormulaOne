@@ -10,9 +10,11 @@ export class Constants {
 
   static readonly BAN_COLOR = 0xea0c00;
 
-  static readonly UNBAN_COLOR = 0x13ff19;
+  static readonly KICK_COLOR = 0xe8511f;
 
   static readonly WARN_COLOR = 0xffb620;
+
+  static readonly UNBAN_COLOR = 0x13ff19;
 
   static readonly GUILD_IDS: Array<Snowflake> = ["177387572505346048"];
 

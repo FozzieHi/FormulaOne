@@ -9,6 +9,7 @@ export class PermissionService {
       "954305075306717194",
       "954332128408113173",
       "954752295218843728",
+      "955436856516948008",
     ];
     const stewardsCommands: Array<Snowflake> = [
       "955204850902265986",

@@ -4,20 +4,24 @@ import {
   Command,
   CommandOptionsRunTypeEnum,
 } from "@sapphire/framework";
-import { CommandInteraction } from "discord.js";
+import { CommandInteraction, GuildMember } from "discord.js";
 import db from "../../database";
-import { dm, replyInteractionPublic } from "../../utility/Sender";
+import {
+  dm,
+  replyInteractionError,
+  replyInteractionPublic,
+} from "../../utility/Sender";
 import { Constants } from "../../utility/Constants";
 import { modLog } from "../../services/ModerationService";
 import { StringUtil } from "../../utility/StringUtil";
 import { PushUpdate } from "../../database/updates/PushUpdate";
 
-export class BanCommand extends Command {
+export class KickCommand extends Command {
   public constructor(context: Command.Context) {
     super(context, {
-      requiredClientPermissions: ["BAN_MEMBERS"],
+      requiredClientPermissions: ["KICK_MEMBERS"],
       runIn: CommandOptionsRunTypeEnum.GuildText,
-      preconditions: ["Stewards"],
+      preconditions: ["Marshals"],
     });
   }
 
@@ -27,17 +31,17 @@ export class BanCommand extends Command {
     registry.registerChatInputCommand(
       {
         name: this.name,
-        description: "Ban a user indefinitely.",
+        description: "Kick a member from the server.",
         options: [
           {
-            name: "user",
-            description: "The user to ban",
+            name: "member",
+            description: "The member to kick",
             type: "USER",
             required: true,
           },
           {
             name: "reason",
-            description: "The reason for the ban",
+            description: "The reason for the kick",
             type: "STRING",
             required: true,
           },
@@ -46,42 +50,40 @@ export class BanCommand extends Command {
       },
       {
         guildIds: Constants.GUILD_IDS,
-        idHints: ["955204850902265986"],
+        idHints: ["955436856516948008"],
       }
     );
   }
 
   public async chatInputRun(interaction: CommandInteraction) {
-    const user = interaction.options.getUser("user");
+    const member = interaction.options.getMember("member") as GuildMember;
     const reason = interaction.options.getString("reason");
-    if (
-      user == null ||
-      reason == null ||
-      interaction.channel == null ||
-      interaction.guild == null
-    ) {
+    if (member == null) {
+      await replyInteractionError(interaction, "Member not found.");
+      return;
+    }
+    if (reason == null || interaction.channel == null || interaction.guild == null) {
       return;
     }
     await dm(
-      user,
-      `A moderator has banned you for the reason: ${reason}.`,
-      interaction.channel,
-      interaction.guild.members.cache.has(user.id)
+      member.user,
+      `A moderator has kicked you for the reason: ${reason}.`,
+      interaction.channel
     );
-    await interaction.guild.members.ban(user, {
-      reason: `(${interaction.user.tag}) ${reason}`,
-    });
+    await member.kick(`(${interaction.user.tag}) ${reason}`);
     await replyInteractionPublic(
       interaction,
-      `Successfully banned ${StringUtil.boldify(user.tag)}.`
+      `Successfully kicked ${StringUtil.boldify(member.user.tag)}.`
     );
-    await db.userRepo?.upsertUser(user.id, interaction.guild.id, { $inc: { bans: 1 } });
+    await db.userRepo?.upsertUser(member.id, interaction.guild.id, {
+      $inc: { kicks: 1 },
+    });
     await db.userRepo?.upsertUser(
-      user.id,
+      member.id,
       interaction.guild.id,
       new PushUpdate("punishments", {
         date: Date.now(),
-        escalation: "Ban",
+        escalation: "Kick",
         reason,
         mod: interaction.user.tag,
         channelId: interaction.channel.id,
@@ -92,16 +94,16 @@ export class BanCommand extends Command {
       interaction.user,
       [
         "Action",
-        "Ban",
-        "User",
-        `${user.tag.toString()} (${user.id})`,
+        "Kick",
+        "Member",
+        `${member.user.tag.toString()} (${member.id})`,
         "Reason",
         reason,
         "Channel",
         interaction.channel.toString(),
       ],
-      Constants.BAN_COLOR,
-      user
+      Constants.KICK_COLOR,
+      member.user
     );
   }
 }

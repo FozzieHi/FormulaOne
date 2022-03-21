@@ -71,7 +71,7 @@ export class UnbanCommand extends Command {
       return;
     }
     await dm(
-      interaction.user,
+      user,
       `A moderator has unbanned you for the reason: ${reason}.`,
       undefined,
       false
