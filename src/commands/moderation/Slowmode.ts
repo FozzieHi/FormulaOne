@@ -5,7 +5,7 @@ import {
   CommandOptionsRunTypeEnum,
 } from "@sapphire/framework";
 import { CommandInteraction, TextChannel } from "discord.js";
-import { replyInteractionPublic } from "../../utility/Sender";
+import { replyInteractionError, replyInteractionPublic } from "../../utility/Sender";
 import { Constants } from "../../utility/Constants";
 import { modLog } from "../../services/ModerationService";
 
@@ -90,6 +90,13 @@ export class SlowmodeCommand extends Command {
         Constants.WARN_COLOR
       );
     } else if (subcommand === "remove") {
+      if ((interaction.channel as TextChannel).rateLimitPerUser === 0) {
+        await replyInteractionError(
+          interaction,
+          `Slowmode is already disabled for ${interaction.channel.toString()}`
+        );
+        return;
+      }
       await (interaction.channel as TextChannel).setRateLimitPerUser(
         0,
         `Slowmode disabled by ${interaction.user.tag}`
