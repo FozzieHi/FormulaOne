@@ -1,5 +1,5 @@
 import { container } from "@sapphire/framework";
-import {ApplicationCommandPermissionData, Guild, Snowflake} from "discord.js";
+import { ApplicationCommandPermissionData, Guild, Snowflake } from "discord.js";
 import { Constants } from "../utility/Constants";
 
 export class PermissionService {
@@ -27,20 +27,22 @@ export class PermissionService {
 
   private static getPermData(permissionLevel: number) {
     const permissions: Array<ApplicationCommandPermissionData> = [];
-    Constants.MOD_ROLES.filter((role) => role.permissionLevel >= permissionLevel).forEach(
-      (marshalRole) => {
-        permissions.push({ id: marshalRole.id, type: "ROLE", permission: true });
-      }
-    );
+    Constants.MOD_ROLES.filter(
+      (role) => role.permissionLevel >= permissionLevel
+    ).forEach((marshalRole) => {
+      permissions.push({ id: marshalRole.id, type: "ROLE", permission: true });
+    });
     return permissions;
   }
 
-  private static async setPerms(guild: Guild, commands: Array<Snowflake>, permissions: Array<ApplicationCommandPermissionData>) {
+  private static async setPerms(
+    guild: Guild,
+    commands: Array<Snowflake>,
+    permissions: Array<ApplicationCommandPermissionData>
+  ) {
     await Promise.all(
       (
-        await Promise.all(
-          commands.map((commandId) => guild.commands.fetch(commandId))
-        )
+        await Promise.all(commands.map((commandId) => guild.commands.fetch(commandId)))
       ).map((command) => command.permissions.set({ permissions }))
     );
   }
