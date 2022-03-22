@@ -7,7 +7,7 @@
     "prepare": "husky install",
     "prettier:write": "prettier --write .",
     "prettier:check": "prettier --check .",
-    "eslint:write": "eslint . --fix",
+    "eslint:write": "eslint . --cache --fix",
     "eslint:check": "eslint ."
   },
   "author": "Fozzie#0001",
@@ -36,6 +36,6 @@
     "typescript": "^4.6.2"
   },
   "lint-staged": {
-    "*.ts": ["prettier:write", "eslint:write"]
+    "*.ts": ["prettier --write", "eslint --cache --fix"]
   }
 }
