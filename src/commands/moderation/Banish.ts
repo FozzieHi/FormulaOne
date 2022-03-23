@@ -135,7 +135,10 @@ export class BanishCommand extends Command {
       );
       return;
     }
-    if (await ModerationService.isModerator(interaction.guild, member.user)) {
+    if (
+      interaction.user.id === member.id ||
+      (await ModerationService.isModerator(interaction.guild, member.user))
+    ) {
       await replyInteractionError(
         interaction,
         "You may not use this command on a moderator."
