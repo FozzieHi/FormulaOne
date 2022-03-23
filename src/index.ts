@@ -21,7 +21,10 @@ import { PermissionService } from "./services/PermissionService";
   ApplicationCommandRegistries.setDefaultBehaviorWhenNotIdentical(
     RegisterBehavior.Overwrite
   );
+  const start = Date.now();
+  container.logger.info("Database: Connecting...");
   await db.connect(credentials.mongodbConnectionURL, credentials.dbName);
+  container.logger.info(`Database: Took ${Date.now() - start}ms to connect.`);
   await client.login(credentials.token);
   await PermissionService.register();
 })().catch((err) => container.logger.error(err));
