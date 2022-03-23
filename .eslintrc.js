@@ -29,7 +29,7 @@ module.exports = {
           "error",
           { ignorePropertyModificationsFor: ["embedOptions", "messageOptions"] },
         ],
-        "no-underscore-dangle": ["off"],
+        "no-underscore-dangle": ["error", { allow: ["_id"] }],
       },
     },
   ],
