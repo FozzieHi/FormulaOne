@@ -37,7 +37,11 @@ export class Constants {
     { id: this.ROLES.MARSHALS, permissionLevel: 1 },
   ];
 
-  static readonly BANISH_ROLES = [
+  static readonly BANISH_ROLES: Array<{
+    name: string;
+    roleId: Snowflake;
+    channelId: Snowflake;
+  }> = [
     {
       name: "f1-beginner-questions",
       roleId: "941602889221165066",
