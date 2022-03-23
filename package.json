@@ -8,7 +8,7 @@
     "prettier:write": "prettier --write .",
     "prettier:check": "prettier --check .",
     "eslint:write": "eslint . --cache --fix",
-    "eslint:check": "eslint ."
+    "eslint:check": "eslint . --cache"
   },
   "author": "Fozzie#0001",
   "license": "AGPL-3.0",
