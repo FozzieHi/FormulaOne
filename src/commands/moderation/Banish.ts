@@ -136,7 +136,7 @@ export class BanishCommand extends Command {
       return;
     }
     if (
-      interaction.user.id === member.id ||
+      member.roles.cache.has(Constants.ROLES.HELPERS) ||
       (await ModerationService.isModerator(interaction.guild, member.user))
     ) {
       await replyInteractionError(
