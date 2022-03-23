@@ -234,7 +234,7 @@ export class BanishCommand extends Command {
       );
       await dm(
         member.user,
-        `A moderator has banished you from the ${banishedRole.name} channel.`,
+        `A moderator has unbanished you from the ${banishedRole.name} channel.`,
         interaction.channel
       );
     }
