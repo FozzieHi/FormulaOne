@@ -14,6 +14,10 @@ export class Constants {
 
   static readonly WARN_COLOR = 0xffb620;
 
+  static readonly BANISH_COLOR = 0xf47a42;
+
+  static readonly UNMUTE_COLOR = 0x6ded5e;
+
   static readonly UNBAN_COLOR = 0x13ff19;
 
   static readonly GUILD_IDS: Array<Snowflake> = ["177387572505346048"];
@@ -23,6 +27,7 @@ export class Constants {
     ADMIN: "177408413381165056",
     STEWARDS: "177408501268611073",
     MARSHALS: "293845938764644352",
+    HELPERS: "941601929178533919",
   };
 
   static readonly MOD_ROLES: Array<{ id: Snowflake; permissionLevel: number }> = [
@@ -30,6 +35,29 @@ export class Constants {
     { id: this.ROLES.ADMIN, permissionLevel: 3 },
     { id: this.ROLES.STEWARDS, permissionLevel: 2 },
     { id: this.ROLES.MARSHALS, permissionLevel: 1 },
+  ];
+
+  static readonly BANISH_ROLES = [
+    {
+      name: "f1-beginner-questions",
+      roleId: "941602889221165066",
+      channelId: "941601102049181737",
+    },
+    {
+      name: "f1-discussion",
+      roleId: "821253279937462283",
+      channelId: "432208507073331201",
+    },
+    {
+      name: "f1-serious",
+      roleId: "411950549064482823",
+      channelId: "186021984126107649",
+    },
+    {
+      name: "f1-technical",
+      roleId: "433240749216104459",
+      channelId: "433229818092322826",
+    },
   ];
 
   static readonly CHANNELS = {

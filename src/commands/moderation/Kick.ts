@@ -65,7 +65,7 @@ export class KickCommand extends Command {
     if (reason == null || interaction.channel == null || interaction.guild == null) {
       return;
     }
-    if ((await ModerationService.getPermLevel(interaction.guild, member.user)) > 0) {
+    if (await ModerationService.isModerator(interaction.guild, member.user)) {
       await replyInteractionError(
         interaction,
         "You may not use this command on a moderator."

@@ -66,7 +66,7 @@ export class BanCommand extends Command {
     ) {
       return;
     }
-    if ((await ModerationService.getPermLevel(interaction.guild, user)) > 0) {
+    if (await ModerationService.isModerator(interaction.guild, user)) {
       await replyInteractionError(
         interaction,
         "You may not use this command on a moderator."

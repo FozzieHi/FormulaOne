@@ -31,6 +31,10 @@ export class ModerationService {
     });
     return member.permissions.has("ADMINISTRATOR") && permLevel < 2 ? 2 : permLevel;
   }
+
+  public static async isModerator(guild: Guild, user: User) {
+    return user.bot || (await this.getPermLevel(guild, user)) > 0;
+  }
 }
 
 export function modLog(
