@@ -7,8 +7,10 @@ export class NoModeratorPrecondition extends Precondition {
     const target =
       interaction.options.getUser("user") ??
       (interaction.options.getMember("member") as GuildMember)?.user;
-    return interaction.guild != null &&
-      target != null &&
+    if (interaction.guild == null) {
+      return this.error({ message: "Guild is null or undefined." });
+    }
+    return target == null ||
       !(await ModerationService.isModerator(interaction.guild, target))
       ? this.ok()
       : this.error({ message: "You may not use this command on a moderator." });
