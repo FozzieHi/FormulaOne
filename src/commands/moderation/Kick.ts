@@ -12,7 +12,7 @@ import {
   replyInteractionPublic,
 } from "../../utility/Sender";
 import { Constants } from "../../utility/Constants";
-import { ModerationService, modLog } from "../../services/ModerationService";
+import { modLog } from "../../services/ModerationService";
 import { StringUtil } from "../../utility/StringUtil";
 import { PushUpdate } from "../../database/updates/PushUpdate";
 
@@ -21,7 +21,7 @@ export class KickCommand extends Command {
     super(context, {
       requiredClientPermissions: ["KICK_MEMBERS"],
       runIn: CommandOptionsRunTypeEnum.GuildText,
-      preconditions: ["Marshals"],
+      preconditions: ["Marshals", "NoModerator"],
     });
   }
 
@@ -63,13 +63,6 @@ export class KickCommand extends Command {
       return;
     }
     if (reason == null || interaction.channel == null || interaction.guild == null) {
-      return;
-    }
-    if (await ModerationService.isModerator(interaction.guild, member.user)) {
-      await replyInteractionError(
-        interaction,
-        "You may not use this command on a moderator."
-      );
       return;
     }
 

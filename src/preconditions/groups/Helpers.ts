@@ -1,7 +1,7 @@
 import { Precondition } from "@sapphire/framework";
 import { CommandInteraction, Guild, GuildMember } from "discord.js";
-import { Constants } from "../utility/Constants";
-import { ModerationService } from "../services/ModerationService";
+import { Constants } from "../../utility/Constants";
+import { ModerationService } from "../../services/ModerationService";
 
 export class HelpersPrecondition extends Precondition {
   public async chatInputRun(interaction: CommandInteraction) {

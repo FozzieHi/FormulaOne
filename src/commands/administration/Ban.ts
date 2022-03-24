@@ -6,13 +6,9 @@ import {
 } from "@sapphire/framework";
 import { CommandInteraction } from "discord.js";
 import db from "../../database";
-import {
-  dm,
-  replyInteractionError,
-  replyInteractionPublic,
-} from "../../utility/Sender";
+import { dm, replyInteractionPublic } from "../../utility/Sender";
 import { Constants } from "../../utility/Constants";
-import { ModerationService, modLog } from "../../services/ModerationService";
+import { modLog } from "../../services/ModerationService";
 import { StringUtil } from "../../utility/StringUtil";
 import { PushUpdate } from "../../database/updates/PushUpdate";
 
@@ -21,7 +17,7 @@ export class BanCommand extends Command {
     super(context, {
       requiredClientPermissions: ["BAN_MEMBERS"],
       runIn: CommandOptionsRunTypeEnum.GuildText,
-      preconditions: ["Stewards"],
+      preconditions: ["Stewards", "NoModerator"],
     });
   }
 
@@ -64,13 +60,6 @@ export class BanCommand extends Command {
       interaction.channel == null ||
       interaction.guild == null
     ) {
-      return;
-    }
-    if (await ModerationService.isModerator(interaction.guild, user)) {
-      await replyInteractionError(
-        interaction,
-        "You may not use this command on a moderator."
-      );
       return;
     }
 
