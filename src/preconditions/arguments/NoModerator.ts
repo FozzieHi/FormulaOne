@@ -6,7 +6,7 @@ export class NoModeratorPrecondition extends Precondition {
   public async chatInputRun(interaction: CommandInteraction) {
     const target =
       interaction.options.getUser("user") ??
-      (interaction.options.getMember("member") as GuildMember).user;
+      (interaction.options.getMember("member") as GuildMember)?.user;
     return interaction.guild != null &&
       target != null &&
       !(await ModerationService.isModerator(interaction.guild, target))
