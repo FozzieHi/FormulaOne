@@ -151,6 +151,7 @@ export class BanishCommand extends Command {
       await replyInteractionError(interaction, "Could not fetch target role/channel.");
       return;
     }
+
     if (subcommand === "add") {
       if (member.roles.cache.has(roleId)) {
         await replyInteractionError(

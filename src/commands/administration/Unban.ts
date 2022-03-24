@@ -70,6 +70,7 @@ export class UnbanCommand extends Command {
       await replyInteractionError(interaction, "Banned user not found.");
       return;
     }
+
     await dm(
       user,
       `A moderator has unbanned you for the reason: ${reason}.`,

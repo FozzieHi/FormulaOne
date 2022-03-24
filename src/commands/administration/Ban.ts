@@ -73,6 +73,7 @@ export class BanCommand extends Command {
       );
       return;
     }
+
     await dm(
       user,
       `A moderator has banned you for the reason: ${reason}.`,

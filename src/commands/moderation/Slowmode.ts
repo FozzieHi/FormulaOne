@@ -66,6 +66,7 @@ export class SlowmodeCommand extends Command {
       if (seconds == null || seconds < 1 || seconds > 21600) {
         return;
       }
+
       await (interaction.channel as TextChannel).setRateLimitPerUser(
         seconds,
         `Slowmode enabled by ${interaction.user.tag}`
@@ -97,6 +98,7 @@ export class SlowmodeCommand extends Command {
         );
         return;
       }
+
       await (interaction.channel as TextChannel).setRateLimitPerUser(
         0,
         `Slowmode disabled by ${interaction.user.tag}`

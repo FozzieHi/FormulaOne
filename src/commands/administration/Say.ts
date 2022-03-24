@@ -50,7 +50,7 @@ export class SayCommand extends Command {
   public async chatInputRun(interaction: CommandInteraction) {
     const channel = interaction.options.getChannel("channel") as TextBasedChannel;
     const message = interaction.options.getString("message");
-    if (channel == null || message == null) {
+    if (channel == null || message == null || !channel.isText()) {
       return;
     }
 

@@ -71,6 +71,7 @@ export class FilterCommand extends Command {
         );
         return;
       }
+
       await db.guildRepo?.upsertGuild(
         interaction.guild.id,
         new PushUpdate("enabledChannels", interaction.channel.id)
@@ -105,6 +106,7 @@ export class FilterCommand extends Command {
         );
         return;
       }
+
       await db.guildRepo?.upsertGuild(
         interaction.guild.id,
         new PullUpdate("enabledChannels", interaction.channel.id)

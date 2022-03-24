@@ -62,6 +62,7 @@ export class ClearCommand extends Command {
       );
       return;
     }
+
     await (interaction.channel as GuildTextBasedChannel).bulkDelete(amount);
     await replyInteractionPublic(
       interaction,

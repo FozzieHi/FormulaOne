@@ -72,6 +72,7 @@ export class KickCommand extends Command {
       );
       return;
     }
+
     await dm(
       member.user,
       `A moderator has kicked you for the reason: ${reason}.`,

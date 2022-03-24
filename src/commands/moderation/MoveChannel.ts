@@ -63,6 +63,7 @@ export class MoveChannelCommand extends Command {
     ) {
       return;
     }
+
     await send(
       fromChannel as GuildTextBasedChannel,
       `Please move to ${toChannel.toString()}.`
