@@ -25,7 +25,7 @@ export class BanishCommand extends Command {
     super(context, {
       requiredClientPermissions: ["MANAGE_ROLES"],
       runIn: CommandOptionsRunTypeEnum.GuildText,
-      preconditions: ["Helpers"],
+      preconditions: ["Helpers", "MemberValidation"],
     });
   }
 
@@ -108,10 +108,6 @@ export class BanishCommand extends Command {
     const member = interaction.options.getMember("member") as GuildMember;
     const reason = interaction.options.getString("reason");
     const roleId = interaction.options.getString("channel");
-    if (member == null) {
-      await replyInteractionError(interaction, "Member not found.");
-      return;
-    }
     if (roleId == null) {
       return;
     }

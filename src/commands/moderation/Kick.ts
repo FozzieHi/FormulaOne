@@ -6,11 +6,7 @@ import {
 } from "@sapphire/framework";
 import { CommandInteraction, GuildMember } from "discord.js";
 import db from "../../database";
-import {
-  dm,
-  replyInteractionError,
-  replyInteractionPublic,
-} from "../../utility/Sender";
+import { dm, replyInteractionPublic } from "../../utility/Sender";
 import { Constants } from "../../utility/Constants";
 import { modLog } from "../../services/ModerationService";
 import { StringUtil } from "../../utility/StringUtil";
@@ -21,7 +17,7 @@ export class KickCommand extends Command {
     super(context, {
       requiredClientPermissions: ["KICK_MEMBERS"],
       runIn: CommandOptionsRunTypeEnum.GuildText,
-      preconditions: ["Marshals", "NoModerator"],
+      preconditions: ["Marshals", "MemberValidation", "NoModerator"],
     });
   }
 
@@ -58,10 +54,6 @@ export class KickCommand extends Command {
   public async chatInputRun(interaction: CommandInteraction) {
     const member = interaction.options.getMember("member") as GuildMember;
     const reason = interaction.options.getString("reason");
-    if (member == null) {
-      await replyInteractionError(interaction, "Member not found.");
-      return;
-    }
     if (reason == null || interaction.channel == null || interaction.guild == null) {
       return;
     }
