@@ -14,11 +14,11 @@ export class UserIDInteraction extends InteractionHandler {
     });
   }
 
-  async run(interaction: ButtonInteraction, userId: Snowflake) {
+  public async run(interaction: ButtonInteraction, userId: Snowflake) {
     await interaction.reply({ content: userId, ephemeral: true });
   }
 
-  parse(interaction: ButtonInteraction): Awaitable<Maybe<unknown>> {
+  public parse(interaction: ButtonInteraction): Awaitable<Maybe<unknown>> {
     if (!interaction.customId.startsWith("userid-")) {
       return this.none();
     }
