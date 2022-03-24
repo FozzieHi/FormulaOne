@@ -70,10 +70,7 @@ export class Constants {
 
   static readonly PREFIX = "t$";
 
-  static readonly INTENTS: Intents = new Intents([
-    Intents.FLAGS.GUILDS,
-    Intents.FLAGS.GUILD_MESSAGES,
-  ]);
+  static readonly INTENTS: Intents = new Intents([Intents.FLAGS.GUILDS]);
 
   static readonly PRESENCE: PresenceData = {
     activities: [
