@@ -15,6 +15,7 @@ export class PermissionService {
     const stewardCommands: Array<Snowflake> = [
       "955204850902265986",
       "955230109890146404",
+      "956490929747918899",
     ];
     const helperPermissions: Array<ApplicationCommandPermissionData> = [
       { id: Constants.ROLES.HELPERS, type: "ROLE", permission: true },
