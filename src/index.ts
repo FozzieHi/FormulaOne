@@ -15,7 +15,6 @@ import { PermissionService } from "./services/PermissionService";
     defaultPrefix: Constants.PREFIX,
     intents: Constants.INTENTS,
     presence: Constants.PRESENCE,
-    caseInsensitiveCommands: true,
     loadMessageCommandListeners: true,
   });
   ApplicationCommandRegistries.setDefaultBehaviorWhenNotIdentical(
