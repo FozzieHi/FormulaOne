@@ -83,10 +83,10 @@ export class SlowmodeCommand extends Command {
           "Changed Slowmode",
           "Status",
           "Enabled",
-          "Channel",
-          interaction.channel.toString(),
           "Duration",
           `${seconds} seconds`,
+          "Channel",
+          interaction.channel.toString(),
         ],
         Constants.WARN_COLOR
       );
