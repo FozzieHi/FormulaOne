@@ -4,12 +4,12 @@ import { ModerationService } from "../../services/ModerationService";
 
 export class NoModeratorPrecondition extends Precondition {
   public async chatInputRun(interaction: CommandInteraction) {
-    const target =
-      interaction.options.getUser("user") ??
-      (interaction.options.getMember("member") as GuildMember)?.user;
     if (interaction.guild == null) {
       return this.error({ message: "Guild is null or undefined." });
     }
+    const target =
+      interaction.options.getUser("user") ??
+      (interaction.options.getMember("member") as GuildMember)?.user;
     return target == null ||
       !(await ModerationService.isModerator(interaction.guild, target))
       ? this.ok()

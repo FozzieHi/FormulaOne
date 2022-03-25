@@ -5,22 +5,17 @@ import {
   CommandOptionsRunTypeEnum,
 } from "@sapphire/framework";
 import { CommandInteraction } from "discord.js";
-import {
-  dm,
-  replyInteractionError,
-  replyInteractionPublic,
-} from "../../utility/Sender";
+import { dm, replyInteractionPublic } from "../../utility/Sender";
 import { Constants } from "../../utility/Constants";
 import { modLog } from "../../services/ModerationService";
 import { StringUtil } from "../../utility/StringUtil";
-import Try from "../../utility/Try";
 
 export class UnbanCommand extends Command {
   public constructor(context: Command.Context) {
     super(context, {
       requiredClientPermissions: ["BAN_MEMBERS"],
       runIn: CommandOptionsRunTypeEnum.GuildText,
-      preconditions: ["Stewards"],
+      preconditions: ["Stewards", "BannedUser"],
     });
   }
 
@@ -63,11 +58,6 @@ export class UnbanCommand extends Command {
       interaction.channel == null ||
       interaction.guild == null
     ) {
-      return;
-    }
-    const ban = await Try(interaction.guild.bans.fetch(user));
-    if (!ban) {
-      await replyInteractionError(interaction, "Banned user not found.");
       return;
     }
 
