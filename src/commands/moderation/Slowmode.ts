@@ -118,7 +118,7 @@ export class SlowmodeCommand extends Command {
           "Channel",
           interaction.channel.toString(),
         ],
-        Constants.WARN_COLOR
+        Constants.UNMUTE_COLOR
       );
     }
   }

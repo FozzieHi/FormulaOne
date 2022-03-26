@@ -126,7 +126,7 @@ export class FilterCommand extends Command {
           "Channel",
           interaction.channel.toString(),
         ],
-        Constants.WARN_COLOR
+        Constants.UNMUTE_COLOR
       );
       if (channelDescription != null) {
         await (interaction.channel as TextChannel).setTopic(
