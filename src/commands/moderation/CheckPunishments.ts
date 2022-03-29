@@ -63,20 +63,26 @@ export class CheckPunishmentsCommand extends Command {
     }
     const fieldsAndValues = await PunishmentUtil.getHistory(user, interaction.guild);
     const maxPages = Math.max(1, Math.trunc(dbUser.punishments.length / 5));
+    const currentPun = dbUser.currentPunishment;
     const embedOptions: MessageEmbedOptions = {
       title: `${user.tag}'s Punishment History (1/${maxPages})`,
+      footer: {
+        text: `${user.tag} has ${currentPun} punishment${
+          currentPun !== 1 ? "s" : ""
+        } in the last 30 days`,
+      },
     };
 
     const buttons: Array<Array<MessageButton>> = [
       [
         new MessageButton({
-          customId: `ppage-1-${maxPages}-${user.id}`,
+          customId: `ppage-1-${maxPages}-${currentPun}-${user.id}`,
           emoji: "⬅",
           style: "SECONDARY",
           disabled: true,
         }),
         new MessageButton({
-          customId: `npage-1-${maxPages}-${user.id}`,
+          customId: `npage-1-${maxPages}-${currentPun}-${user.id}`,
           emoji: "➡",
           style: "SECONDARY",
           disabled: dbUser.punishments.length <= 5,

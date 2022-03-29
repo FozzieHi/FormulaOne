@@ -37,18 +37,23 @@ export class PagesInteraction extends InteractionHandler {
       title: `${user.tag}'s Punishment History (${newPage}/${parsedData.maxPages})`,
       color: interaction.message.embeds[0].color ?? undefined,
       fields: getFields(fieldsAndValues),
+      footer: {
+        text: `${user.tag} has ${parsedData.currentPun} punishment${
+          parsedData.currentPun !== 1 ? "s" : ""
+        } in the last 30 days`,
+      },
     };
 
     const buttons: Array<Array<MessageButton>> = [
       [
         new MessageButton({
-          customId: `ppage-${newPage}-${parsedData.maxPages}-${user.id}`,
+          customId: `ppage-${newPage}-${parsedData.maxPages}-${parsedData.currentPun}-${user.id}`,
           emoji: "⬅",
           style: "SECONDARY",
           disabled: newPage === 1,
         }),
         new MessageButton({
-          customId: `npage-${newPage}-${parsedData.maxPages}-${user.id}`,
+          customId: `npage-${newPage}-${parsedData.maxPages}-${parsedData.currentPun}-${user.id}`,
           emoji: "➡",
           style: "SECONDARY",
           disabled: newPage === parsedData.maxPages,
@@ -73,11 +78,12 @@ export class PagesInteraction extends InteractionHandler {
       return this.none();
     }
     const split = interaction.customId.split("-");
-    const [action, pageNum, maxPages, userId] = split;
+    const [action, pageNum, maxPages, currentPun, userId] = split;
     return this.some({
       action,
       pageNum: parseInt(pageNum, 10),
       maxPages: parseInt(maxPages, 10),
+      currentPun: parseInt(currentPun, 10),
       userId,
     });
   }
