@@ -1,8 +1,6 @@
 import {
-  Awaitable,
   InteractionHandler,
   InteractionHandlerTypes,
-  Maybe,
   PieceContext,
 } from "@sapphire/framework";
 import { ButtonInteraction, Snowflake } from "discord.js";
@@ -18,10 +16,10 @@ export class UserIDInteraction extends InteractionHandler {
     await interaction.reply({ content: userId, ephemeral: true });
   }
 
-  public parse(interaction: ButtonInteraction): Awaitable<Maybe<unknown>> {
+  public parse(interaction: ButtonInteraction) {
     if (!interaction.customId.startsWith("userid-")) {
       return this.none();
     }
-    return this.some(interaction.customId.split("userid-")[1]);
+    return this.some(interaction.customId.split("-")[1]);
   }
 }

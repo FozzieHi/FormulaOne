@@ -1,5 +1,6 @@
 import {
   CommandInteraction,
+  EmbedFieldData,
   InteractionReplyOptions,
   Message,
   MessageEmbedOptions,
@@ -11,6 +12,20 @@ import { StringUtil } from "./StringUtil";
 import { Embed } from "../structures/Embed";
 import { Constants } from "./Constants";
 import Try from "./Try";
+import { NumberUtil } from "./NumberUtil";
+
+export function getFields(fieldsAndValues: Array<string>): Array<EmbedFieldData> {
+  const fields = [];
+  for (let i = 0; i < fieldsAndValues.length - 1; i += 1) {
+    if (NumberUtil.isEven(i)) {
+      fields.push({
+        name: fieldsAndValues[i],
+        value: fieldsAndValues[i + 1].toString(),
+      });
+    }
+  }
+  return fields;
+}
 
 export async function send(
   channel: TextBasedChannel | User,
@@ -29,6 +44,15 @@ export async function sendError(channel: TextBasedChannel | User, description: s
   return send(channel, description, { color: Constants.ERROR_COLOR });
 }
 
+export async function sendFields(
+  channel: TextBasedChannel | User,
+  fieldsAndValues: Array<string>,
+  embedOptions: MessageEmbedOptions = {}
+): Promise<Message> {
+  embedOptions.fields = getFields(fieldsAndValues);
+  return send(channel, undefined, embedOptions);
+}
+
 export async function dm(
   user: User,
   description: string,
@@ -44,11 +68,13 @@ export async function dm(
 
 async function sendInteraction(
   interaction: CommandInteraction,
-  description: string,
+  description: string | undefined,
   embedOptions: MessageEmbedOptions = {},
   messageOptions: InteractionReplyOptions = {}
 ) {
-  embedOptions.description = description;
+  if (description != null) {
+    embedOptions.description = description;
+  }
   messageOptions.embeds = [new Embed(embedOptions)];
   return interaction.reply(messageOptions);
 }
@@ -97,6 +123,16 @@ export async function replyInteractionPublic(
     `${StringUtil.boldify(interaction.user.tag)}, ${description}`,
     embedOptions
   );
+}
+
+export async function replyInteractionPublicFields(
+  interaction: CommandInteraction,
+  fieldsAndValues: Array<string>,
+  embedOptions: MessageEmbedOptions = {},
+  messageOptions: MessageOptions = {}
+) {
+  embedOptions.fields = getFields(fieldsAndValues);
+  return sendInteraction(interaction, undefined, embedOptions, messageOptions);
 }
 
 export async function replyInteractionError(
