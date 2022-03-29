@@ -19,7 +19,7 @@ export class PagesInteraction extends InteractionHandler {
     interaction: ButtonInteraction,
     parsedData: InteractionHandler.ParseResult<this>
   ) {
-    const user = interaction.client.users.cache.get(parsedData.userId);
+    const user = await interaction.client.users.fetch(parsedData.userId);
     if (user == null || interaction.guild == null) {
       return;
     }
