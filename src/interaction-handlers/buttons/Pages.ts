@@ -25,7 +25,7 @@ export class PagesInteraction extends InteractionHandler {
     }
     const newPage =
       parsedData.action === "ppage" ? parsedData.pageNum - 1 : parsedData.pageNum + 1;
-    if (newPage < 0 || newPage > parsedData.maxPages) {
+    if (newPage < 1 || newPage > parsedData.maxPages) {
       return;
     }
     const fieldsAndValues = await PunishmentUtil.getHistory(
