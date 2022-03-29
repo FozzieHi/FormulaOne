@@ -31,7 +31,7 @@ export class PagesInteraction extends InteractionHandler {
     const fieldsAndValues = await PunishmentUtil.getHistory(
       user,
       interaction.guild,
-      newPage * 5
+      (newPage - 1) * 5
     );
     const embedOptions: MessageEmbedOptions = {
       title: `${user.tag}'s Punishment History (${newPage}/${parsedData.maxPages})`,

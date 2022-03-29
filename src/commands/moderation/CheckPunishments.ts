@@ -62,7 +62,7 @@ export class CheckPunishmentsCommand extends Command {
       return;
     }
     const fieldsAndValues = await PunishmentUtil.getHistory(user, interaction.guild);
-    const maxPages = Math.max(1, Math.trunc(dbUser.punishments.length / 5));
+    const maxPages = Math.max(1, Math.ceil(dbUser.punishments.length / 5));
     const embedOptions: MessageEmbedOptions = {
       title: `${user.tag}'s Punishment History (1/${maxPages})`,
       footer: {
