@@ -8,7 +8,7 @@ import { PunishmentUtil } from "../../utility/PunishmentUtil";
 import { Embed } from "../../structures/Embed";
 import { getFields } from "../../utility/Sender";
 
-export class PagesInteraction extends InteractionHandler {
+export class CheckPunishmentsPagesInteraction extends InteractionHandler {
   public constructor(context: PieceContext) {
     super(context, {
       interactionHandlerType: InteractionHandlerTypes.Button,
