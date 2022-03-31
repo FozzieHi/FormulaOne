@@ -7,8 +7,7 @@
   "compilerOptions": {
     "target": "ES2021",
     "lib": ["ES2021"],
-    "noImplicitAny": true,
-    "strictNullChecks": true,
+    "strict": true,
     "resolveJsonModule": true
   }
 }
