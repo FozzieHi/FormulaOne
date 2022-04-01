@@ -37,7 +37,6 @@ export class FlairCommand extends Command {
             type: "SUB_COMMAND",
           },
         ],
-        defaultPermission: false,
       },
       {
         guildIds: Constants.GUILD_IDS,

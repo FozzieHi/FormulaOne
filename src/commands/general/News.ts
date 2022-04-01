@@ -26,6 +26,7 @@ export class NewsCommand extends Command {
             required: true,
           },
         ],
+        defaultPermission: false,
       },
       {
         guildIds: Constants.GUILD_IDS,
