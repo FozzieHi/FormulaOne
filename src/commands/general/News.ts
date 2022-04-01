@@ -29,6 +29,7 @@ export class NewsCommand extends Command {
       },
       {
         guildIds: Constants.GUILD_IDS,
+        idHints: ["959532806986420285"],
       }
     );
   }
