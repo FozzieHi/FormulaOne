@@ -18,15 +18,18 @@ export class PermissionService {
       "955230109890146404",
       "956490929747918899",
     ];
+
     const helperPermissions: Array<ApplicationCommandPermissionData> = [
       { id: Constants.ROLES.HELPERS, type: "ROLE", permission: true },
     ];
     const marshalPermissions = this.getPermData(1);
     const stewardPermissions = this.getPermData(2);
+
     const guild = container.client.guilds.cache.get(Constants.GUILD_IDS[0]);
     if (guild == null) {
       return;
     }
+
     await this.setPerms(guild, helperCommands, helperPermissions);
     await this.setPerms(guild, marshalCommands, marshalPermissions);
     await this.setPerms(guild, stewardCommands, stewardPermissions);

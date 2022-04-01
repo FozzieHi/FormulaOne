@@ -66,19 +66,6 @@ export async function dm(
   return result;
 }
 
-async function sendInteraction(
-  interaction: CommandInteraction,
-  description: string | undefined,
-  embedOptions: MessageEmbedOptions = {},
-  messageOptions: InteractionReplyOptions = {}
-) {
-  if (description != null) {
-    embedOptions.description = description;
-  }
-  messageOptions.embeds = [new Embed(embedOptions)];
-  return interaction.reply(messageOptions);
-}
-
 export async function replyMsg(
   message: Message,
   description: string
@@ -98,6 +85,19 @@ export async function replyMsgError(
     `${StringUtil.boldify(message.author.tag)}, ${description}`,
     { color: Constants.ERROR_COLOR }
   );
+}
+
+async function sendInteraction(
+  interaction: CommandInteraction,
+  description: string | undefined,
+  embedOptions: MessageEmbedOptions = {},
+  messageOptions: InteractionReplyOptions = {}
+) {
+  if (description != null) {
+    embedOptions.description = description;
+  }
+  messageOptions.embeds = [new Embed(embedOptions)];
+  return interaction.reply(messageOptions);
 }
 
 export async function replyInteraction(
