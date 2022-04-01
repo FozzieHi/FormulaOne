@@ -1,4 +1,5 @@
 import {
+  ButtonInteraction,
   CommandInteraction,
   EmbedFieldData,
   InteractionReplyOptions,
@@ -88,7 +89,7 @@ export async function replyMsgError(
 }
 
 async function sendInteraction(
-  interaction: CommandInteraction,
+  interaction: CommandInteraction | ButtonInteraction,
   description: string | undefined,
   embedOptions: MessageEmbedOptions = {},
   messageOptions: InteractionReplyOptions = {}
@@ -101,7 +102,7 @@ async function sendInteraction(
 }
 
 export async function replyInteraction(
-  interaction: CommandInteraction,
+  interaction: CommandInteraction | ButtonInteraction,
   description: string,
   embedOptions: MessageEmbedOptions = {}
 ) {
@@ -114,7 +115,7 @@ export async function replyInteraction(
 }
 
 export async function replyInteractionPublic(
-  interaction: CommandInteraction,
+  interaction: CommandInteraction | ButtonInteraction,
   description: string,
   embedOptions: MessageEmbedOptions = {}
 ) {
@@ -126,7 +127,7 @@ export async function replyInteractionPublic(
 }
 
 export async function replyInteractionPublicFields(
-  interaction: CommandInteraction,
+  interaction: CommandInteraction | ButtonInteraction,
   fieldsAndValues: Array<string>,
   embedOptions: MessageEmbedOptions = {},
   messageOptions: MessageOptions = {}
@@ -136,7 +137,7 @@ export async function replyInteractionPublicFields(
 }
 
 export async function replyInteractionError(
-  interaction: CommandInteraction,
+  interaction: CommandInteraction | ButtonInteraction,
   description: string,
   embedOptions: MessageEmbedOptions = {}
 ) {

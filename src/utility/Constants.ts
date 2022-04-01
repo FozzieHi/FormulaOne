@@ -28,6 +28,8 @@ export class Constants {
     STEWARDS: "177408501268611073",
     MARSHALS: "293845938764644352",
     HELPERS: "941601929178533919",
+    F1: "314910132733739009",
+    F2: "314910011358707712",
   };
 
   static readonly MOD_ROLES: Array<{ id: Snowflake; permissionLevel: number }> = [
@@ -65,6 +67,7 @@ export class Constants {
   ];
 
   static readonly CHANNELS = {
+    NEWS: "335167453350854666",
     MOD_LOGS: "447397947261452288",
   };
 
@@ -81,7 +84,8 @@ export class Constants {
     ],
   };
 
-  static readonly regexes = {
-    markdown: /([*~`_])+/g,
+  static readonly REGEXES = {
+    MARKDOWN: /([*~`_])+/g,
+    URL: /^(http|https):\/\/(\w+:?\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%\-/]))?$/,
   };
 }
