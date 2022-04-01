@@ -4,6 +4,7 @@ import { Constants } from "../utility/Constants";
 
 export class PermissionService {
   public static async register() {
+    const f2Commands: Array<Snowflake> = ["959532806986420285"];
     const helperCommands: Array<Snowflake> = ["956174760688115783"];
     const marshalCommands: Array<Snowflake> = [
       "954020435652128848",
@@ -19,6 +20,9 @@ export class PermissionService {
       "956490929747918899",
     ];
 
+    const f2Permissions: Array<ApplicationCommandPermissionData> = [
+      { id: Constants.ROLES.F2, type: "ROLE", permission: true },
+    ];
     const helperPermissions: Array<ApplicationCommandPermissionData> = [
       { id: Constants.ROLES.HELPERS, type: "ROLE", permission: true },
     ];
@@ -30,6 +34,7 @@ export class PermissionService {
       return;
     }
 
+    await this.setPerms(guild, f2Commands, f2Permissions);
     await this.setPerms(guild, helperCommands, helperPermissions);
     await this.setPerms(guild, marshalCommands, marshalPermissions);
     await this.setPerms(guild, stewardCommands, stewardPermissions);
