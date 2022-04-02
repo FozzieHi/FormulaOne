@@ -1,6 +1,10 @@
 import { ApplicationCommandRegistry, Awaitable, Command } from "@sapphire/framework";
 import { CommandInteraction, MessageButton, TextBasedChannel } from "discord.js";
-import { replyInteractionError, send } from "../../utility/Sender";
+import {
+  replyInteractionError,
+  replyInteractionPublic,
+  send,
+} from "../../utility/Sender";
 import { Constants } from "../../utility/Constants";
 import { StringUtil } from "../../utility/StringUtil";
 
@@ -69,6 +73,10 @@ export class NewsCommand extends Command {
           components: button,
         })),
       }
+    );
+    await replyInteractionPublic(
+      interaction,
+      `Successfully posted to ${newsChannel.toString()}`
     );
   }
 }
