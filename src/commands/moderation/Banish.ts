@@ -142,9 +142,8 @@ export class BanishCommand extends Command {
       return;
     }
     const role = interaction.guild.roles.cache.get(roleId);
-    const channel = interaction.guild.channels.cache.get(banishedRole.channelId);
-    if (role == null || channel == null) {
-      await replyInteractionError(interaction, "Could not fetch target role/channel.");
+    if (role == null) {
+      await replyInteractionError(interaction, "Could not fetch target role.");
       return;
     }
 
@@ -152,9 +151,9 @@ export class BanishCommand extends Command {
       if (member.roles.cache.has(roleId)) {
         await replyInteractionError(
           interaction,
-          `${StringUtil.boldify(
-            member.user.tag
-          )} is already banished from ${channel.toString()}`
+          `${StringUtil.boldify(member.user.tag)} is already banished from ${
+            banishedRole.name
+          }`
         );
         return;
       }
@@ -162,9 +161,9 @@ export class BanishCommand extends Command {
       await member.roles.add(roleId);
       await replyInteractionPublic(
         interaction,
-        `Successfully banished ${StringUtil.boldify(
-          member.user.tag
-        )} from ${channel.toString()}`
+        `Successfully banished ${StringUtil.boldify(member.user.tag)} from ${
+          banishedRole.name
+        }`
       );
       await db.userRepo?.upsertUser(
         member.id,
@@ -202,9 +201,9 @@ export class BanishCommand extends Command {
       if (!member.roles.cache.has(roleId)) {
         await replyInteractionError(
           interaction,
-          `${StringUtil.boldify(
-            member.user.tag
-          )} is not banished from ${channel.toString()}`
+          `${StringUtil.boldify(member.user.tag)} is not banished from ${
+            banishedRole.name
+          }`
         );
         return;
       }
@@ -212,9 +211,9 @@ export class BanishCommand extends Command {
       await member.roles.remove(roleId);
       await replyInteractionPublic(
         interaction,
-        `Successfully unbanished ${StringUtil.boldify(
-          member.user.tag
-        )} from ${channel.toString()}`
+        `Successfully unbanished ${StringUtil.boldify(member.user.tag)} from ${
+          banishedRole.name
+        }`
       );
       await modLog(
         interaction.guild,
