@@ -23,7 +23,8 @@ export class ModerationService {
       (a, b) => b.permissionLevel - a.permissionLevel
     );
     const permLevel =
-      modRoles.find((modRole) => member.roles.cache.has(modRole.id)) ?? 0;
+      modRoles.find((modRole) => member.roles.cache.has(modRole.id))?.permissionLevel ??
+      0;
     return member.permissions.has("ADMINISTRATOR") && permLevel < 2 ? 2 : permLevel;
   }
 
