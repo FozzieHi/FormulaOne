@@ -20,15 +20,10 @@ export class ModerationService {
       return 0;
     }
     const modRoles = Constants.MOD_ROLES.sort(
-      (a, b) => a.permissionLevel - b.permissionLevel
+      (a, b) => b.permissionLevel - a.permissionLevel
     );
-
-    let permLevel = 0;
-    modRoles.forEach((modRole) => {
-      if (member.roles.cache.has(modRole.id)) {
-        permLevel = modRole.permissionLevel;
-      }
-    });
+    const permLevel =
+      modRoles.find((modRole) => member.roles.cache.has(modRole.id)) ?? 0;
     return member.permissions.has("ADMINISTRATOR") && permLevel < 2 ? 2 : permLevel;
   }
 
