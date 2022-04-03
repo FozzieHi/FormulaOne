@@ -23,9 +23,12 @@ export class PermissionService {
     const f2Permissions: Array<ApplicationCommandPermissionData> = [
       { id: Constants.ROLES.F2, type: "ROLE", permission: true },
     ];
-    const helperPermissions: Array<ApplicationCommandPermissionData> = [
-      { id: Constants.ROLES.HELPERS, type: "ROLE", permission: true },
-    ];
+    const helperPermissions = this.getPermData(1);
+    helperPermissions.push({
+      id: Constants.ROLES.HELPERS,
+      type: "ROLE",
+      permission: true,
+    });
     const marshalPermissions = this.getPermData(1);
     const stewardPermissions = this.getPermData(2);
 
