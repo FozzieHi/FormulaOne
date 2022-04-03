@@ -41,23 +41,23 @@ export class Constants {
 
   static readonly BANISH_ROLES: Array<{
     name: string;
-    roleId: Snowflake;
+    id: Snowflake;
   }> = [
     {
       name: "f1-beginner-questions",
-      roleId: "941602889221165066",
+      id: "941602889221165066",
     },
     {
       name: "f1-discussion",
-      roleId: "821253279937462283",
+      id: "821253279937462283",
     },
     {
       name: "f1-serious",
-      roleId: "411950549064482823",
+      id: "411950549064482823",
     },
     {
       name: "f1-technical",
-      roleId: "433240749216104459",
+      id: "433240749216104459",
     },
   ];
 

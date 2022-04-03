@@ -34,7 +34,7 @@ export class BanishCommand extends Command {
   ): Awaitable<void> {
     const choices: Array<ApplicationCommandOptionChoice> = [];
     Constants.BANISH_ROLES.forEach((role) =>
-      choices.push({ name: role.name, value: role.roleId })
+      choices.push({ name: role.name, value: role.id })
     );
     registry.registerChatInputCommand(
       {
@@ -112,7 +112,7 @@ export class BanishCommand extends Command {
       return;
     }
     const banishedRole = Constants.BANISH_ROLES.find(
-      (banishRole) => banishRole.roleId === roleId
+      (banishRole) => banishRole.id === roleId
     );
     if (
       interaction.guild == null ||
