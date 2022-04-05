@@ -1,10 +1,6 @@
 import { ApplicationCommandRegistry, Awaitable, Command } from "@sapphire/framework";
 import { CommandInteraction, MessageButton, TextBasedChannel } from "discord.js";
-import {
-  replyInteractionError,
-  replyInteractionPublic,
-  send,
-} from "../../utility/Sender";
+import { replyInteractionError, replyInteractionPublic } from "../../utility/Sender";
 import { Constants } from "../../utility/Constants";
 import { StringUtil } from "../../utility/StringUtil";
 
@@ -49,7 +45,9 @@ export class NewsCommand extends Command {
       return;
     }
 
-    const newsChannel = interaction.guild.channels.cache.get(Constants.CHANNELS.NEWS);
+    const newsChannel = interaction.guild.channels.cache.get(
+      Constants.CHANNELS.NEWS
+    ) as TextBasedChannel;
     if (newsChannel == null) {
       return;
     }
@@ -63,17 +61,13 @@ export class NewsCommand extends Command {
         }),
       ],
     ];
-    await send(
-      newsChannel as TextBasedChannel,
-      `${url} sent by ${StringUtil.boldify(interaction.user.tag)}`,
-      {},
-      {
-        components: buttons.map((button) => ({
-          type: "ACTION_ROW",
-          components: button,
-        })),
-      }
-    );
+    await newsChannel.send({
+      content: `${url} sent by ${StringUtil.boldify(interaction.user.tag)}`,
+      components: buttons.map((button) => ({
+        type: "ACTION_ROW",
+        components: button,
+      })),
+    });
     await replyInteractionPublic(
       interaction,
       `Successfully posted to ${newsChannel.toString()}`
