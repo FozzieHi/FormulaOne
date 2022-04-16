@@ -5,7 +5,7 @@ import {
   CommandOptionsRunTypeEnum,
 } from "@sapphire/framework";
 import { CommandInteraction, TextBasedChannel } from "discord.js";
-import { replyInteraction, send } from "../../utility/Sender";
+import { replyInteractionPublic, send } from "../../utility/Sender";
 import { Constants } from "../../utility/Constants";
 
 export class SayCommand extends Command {
@@ -55,6 +55,6 @@ export class SayCommand extends Command {
     }
 
     await send(channel, message);
-    await replyInteraction(interaction, "Successfully sent the message.");
+    await replyInteractionPublic(interaction, "Successfully sent the message.");
   }
 }
