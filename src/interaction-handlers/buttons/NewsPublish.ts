@@ -33,6 +33,18 @@ export class NewsPublishInteraction extends InteractionHandler {
       });
       return;
     }
+    if (Date.now() - message.createdTimestamp > 1.728e8) {
+      // 48 hours in milliseconds
+      await replyInteractionError(
+        interaction,
+        "A message may only be published within the first 48 hours of its submission."
+      );
+      await message.edit({
+        content: message.content,
+        components: [],
+      });
+      return;
+    }
     if (!(await ModerationService.isModerator(interaction.guild, interaction.user))) {
       if (!member.roles.cache.has(Constants.ROLES.F1)) {
         await replyInteractionError(
