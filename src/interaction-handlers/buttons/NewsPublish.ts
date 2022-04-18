@@ -22,29 +22,6 @@ export class NewsPublishInteraction extends InteractionHandler {
 
     const message = interaction.message as Message;
     const member = interaction.member as GuildMember;
-    if (!message.crosspostable) {
-      await replyInteractionError(
-        interaction,
-        "Cannot publish message, maybe it is already published?"
-      );
-      await message.edit({
-        content: message.content,
-        components: [],
-      });
-      return;
-    }
-    if (Date.now() - message.createdTimestamp > 1.728e8) {
-      // 48 hours in milliseconds
-      await replyInteractionError(
-        interaction,
-        "A message may only be published within the first 48 hours of its submission."
-      );
-      await message.edit({
-        content: message.content,
-        components: [],
-      });
-      return;
-    }
     if (!(await ModerationService.isModerator(interaction.guild, interaction.user))) {
       if (!member.roles.cache.has(Constants.ROLES.F1)) {
         await replyInteractionError(
@@ -61,6 +38,31 @@ export class NewsPublishInteraction extends InteractionHandler {
         );
         return;
       }
+    }
+
+    if (!message.crosspostable) {
+      await replyInteractionError(
+        interaction,
+        "Cannot publish message, maybe it is already published?"
+      );
+      await message.edit({
+        content: message.content,
+        components: [],
+      });
+      return;
+    }
+
+    if (Date.now() - message.createdTimestamp > 1.728e8) {
+      // 48 hours in milliseconds
+      await replyInteractionError(
+        interaction,
+        "A message may only be published within the first 48 hours of its submission."
+      );
+      await message.edit({
+        content: message.content,
+        components: [],
+      });
+      return;
     }
 
     await message.crosspost();
