@@ -5,7 +5,7 @@ import {
   CommandOptionsRunTypeEnum,
 } from "@sapphire/framework";
 import {
-  ApplicationCommandOptionChoice,
+  ApplicationCommandOptionChoiceData,
   CommandInteraction,
   GuildMember,
 } from "discord.js";
@@ -32,7 +32,7 @@ export class BanishCommand extends Command {
   public override registerApplicationCommands(
     registry: ApplicationCommandRegistry
   ): Awaitable<void> {
-    const choices: Array<ApplicationCommandOptionChoice> = [];
+    const choices: Array<ApplicationCommandOptionChoiceData> = [];
     Constants.BANISH_ROLES.forEach((role) =>
       choices.push({ name: role.name, value: role.id })
     );
