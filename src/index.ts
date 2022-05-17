@@ -8,7 +8,6 @@ import {
   container,
 } from "@sapphire/framework";
 import { Constants } from "./utility/Constants";
-import { PermissionService } from "./services/PermissionService";
 
 (async () => {
   const client = new SapphireClient({
@@ -25,5 +24,4 @@ import { PermissionService } from "./services/PermissionService";
   await db.connect(credentials.mongodbConnectionURL, credentials.dbName);
   container.logger.info(`Database: Took ${Date.now() - start}ms to connect.`);
   await client.login(credentials.token);
-  await PermissionService.register();
 })().catch((err) => container.logger.error(err));
