@@ -40,7 +40,7 @@ export class FlairCommand extends Command {
       },
       {
         guildIds: Constants.GUILD_IDS,
-        idHints: ["953938047404245023"],
+        idHints: ["977147655698403328"],
       }
     );
   }

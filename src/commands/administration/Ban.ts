@@ -42,11 +42,10 @@ export class BanCommand extends Command {
             required: true,
           },
         ],
-        defaultPermission: false,
       },
       {
         guildIds: Constants.GUILD_IDS,
-        idHints: ["955204850902265986"],
+        idHints: ["977147741937500260"],
       }
     );
   }

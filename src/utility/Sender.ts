@@ -1,11 +1,14 @@
 import {
   ButtonInteraction,
   CommandInteraction,
+  ContextMenuInteraction,
   EmbedFieldData,
   InteractionReplyOptions,
+  InteractionUpdateOptions,
   Message,
   MessageEmbedOptions,
   MessageOptions,
+  SelectMenuInteraction,
   TextBasedChannel,
   User,
 } from "discord.js";
@@ -88,29 +91,35 @@ export async function replyMsgError(
   );
 }
 
-async function sendInteraction(
-  interaction: CommandInteraction | ButtonInteraction,
+async function replyInteractionHandler(
+  interaction: CommandInteraction | ButtonInteraction | ContextMenuInteraction,
   description: string | undefined,
-  embedOptions: MessageEmbedOptions = {},
+  embedOptions: MessageEmbedOptions | null = {},
   messageOptions: InteractionReplyOptions = {}
 ) {
-  if (description != null) {
+  if (embedOptions != null && description != null) {
     embedOptions.description = description;
   }
-  messageOptions.embeds = [new Embed(embedOptions)];
+  if (embedOptions != null) {
+    messageOptions.embeds = [new Embed(embedOptions)];
+  }
   return interaction.reply(messageOptions);
 }
 
 export async function replyInteraction(
-  interaction: CommandInteraction | ButtonInteraction,
-  description: string,
-  embedOptions: MessageEmbedOptions = {}
+  interaction: CommandInteraction | ButtonInteraction | ContextMenuInteraction,
+  description: string | undefined,
+  embedOptions: MessageEmbedOptions | null = {},
+  messageOptions: InteractionReplyOptions = {}
 ) {
-  return sendInteraction(
+  messageOptions.ephemeral = true;
+  return replyInteractionHandler(
     interaction,
-    `${StringUtil.boldify(interaction.user.tag)}, ${description}`,
+    description != null
+      ? `${StringUtil.boldify(interaction.user.tag)}, ${description}`
+      : undefined,
     embedOptions,
-    { ephemeral: true }
+    messageOptions
   );
 }
 
@@ -119,7 +128,7 @@ export async function replyInteractionPublic(
   description: string,
   embedOptions: MessageEmbedOptions = {}
 ) {
-  return sendInteraction(
+  return replyInteractionHandler(
     interaction,
     `${StringUtil.boldify(interaction.user.tag)}, ${description}`,
     embedOptions
@@ -130,22 +139,53 @@ export async function replyInteractionPublicFields(
   interaction: CommandInteraction | ButtonInteraction,
   fieldsAndValues: Array<string>,
   embedOptions: MessageEmbedOptions = {},
-  messageOptions: MessageOptions = {}
+  messageOptions: InteractionReplyOptions = {}
 ) {
   embedOptions.fields = getFields(fieldsAndValues);
-  return sendInteraction(interaction, undefined, embedOptions, messageOptions);
+  return replyInteractionHandler(interaction, undefined, embedOptions, messageOptions);
 }
 
 export async function replyInteractionError(
-  interaction: CommandInteraction | ButtonInteraction,
+  interaction: CommandInteraction | ButtonInteraction | ContextMenuInteraction,
   description: string,
   embedOptions: MessageEmbedOptions = {}
 ) {
   embedOptions.color = Constants.ERROR_COLOR;
-  return sendInteraction(
+  return replyInteractionHandler(
     interaction,
     `${StringUtil.boldify(interaction.user.tag)}, ${description}`,
     embedOptions,
     { ephemeral: true }
+  );
+}
+
+async function updateInteractionHandler(
+  interaction: ButtonInteraction | SelectMenuInteraction,
+  description: string | undefined,
+  embedOptions: MessageEmbedOptions | null = {},
+  messageOptions: InteractionUpdateOptions = {}
+) {
+  if (embedOptions != null && description != null) {
+    embedOptions.description = description;
+  }
+  if (embedOptions != null) {
+    messageOptions.embeds = [new Embed(embedOptions)];
+  }
+  return interaction.update(messageOptions);
+}
+
+export async function updateInteraction(
+  interaction: ButtonInteraction | SelectMenuInteraction,
+  description: string | undefined,
+  embedOptions: MessageEmbedOptions | null = {},
+  messageOptions: InteractionUpdateOptions = {}
+) {
+  return updateInteractionHandler(
+    interaction,
+    description != null
+      ? `${StringUtil.boldify(interaction.user.tag)}, ${description}`
+      : undefined,
+    embedOptions,
+    messageOptions
   );
 }

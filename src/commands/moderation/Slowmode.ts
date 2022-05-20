@@ -47,11 +47,10 @@ export class SlowmodeCommand extends Command {
             type: "SUB_COMMAND",
           },
         ],
-        defaultPermission: false,
       },
       {
         guildIds: Constants.GUILD_IDS,
-        idHints: ["954020435652128848"],
+        idHints: ["977147567160840232"],
       }
     );
   }

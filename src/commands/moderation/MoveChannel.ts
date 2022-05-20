@@ -43,11 +43,10 @@ export class MoveChannelCommand extends Command {
             required: true,
           },
         ],
-        defaultPermission: false,
       },
       {
         guildIds: Constants.GUILD_IDS,
-        idHints: ["954332128408113173"],
+        idHints: ["977147565327921152"],
       }
     );
   }

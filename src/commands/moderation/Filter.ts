@@ -41,11 +41,10 @@ export class FilterCommand extends Command {
             type: "SUB_COMMAND",
           },
         ],
-        defaultPermission: false,
       },
       {
         guildIds: Constants.GUILD_IDS,
-        idHints: ["954752295218843728"],
+        idHints: ["977147571007012864"],
       }
     );
   }

@@ -40,11 +40,10 @@ export class UnbanCommand extends Command {
             required: true,
           },
         ],
-        defaultPermission: false,
       },
       {
         guildIds: Constants.GUILD_IDS,
-        idHints: ["955230109890146404"],
+        idHints: ["977147658479231046"],
       }
     );
   }

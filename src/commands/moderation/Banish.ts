@@ -7,11 +7,16 @@ import {
 import {
   ApplicationCommandOptionChoiceData,
   CommandInteraction,
+  ContextMenuInteraction,
+  Guild,
   GuildMember,
+  MessageSelectMenu,
+  MessageSelectOptionData,
 } from "discord.js";
 import db from "../../database";
 import {
   dm,
+  replyInteraction,
   replyInteractionError,
   replyInteractionPublic,
 } from "../../utility/Sender";
@@ -32,10 +37,19 @@ export class BanishCommand extends Command {
   public override registerApplicationCommands(
     registry: ApplicationCommandRegistry
   ): Awaitable<void> {
-    const choices: Array<ApplicationCommandOptionChoiceData> = [];
+    const ruleChoices: Array<ApplicationCommandOptionChoiceData> = [];
+    Constants.RULES.forEach((rule, i) => {
+      ruleChoices.push({
+        name: `Rule ${i + 1} - ${rule}`,
+        value: i,
+      });
+    });
+
+    const roleChoices: Array<ApplicationCommandOptionChoiceData> = [];
     Constants.BANISH_ROLES.forEach((role) =>
-      choices.push({ name: role.name, value: role.id })
+      roleChoices.push({ name: role.name, value: role.id })
     );
+
     registry.registerChatInputCommand(
       {
         name: this.name,
@@ -55,14 +69,15 @@ export class BanishCommand extends Command {
               {
                 name: "reason",
                 description: "The reason for the banish",
-                type: "STRING",
+                type: "NUMBER",
+                choices: ruleChoices,
                 required: true,
               },
               {
                 name: "channel",
                 description: "The channel to banish the member from",
                 type: "STRING",
-                choices,
+                choices: roleChoices,
                 required: true,
               },
             ],
@@ -88,17 +103,27 @@ export class BanishCommand extends Command {
                 name: "channel",
                 description: "The channel to unbanish the member from",
                 type: "STRING",
-                choices,
+                choices: roleChoices,
                 required: true,
               },
             ],
           },
         ],
-        defaultPermission: false,
       },
       {
         guildIds: Constants.GUILD_IDS,
-        idHints: ["956174760688115783"],
+        idHints: ["977147652972105748"],
+      }
+    );
+
+    registry.registerContextMenuCommand(
+      {
+        name: "Banish",
+        type: "MESSAGE",
+      },
+      {
+        guildIds: Constants.GUILD_IDS,
+        idHints: ["977175035930361976"],
       }
     );
   }
@@ -106,7 +131,16 @@ export class BanishCommand extends Command {
   public async chatInputRun(interaction: CommandInteraction) {
     const subcommand = interaction.options.getSubcommand();
     const member = interaction.options.getMember("member") as GuildMember;
-    const reason = interaction.options.getString("reason");
+    let reason;
+    if (subcommand === "add") {
+      const ruleNumber = interaction.options.getNumber("reason");
+      if (ruleNumber == null) {
+        return;
+      }
+      reason = `Rule ${ruleNumber + 1} - ${Constants.RULES[ruleNumber]}`;
+    } else if (subcommand === "remove") {
+      reason = interaction.options.getString("reason");
+    }
     const roleId = interaction.options.getString("channel");
     if (roleId == null) {
       return;
@@ -122,6 +156,7 @@ export class BanishCommand extends Command {
     ) {
       return;
     }
+
     const helper =
       (await ModerationService.getPermLevel(interaction.guild, interaction.user)) === 0;
     if (helper && banishedRole.name !== "f1-beginner-questions") {
@@ -237,5 +272,71 @@ export class BanishCommand extends Command {
         interaction.channel
       );
     }
+  }
+
+  public async contextMenuRun(interaction: ContextMenuInteraction) {
+    const message = interaction.options.getMessage("message");
+    if (message == null) {
+      return;
+    }
+    const moderator = interaction.member as GuildMember;
+    const targetMember = (interaction.guild as Guild).members.cache.get(
+      message.author.id
+    );
+    if (moderator == null || targetMember == null) {
+      return;
+    }
+
+    if (
+      (await ModerationService.getPermLevel(
+        interaction.guild as Guild,
+        moderator.user
+      )) > 0 ||
+      ((await ModerationService.getPermLevel(
+        interaction.guild as Guild,
+        moderator.user
+      )) === 0 &&
+        targetMember.roles.cache.has(Constants.ROLES.BEGINNERS_QUESTIONS))
+    ) {
+      await replyInteractionError(
+        interaction,
+        "You may not use this command on a moderator."
+      );
+      return;
+    }
+
+    const roleOptions: Array<MessageSelectOptionData> = [];
+    if (
+      (await ModerationService.getPermLevel(
+        interaction.guild as Guild,
+        moderator.user
+      )) > 0
+    ) {
+      Constants.BANISH_ROLES.forEach((role) =>
+        roleOptions.push({ label: role.name, value: role.id })
+      );
+    } else {
+      roleOptions.push({
+        label: "f1-beginner-questions",
+        value: Constants.ROLES.BEGINNERS_QUESTIONS,
+      });
+    }
+    const optionSelect: Array<Array<MessageSelectMenu>> = [
+      [
+        new MessageSelectMenu({
+          customId: `banishchannelselect-${targetMember.id}`,
+          placeholder: "Select banish channel",
+          options: roleOptions,
+        }),
+      ],
+    ];
+
+    await replyInteraction(interaction, undefined, null, {
+      content: "Please select a channel.",
+      components: optionSelect.map((selectmenu) => ({
+        type: "ACTION_ROW",
+        components: selectmenu,
+      })),
+    });
   }
 }

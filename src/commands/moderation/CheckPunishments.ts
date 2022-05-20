@@ -37,11 +37,10 @@ export class CheckPunishmentsCommand extends Command {
             required: true,
           },
         ],
-        defaultPermission: false,
       },
       {
         guildIds: Constants.GUILD_IDS,
-        idHints: ["958292992983187507"],
+        idHints: ["977147654310088714"],
       }
     );
   }

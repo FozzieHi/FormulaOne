@@ -23,7 +23,10 @@ module.exports = {
         project: ["./tsconfig.json"],
       },
       rules: {
-        "class-methods-use-this": ["error", { exceptMethods: ["chatInputRun", "run"] }],
+        "class-methods-use-this": [
+          "error",
+          { exceptMethods: ["chatInputRun", "contextMenuRun", "run"] },
+        ],
         "import/prefer-default-export": "off",
         "no-param-reassign": [
           "error",

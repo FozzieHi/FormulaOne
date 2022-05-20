@@ -38,11 +38,10 @@ export class SayCommand extends Command {
             required: true,
           },
         ],
-        defaultPermission: false,
       },
       {
         guildIds: Constants.GUILD_IDS,
-        idHints: ["956490929747918899"],
+        idHints: ["977147740314284052"],
       }
     );
   }

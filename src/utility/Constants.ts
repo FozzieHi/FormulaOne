@@ -22,6 +22,20 @@ export class Constants {
 
   static readonly GUILD_IDS: Array<Snowflake> = ["177387572505346048"];
 
+  static readonly RULES: Array<string> = [
+    "Adhere to the r/formula1 server rules and Discord community guidelines and Terms of Service",
+    "Circumventing moderation action is prohibited",
+    "Illegal, harmful and NSFW/NSFL content is prohibited",
+    "Do not send low-quality messages",
+    "Be respectful and act in good faith",
+    "Do not enforce these rules on behalf of a moderator",
+    "No self-promotion",
+    "Agree to disagree",
+    "Usernames",
+    "Use relevant channels and read the channel topic and pinned messages",
+    "Keep all discussions in English",
+  ];
+
   static readonly ROLES = {
     BOT_DEV: "424590836777484291",
     ADMIN: "177408413381165056",
@@ -30,6 +44,7 @@ export class Constants {
     HELPERS: "941601929178533919",
     F1: "314910132733739009",
     F2: "314910011358707712",
+    BEGINNERS_QUESTIONS: "941602889221165066",
   };
 
   static readonly MOD_ROLES: Array<{ id: Snowflake; permissionLevel: number }> = [

@@ -35,11 +35,10 @@ export class ClearCommand extends Command {
             maxValue: 200,
           },
         ],
-        defaultPermission: false,
       },
       {
         guildIds: Constants.GUILD_IDS,
-        idHints: ["954305075306717194"],
+        idHints: ["977147568360415242"],
       }
     );
   }

@@ -26,11 +26,10 @@ export class NewsCommand extends Command {
             required: true,
           },
         ],
-        defaultPermission: false,
       },
       {
         guildIds: Constants.GUILD_IDS,
-        idHints: ["959532806986420285"],
+        idHints: ["977147657053167616"],
       }
     );
   }

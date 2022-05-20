@@ -42,11 +42,10 @@ export class KickCommand extends Command {
             required: true,
           },
         ],
-        defaultPermission: false,
       },
       {
         guildIds: Constants.GUILD_IDS,
-        idHints: ["955436856516948008"],
+        idHints: ["977147569648074772"],
       }
     );
   }
