@@ -6,8 +6,10 @@ import {
   InteractionReplyOptions,
   InteractionUpdateOptions,
   Message,
+  MessageComponentInteraction,
   MessageEmbedOptions,
   MessageOptions,
+  ModalSubmitInteraction,
   SelectMenuInteraction,
   TextBasedChannel,
   User,
@@ -92,7 +94,12 @@ export async function replyMsgError(
 }
 
 async function replyInteractionHandler(
-  interaction: CommandInteraction | ButtonInteraction | ContextMenuInteraction,
+  interaction:
+    | CommandInteraction
+    | ButtonInteraction
+    | ContextMenuInteraction
+    | SelectMenuInteraction
+    | ModalSubmitInteraction,
   description: string | undefined,
   embedOptions: MessageEmbedOptions | null = {},
   messageOptions: InteractionReplyOptions = {}
@@ -124,7 +131,12 @@ export async function replyInteraction(
 }
 
 export async function replyInteractionPublic(
-  interaction: CommandInteraction | ButtonInteraction,
+  interaction:
+    | CommandInteraction
+    | ButtonInteraction
+    | ContextMenuInteraction
+    | SelectMenuInteraction
+    | ModalSubmitInteraction,
   description: string,
   embedOptions: MessageEmbedOptions = {}
 ) {
@@ -146,7 +158,12 @@ export async function replyInteractionPublicFields(
 }
 
 export async function replyInteractionError(
-  interaction: CommandInteraction | ButtonInteraction | ContextMenuInteraction,
+  interaction:
+    | CommandInteraction
+    | ButtonInteraction
+    | ContextMenuInteraction
+    | SelectMenuInteraction
+    | ModalSubmitInteraction,
   description: string,
   embedOptions: MessageEmbedOptions = {}
 ) {
@@ -160,7 +177,7 @@ export async function replyInteractionError(
 }
 
 async function updateInteractionHandler(
-  interaction: ButtonInteraction | SelectMenuInteraction,
+  interaction: MessageComponentInteraction,
   description: string | undefined,
   embedOptions: MessageEmbedOptions | null = {},
   messageOptions: InteractionUpdateOptions = {}
@@ -175,7 +192,7 @@ async function updateInteractionHandler(
 }
 
 export async function updateInteraction(
-  interaction: ButtonInteraction | SelectMenuInteraction,
+  interaction: MessageComponentInteraction,
   description: string | undefined,
   embedOptions: MessageEmbedOptions | null = {},
   messageOptions: InteractionUpdateOptions = {}

@@ -17,7 +17,9 @@ export class BanishChannelSelect extends InteractionHandler {
     interaction: SelectMenuInteraction,
     parsedData: InteractionHandler.ParseResult<this>
   ) {
-    const member = (interaction.guild as Guild).members.cache.get(parsedData.memberId);
+    const member = (interaction.guild as Guild).members.cache.get(
+      parsedData.targetMemberId
+    );
     if (member == null) {
       return;
     }
@@ -25,13 +27,13 @@ export class BanishChannelSelect extends InteractionHandler {
     const buttons: Array<Array<MessageButton>> = [
       [
         new MessageButton({
-          customId: `addremoveoption-banish-${parsedData.memberId}-${parsedData.targetRoleId}-add`,
+          customId: `addremoveoption-banish-${parsedData.moderatorId}-${parsedData.targetMemberId}-${parsedData.targetRoleId}-add`,
           label: "Add",
           style: "SECONDARY",
           disabled: member.roles.cache.has(parsedData.targetRoleId),
         }),
         new MessageButton({
-          customId: `addremoveoption-banish-${parsedData.memberId}-${parsedData.targetRoleId}-remove`,
+          customId: `addremoveoption-banish-${parsedData.moderatorId}-${parsedData.targetMemberId}-${parsedData.targetRoleId}-remove`,
           label: "Remove",
           style: "SECONDARY",
           disabled: !member.roles.cache.has(parsedData.targetRoleId),
@@ -52,8 +54,10 @@ export class BanishChannelSelect extends InteractionHandler {
     if (!interaction.customId.startsWith("banishchannelselect-")) {
       return this.none();
     }
-    const memberId = interaction.customId.split("-")[1];
+    const split = interaction.customId.split("-");
+    split.shift();
+    const [moderatorId, targetMemberId] = split;
     const targetRoleId = interaction.values[0];
-    return this.some({ memberId, targetRoleId });
+    return this.some({ moderatorId, targetMemberId, targetRoleId });
   }
 }
