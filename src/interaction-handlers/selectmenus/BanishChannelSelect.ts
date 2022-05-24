@@ -42,7 +42,7 @@ export class BanishChannelSelect extends InteractionHandler {
     ];
 
     await updateInteraction(interaction, undefined, null, {
-      content: "Please select the action.",
+      content: "Please select an action.",
       components: buttons.map((button) => ({
         type: "ACTION_ROW",
         components: button,
