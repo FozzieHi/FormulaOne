@@ -21,7 +21,7 @@ import { BanishUtil } from "../../utility/BanishUtil";
 export class BanishCommand extends Command {
   public constructor(context: Command.Context) {
     super(context, {
-      requiredClientPermissions: ["MANAGE_ROLES"],
+      // requiredClientPermissions: ["MANAGE_ROLES"],
       runIn: CommandOptionsRunTypeEnum.GuildText,
       preconditions: ["Helpers", "MemberValidation"],
     });
