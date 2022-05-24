@@ -3,10 +3,16 @@ import {
   InteractionHandlerTypes,
   PieceContext,
 } from "@sapphire/framework";
-import { ButtonInteraction, MessageButton, MessageEmbedOptions } from "discord.js";
+import {
+  ButtonInteraction,
+  MessageButton,
+  MessageEmbedOptions,
+  User,
+} from "discord.js";
 import { PunishmentUtil } from "../../utility/PunishmentUtil";
 import { Embed } from "../../structures/Embed";
 import { getFields } from "../../utility/Sender";
+import TryVal from "../../utility/TryVal";
 
 export class CheckPunishmentsPagesInteraction extends InteractionHandler {
   public constructor(context: PieceContext) {
@@ -19,7 +25,9 @@ export class CheckPunishmentsPagesInteraction extends InteractionHandler {
     interaction: ButtonInteraction,
     parsedData: InteractionHandler.ParseResult<this>
   ) {
-    const user = await interaction.client.users.fetch(parsedData.userId);
+    const user = (await TryVal(
+      interaction.client.users.fetch(parsedData.userId)
+    )) as User;
     if (user == null || interaction.guild == null) {
       return;
     }
