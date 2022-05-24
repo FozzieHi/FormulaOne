@@ -69,7 +69,7 @@ export class NewsCommand extends Command {
     });
     await replyInteractionPublic(
       interaction,
-      `Successfully posted to ${newsChannel.toString()}`
+      `Successfully posted to ${newsChannel.toString()}.`
     );
   }
 }

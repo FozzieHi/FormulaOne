@@ -71,7 +71,7 @@ export class BanishUtil {
           interaction,
           `${StringUtil.boldify(targetMember.user.tag)} is already banished from ${
             banishedRole.name
-          }`
+          }.`
         );
         return;
       }
@@ -83,12 +83,12 @@ export class BanishUtil {
           interaction,
           `Successfully banished ${StringUtil.boldify(targetMember.user.tag)} from ${
             banishedRole.name
-          }`
+          }.`
         );
       } else {
         await updateInteraction(
           interaction as MessageComponentInteraction,
-          `Successfully banished ${StringUtil.boldify(targetMember.user.tag)}`,
+          `Successfully banished ${StringUtil.boldify(targetMember.user.tag)}.`,
           { color: Constants.UNMUTE_COLOR },
           { content: null, components: [] }
         );
@@ -96,7 +96,7 @@ export class BanishUtil {
           interaction.channel,
           `Successfully banished ${StringUtil.boldify(targetMember.user.tag)} from ${
             banishedRole.name
-          }`
+          }.`
         );
       }
       await db.userRepo?.upsertUser(
@@ -137,7 +137,7 @@ export class BanishUtil {
           interaction,
           `${StringUtil.boldify(targetMember.user.tag)} is not banished from ${
             banishedRole.name
-          }`
+          }.`
         );
         return;
       }
@@ -148,12 +148,12 @@ export class BanishUtil {
           interaction,
           `Successfully unbanished ${StringUtil.boldify(targetMember.user.tag)} from ${
             banishedRole.name
-          }`
+          }.`
         );
       } else {
         await updateInteraction(
           interaction as MessageComponentInteraction,
-          `Successfully unbanished ${StringUtil.boldify(targetMember.user.tag)}`,
+          `Successfully unbanished ${StringUtil.boldify(targetMember.user.tag)}.`,
           { color: Constants.UNMUTE_COLOR },
           { content: null, components: [] }
         );
@@ -161,7 +161,7 @@ export class BanishUtil {
           interaction.channel,
           `Successfully unbanished ${StringUtil.boldify(targetMember.user.tag)} from ${
             banishedRole.name
-          }`
+          }.`
         );
       }
       await modLog(
