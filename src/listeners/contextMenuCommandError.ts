@@ -9,7 +9,7 @@ export class ContextMenuCommandErrorListener extends Listener {
   public async run(error: UserError, { interaction }: ContextMenuCommandErrorPayload) {
     await replyInteractionError(interaction, error.message);
     this.container.logger.info(
-      `Unsuccessful (error) command result - ${interaction.user.tag} - ${interaction.commandName} - ${error.message}`
+      `Unsuccessful (error) context menu result - ${interaction.user.tag} - ${interaction.commandName} - ${error.message}`
     );
   }
 }

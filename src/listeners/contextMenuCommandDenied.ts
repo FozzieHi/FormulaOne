@@ -9,7 +9,7 @@ export class ContextMenuCommandDeniedListener extends Listener {
   public async run(error: UserError, { interaction }: ContextMenuCommandDeniedPayload) {
     await replyInteractionError(interaction, error.message);
     this.container.logger.info(
-      `Unsuccessful (denied) command result - ${interaction.user.tag} - ${interaction.commandName} - ${error.message}`
+      `Unsuccessful (denied) context menu result - ${interaction.user.tag} - ${interaction.commandName} - ${error.message}`
     );
   }
 }
