@@ -164,6 +164,7 @@ export class BanishCommand extends Command {
     }
 
     if (
+      targetMember.user.bot ||
       (await ModerationService.getPermLevel(
         interaction.guild as Guild,
         targetMember.user
