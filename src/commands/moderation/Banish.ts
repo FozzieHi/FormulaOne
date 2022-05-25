@@ -8,7 +8,6 @@ import {
   ApplicationCommandOptionChoiceData,
   CommandInteraction,
   ContextMenuInteraction,
-  Guild,
   GuildMember,
   MessageSelectMenu,
   MessageSelectOptionData,
@@ -152,27 +151,19 @@ export class BanishCommand extends Command {
 
   public async contextMenuRun(interaction: ContextMenuInteraction) {
     const message = interaction.options.getMessage("message");
-    if (message == null) {
+    if (interaction.guild == null || message == null) {
       return;
     }
     const moderator = interaction.member as GuildMember;
-    const targetMember = (interaction.guild as Guild).members.cache.get(
-      message.author.id
-    );
+    const targetMember = interaction.guild.members.cache.get(message.author.id);
     if (moderator == null || targetMember == null) {
       return;
     }
 
     if (
-      targetMember.user.bot ||
-      (await ModerationService.getPermLevel(
-        interaction.guild as Guild,
-        targetMember.user
-      )) > 0 ||
-      ((await ModerationService.getPermLevel(
-        interaction.guild as Guild,
-        moderator.user
-      )) === 0 &&
+      (await ModerationService.isModerator(interaction.guild, targetMember.user)) ||
+      ((await ModerationService.getPermLevel(interaction.guild, moderator.user)) ===
+        0 &&
         targetMember.roles.cache.has(Constants.ROLES.HELPERS))
     ) {
       await replyInteractionError(
@@ -183,12 +174,7 @@ export class BanishCommand extends Command {
     }
 
     const roleOptions: Array<MessageSelectOptionData> = [];
-    if (
-      (await ModerationService.getPermLevel(
-        interaction.guild as Guild,
-        moderator.user
-      )) > 0
-    ) {
+    if ((await ModerationService.getPermLevel(interaction.guild, moderator.user)) > 0) {
       Constants.BANISH_ROLES.forEach((role) =>
         roleOptions.push({ label: role.name, value: role.id })
       );

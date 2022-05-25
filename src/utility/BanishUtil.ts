@@ -44,9 +44,7 @@ export class BanishUtil {
     }
 
     if (
-      targetMember.user.bot ||
-      (await ModerationService.getPermLevel(interaction.guild, targetMember.user)) >
-        0 ||
+      (await ModerationService.isModerator(interaction.guild, targetMember.user)) ||
       ((await ModerationService.getPermLevel(interaction.guild, moderator.user)) ===
         0 &&
         targetMember.roles.cache.has(Constants.ROLES.HELPERS))
