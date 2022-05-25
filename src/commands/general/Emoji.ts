@@ -6,6 +6,7 @@ import {
   send,
 } from "../../utility/Sender";
 import { Constants } from "../../utility/Constants";
+import { genericLog } from "../../services/ModerationService";
 
 export class EmojiCommand extends Command {
   public constructor(context: Command.Context) {
@@ -84,6 +85,18 @@ export class EmojiCommand extends Command {
     await replyInteractionPublic(
       interaction,
       `Successfully proposed the emote :${name}:.`
+    );
+
+    await genericLog(
+      interaction.guild,
+      interaction.user,
+      [
+        "Action",
+        `Suggested emoji [Jump to suggestion](${sentMessage.url})`,
+        "Name",
+        name,
+      ],
+      Constants.LIGHT_ORANGE_COLOR
     );
   }
 }

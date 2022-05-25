@@ -33,7 +33,61 @@ export class ModerationService {
   }
 }
 
-export function modLog(
+export async function genericLog(
+  guild: Guild,
+  user: User,
+  fieldsAndValues: Array<string>,
+  color: number
+) {
+  const logChannel = guild.channels.cache.get(Constants.CHANNELS.LOGS);
+  if (logChannel == null) {
+    container.logger.error("LOGS is null or undefined.");
+    return;
+  }
+
+  const messageOptions: MessageOptions = {};
+  const embedOptions: MessageEmbedOptions = {
+    author: {
+      name: user.tag,
+      iconURL: user.displayAvatarURL(),
+    },
+    footer: {
+      text: `User ID: ${user.id}`,
+    },
+    color,
+    timestamp: new Date(),
+  };
+
+  const buttons = [
+    [
+      new MessageButton()
+        .setCustomId(`userid-${user.id}`)
+        .setLabel("User ID")
+        .setStyle("SECONDARY"),
+    ],
+  ];
+  messageOptions.components = buttons.map((b) => ({ type: 1, components: b }));
+
+  embedOptions.fields = [];
+
+  for (let i = 0; i < fieldsAndValues.length - 1; i += 1) {
+    if (NumberUtil.isEven(i)) {
+      embedOptions.fields.push({
+        name: fieldsAndValues[i],
+        value: fieldsAndValues[i + 1].toString(),
+      });
+    }
+  }
+
+  await send(
+    logChannel as GuildTextBasedChannel,
+    undefined,
+    embedOptions,
+    messageOptions
+  );
+}
+
+export async function modLog(
   guild: Guild,
   moderator: User,
   fieldsAndValues: Array<string>,
@@ -42,7 +96,8 @@ export function modLog(
 ) {
   const logChannel = guild.channels.cache.get(Constants.CHANNELS.MOD_LOGS);
   if (logChannel == null) {
-    container.logger.error("logChannel is null or undefined.");
+    container.logger.error("MOD_LOGS is null or undefined.");
+    return;
   }
 
   const messageOptions: MessageOptions = {};
@@ -78,7 +133,7 @@ export function modLog(
     }
   }
 
-  return send(
+  await send(
     logChannel as GuildTextBasedChannel,
     undefined,
     embedOptions,

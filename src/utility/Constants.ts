@@ -20,6 +20,8 @@ export class Constants {
 
   static readonly UNBAN_COLOR = 0x13ff19;
 
+  static readonly LIGHT_ORANGE_COLOR = 0xff720e;
+
   static readonly GUILD_IDS: Array<Snowflake> = ["177387572505346048"];
 
   static readonly RULES: Array<string> = [
@@ -78,6 +80,7 @@ export class Constants {
 
   static readonly CHANNELS = {
     NEWS: "335167453350854666",
+    LOGS: "273927887034515457",
     MOD_LOGS: "447397947261452288",
     EMOJIS: "639401538485485569",
   };
