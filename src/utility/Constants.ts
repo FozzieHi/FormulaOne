@@ -79,6 +79,12 @@ export class Constants {
   static readonly CHANNELS = {
     NEWS: "335167453350854666",
     MOD_LOGS: "447397947261452288",
+    EMOJIS: "639401538485485569",
+  };
+
+  static readonly EMOTES = {
+    UP: "303230406352699393",
+    DOWN: "303230394008993793",
   };
 
   static readonly PREFIX = "t$";
