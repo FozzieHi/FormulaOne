@@ -12,6 +12,7 @@ export class EmojiCommand extends Command {
   public constructor(context: Command.Context) {
     super(context, {
       requiredClientPermissions: ["ADD_REACTIONS"],
+      preconditions: ["F3"],
     });
   }
 
