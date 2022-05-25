@@ -9,7 +9,9 @@ import { Constants } from "../../utility/Constants";
 
 export class EmojiCommand extends Command {
   public constructor(context: Command.Context) {
-    super(context);
+    super(context, {
+      requiredClientPermissions: ["ADD_REACTIONS"],
+    });
   }
 
   public override registerApplicationCommands(
