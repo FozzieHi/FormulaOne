@@ -58,6 +58,7 @@ export class FlairCommand extends Command {
           interaction,
           "The nickname length (username, brackets and flair) must not exceed 32 characters."
         );
+        return;
       }
 
       await (interaction.member as GuildMember).setNickname(
