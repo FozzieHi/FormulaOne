@@ -38,20 +38,21 @@ export class Database {
       db.collection("youtubeChannelCache")
     );
 
-    await db.collection("guilds").createIndex("guildId", { unique: true });
-    await db
-      .collection("users")
-      .createIndex({ userId: 1, guildId: 1 }, { unique: true });
-    await db
-      .collection("mutes")
-      .createIndex({ userId: 1, guildId: 1 }, { unique: true });
-    await db
-      .collection("punishments")
-      .createIndex({ userId: 1, guildId: 1 }, { unique: false });
-    await db
-      .collection("bans")
-      .createIndex({ userId: 1, guildId: 1 }, { unique: true });
-    await db.collection("safeBrowsingCache").createIndex("hash", { unique: true });
-    await db.collection("youtubeChannelCache").createIndex("videoId", { unique: true });
+    // Indexes on first creation:
+    // await db.collection("guilds").createIndex("guildId", { unique: true });
+    // await db
+    //   .collection("users")
+    //   .createIndex({ userId: 1, guildId: 1 }, { unique: true });
+    // await db
+    //   .collection("mutes")
+    //   .createIndex({ userId: 1, guildId: 1 }, { unique: true });
+    // await db
+    //   .collection("punishments")
+    //   .createIndex({ userId: 1, guildId: 1 }, { unique: false });
+    // await db
+    //   .collection("bans")
+    //   .createIndex({ userId: 1, guildId: 1 }, { unique: true });
+    // await db.collection("safeBrowsingCache").createIndex("hash", { unique: true });
+    // await db.collection("youtubeChannelCache").createIndex("videoId", { unique: true });
   }
 }
