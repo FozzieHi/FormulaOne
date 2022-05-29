@@ -26,13 +26,13 @@ export class EmojiCommand extends Command {
         options: [
           {
             name: "name",
-            description: "The suggested emoji name",
+            description: "The proposed emoji name",
             type: "STRING",
             required: true,
           },
           {
             name: "attachment",
-            description: "The suggested emoji image or video",
+            description: "The proposed emoji image or video",
             type: "ATTACHMENT",
             required: true,
           },
