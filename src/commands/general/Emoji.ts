@@ -31,8 +31,8 @@ export class EmojiCommand extends Command {
             required: true,
           },
           {
-            name: "image",
-            description: "The suggested emoji image",
+            name: "attachment",
+            description: "The suggested emoji image or video",
             type: "ATTACHMENT",
             required: true,
           },
@@ -47,7 +47,7 @@ export class EmojiCommand extends Command {
 
   public async chatInputRun(interaction: CommandInteraction) {
     const name = interaction.options.getString("name")?.replaceAll(":", "");
-    const attachment = interaction.options.getAttachment("image");
+    const attachment = interaction.options.getAttachment("attachment");
     if (interaction.guild == null || name == null) {
       return;
     }
@@ -93,7 +93,7 @@ export class EmojiCommand extends Command {
       interaction.user,
       [
         "Action",
-        `Suggested emoji [Jump to suggestion](${sentMessage.url})`,
+        `Proposed an emote [Jump to message](${sentMessage.url})`,
         "Name",
         name,
       ],
