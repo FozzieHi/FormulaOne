@@ -140,19 +140,3 @@ export async function modLog(
     messageOptions
   );
 }
-
-export function modLogCustom(guild: Guild, message: string, author: User) {
-  const logChannel = guild.channels.cache.get(Constants.CHANNELS.MOD_LOGS);
-  if (logChannel == null) {
-    container.logger.error("logChannel is null or undefined.");
-  }
-
-  const embedOptions: MessageEmbedOptions = {
-    author: {
-      name: author.tag,
-      iconURL: author.displayAvatarURL(),
-    },
-  };
-
-  return send(logChannel as GuildTextBasedChannel, message, embedOptions);
-}
