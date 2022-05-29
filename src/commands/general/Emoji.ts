@@ -48,10 +48,10 @@ export class EmojiCommand extends Command {
   public async chatInputRun(interaction: CommandInteraction) {
     const name = interaction.options.getString("name")?.replaceAll(":", "");
     const attachment = interaction.options.getAttachment("attachment");
-    if (interaction.guild == null || name == null) {
+    if (interaction.guild == null || name == null || attachment == null) {
       return;
     }
-    if (attachment == null || attachment.height == null || attachment.width == null) {
+    if (attachment.height == null || attachment.width == null) {
       await replyInteractionError(
         interaction,
         "That is not a valid file type, please make sure you upload an image or video."
