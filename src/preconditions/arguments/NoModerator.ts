@@ -16,9 +16,3 @@ export class NoModeratorPrecondition extends Precondition {
       : this.error({ message: "You may not use this command on a moderator." });
   }
 }
-
-declare module "@sapphire/framework" {
-  interface Preconditions {
-    NoModerator: never;
-  }
-}

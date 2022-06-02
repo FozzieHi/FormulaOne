@@ -12,9 +12,3 @@ export class MarshalsPrecondition extends Precondition {
       : this.error({ message: "You must be a Marshal in order to use this command." });
   }
 }
-
-declare module "@sapphire/framework" {
-  interface Preconditions {
-    Marshals: never;
-  }
-}

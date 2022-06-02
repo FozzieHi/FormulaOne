@@ -12,9 +12,3 @@ export class StewardsPrecondition extends Precondition {
       : this.error({ message: "You must be a Steward in order to use this command." });
   }
 }
-
-declare module "@sapphire/framework" {
-  interface Preconditions {
-    Stewards: never;
-  }
-}

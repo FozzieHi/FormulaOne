@@ -17,9 +17,3 @@ export class MemberValidationPrecondition extends Precondition {
       : this.error({ message: "Member not found." });
   }
 }
-
-declare module "@sapphire/framework" {
-  interface Preconditions {
-    MemberValidation: never;
-  }
-}

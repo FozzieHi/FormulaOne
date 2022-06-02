@@ -25,9 +25,3 @@ export class HelpersPrecondition extends Precondition {
       : this.error({ message: "You must be a Helper in order to use this command." });
   }
 }
-
-declare module "@sapphire/framework" {
-  interface Preconditions {
-    Helpers: never;
-  }
-}

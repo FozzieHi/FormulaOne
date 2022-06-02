@@ -12,9 +12,3 @@ export class BannedUserPrecondition extends Precondition {
     return ban ? this.ok() : this.error({ message: "Banned user not found." });
   }
 }
-
-declare module "@sapphire/framework" {
-  interface Preconditions {
-    BannedUser: never;
-  }
-}

@@ -15,9 +15,3 @@ export class F3Precondition extends Precondition {
         });
   }
 }
-
-declare module "@sapphire/framework" {
-  interface Preconditions {
-    F3: never;
-  }
-}

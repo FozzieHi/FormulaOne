@@ -15,9 +15,3 @@ export class F2Precondition extends Precondition {
         });
   }
 }
-
-declare module "@sapphire/framework" {
-  interface Preconditions {
-    F2: never;
-  }
-}
