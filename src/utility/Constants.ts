@@ -1,5 +1,16 @@
 import { Intents, PresenceData, Snowflake } from "discord.js";
 
+export enum PunishmentType {
+  WARN = "warn",
+  MUTE = "mute",
+  BAN = "ban",
+}
+
+export type PunishmentLevel = {
+  type: PunishmentType;
+  length: number;
+};
+
 export class Constants {
   static readonly DEFAULT_COLORS: Array<number> = [
     0xff269a, 0x00ff00, 0x00e828, 0x08f8ff, 0xf226ff, 0xff1c8e, 0x68ff22, 0xffbe11,
@@ -11,6 +22,8 @@ export class Constants {
   static readonly BAN_COLOR = 0xea0c00;
 
   static readonly KICK_COLOR = 0xe8511f;
+
+  static readonly MUTE_COLOR = 0xff720e;
 
   static readonly WARN_COLOR = 0xffb620;
 
@@ -38,6 +51,29 @@ export class Constants {
     "Keep all discussions in English",
   ];
 
+  static readonly PUNISHMENTS: Array<PunishmentLevel> = [
+    {
+      type: PunishmentType.WARN,
+      length: 0,
+    },
+    {
+      type: PunishmentType.MUTE,
+      length: 3600000,
+    },
+    {
+      type: PunishmentType.MUTE,
+      length: 86400000,
+    },
+    {
+      type: PunishmentType.BAN,
+      length: 864000000,
+    },
+    {
+      type: PunishmentType.BAN,
+      length: 2.592e9,
+    },
+  ];
+
   static readonly ROLES = {
     BOT_DEV: "424590836777484291",
     ADMIN: "177408413381165056",
@@ -48,6 +84,7 @@ export class Constants {
     F2: "314910011358707712",
     F3: "314909797445271564",
     BEGINNERS_QUESTIONS: "941602889221165066",
+    MUTED: "292105874158256128",
   };
 
   static readonly MOD_ROLES: Array<{ id: Snowflake; permissionLevel: number }> = [
