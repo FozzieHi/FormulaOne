@@ -8,7 +8,7 @@ export enum PunishmentType {
 
 export type PunishmentLevel = {
   type: PunishmentType;
-  length: number;
+  length?: number;
 };
 
 export class Constants {
@@ -54,7 +54,6 @@ export class Constants {
   static readonly PUNISHMENTS: Array<PunishmentLevel> = [
     {
       type: PunishmentType.WARN,
-      length: 0,
     },
     {
       type: PunishmentType.MUTE,

@@ -100,7 +100,7 @@ function getPunishmentDisplay(punishment: PunishmentLevel) {
     punishment.type === PunishmentType.MUTE ||
     punishment.type === PunishmentType.BAN
   ) {
-    const timeUnits = NumberUtil.millisecondsToUnits(punishment.length);
+    const timeUnits = NumberUtil.millisecondsToUnits(punishment.length as number);
     if (timeUnits.hours < 24) {
       const hourLength = timeUnits.hours;
       displayLog = `${hourLength} hour ${punishment.type}`;
@@ -170,7 +170,7 @@ export class PunishUtil {
           interaction.guild,
           reason,
           punishmentDisplay.displayLog,
-          punishment.length
+          punishment.length as number
         );
         await db.userRepo?.upsertUser(targetMember.id, interaction.guild.id, {
           $inc: { mutes: 1 },
@@ -183,7 +183,7 @@ export class PunishUtil {
           interaction.guild,
           reason,
           punishmentDisplay.displayLog,
-          punishment.length
+          punishment.length as number
         );
         await db.userRepo?.upsertUser(targetMember.id, interaction.guild.id, {
           $inc: { bans: 1 },
@@ -194,7 +194,7 @@ export class PunishUtil {
       await dm(
         targetMember.user,
         `A moderator has ${punishmentDisplay.displayPastTense} you${
-          punishment.length !== 0 ? ` for ${punishmentDisplay.displayCurrent}` : ""
+          punishment.length != null ? ` for ${punishmentDisplay.displayCurrent}` : ""
         } for the reason: ${reason}.`,
         interaction.channel
       );
@@ -204,7 +204,7 @@ export class PunishUtil {
         `Successfully ${punishmentDisplay.displayPastTense} ${StringUtil.boldify(
           targetMember.user.tag
         )}${
-          punishment.length !== 0 ? ` for ${punishmentDisplay.displayCurrent}` : ""
+          punishment.length != null ? ` for ${punishmentDisplay.displayCurrent}` : ""
         } for the reason ${reason}.\n\nThey have ${currentPun} punishments in the last 30 days.`
       );
 
