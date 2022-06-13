@@ -13,7 +13,7 @@
   "author": "Fozzie#0001",
   "license": "AGPL-3.0",
   "dependencies": {
-    "@sapphire/framework": "^3.0.0-next.93c937f.0",
+    "@sapphire/framework": "^3.0.0-next.838919c.0",
     "@sapphire/plugin-logger": "^2.2.1",
     "bufferutil": "^4.0.6",
     "discord.js": "^13.8.0",
