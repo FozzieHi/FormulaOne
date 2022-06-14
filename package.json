@@ -5,8 +5,8 @@
   "main": "src/index.ts",
   "scripts": {
     "prepare": "husky install",
-    "prettier:write": "prettier --write .",
-    "prettier:check": "prettier --check .",
+    "prettier:write": "prettier --cache --write .",
+    "prettier:check": "prettier --cache --check .",
     "eslint:write": "eslint . --cache --fix",
     "eslint:check": "eslint . --cache"
   },
