@@ -27,7 +27,6 @@ declare module "@sapphire/framework" {
     defaultPrefix: Constants.PREFIX,
     intents: Constants.INTENTS,
     presence: Constants.PRESENCE,
-    loadMessageCommandListeners: true,
   });
   ApplicationCommandRegistries.setDefaultBehaviorWhenNotIdentical(
     RegisterBehavior.Overwrite
