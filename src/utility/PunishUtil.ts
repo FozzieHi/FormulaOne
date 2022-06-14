@@ -96,6 +96,7 @@ function getPunishmentDisplay(punishment: PunishmentLevel) {
   let displayPastTense = "";
   if (punishment.type === PunishmentType.WARN) {
     displayLog = "Warning";
+    displayPastTense = "warned";
   } else if (
     punishment.type === PunishmentType.MUTE ||
     punishment.type === PunishmentType.BAN
