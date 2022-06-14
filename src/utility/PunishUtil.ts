@@ -158,6 +158,14 @@ export class PunishUtil {
       const punishment = Constants.PUNISHMENTS[maxEscalations - 1];
       const punishmentDisplay = getPunishmentDisplay(punishment);
 
+      await dm(
+        targetMember.user,
+        `A moderator has ${punishmentDisplay.displayPastTense} you${
+          punishment.length != null ? ` for ${punishmentDisplay.displayCurrent}` : ""
+        } for the reason: ${reason}.`,
+        interaction.channel
+      );
+
       let color = Constants.WARN_COLOR;
       if (punishment.type === PunishmentType.WARN) {
         await db.userRepo?.upsertUser(targetMember.id, interaction.guild.id, {
@@ -191,14 +199,6 @@ export class PunishUtil {
         });
         color = Constants.BAN_COLOR;
       }
-
-      await dm(
-        targetMember.user,
-        `A moderator has ${punishmentDisplay.displayPastTense} you${
-          punishment.length != null ? ` for ${punishmentDisplay.displayCurrent}` : ""
-        } for the reason: ${reason}.`,
-        interaction.channel
-      );
 
       await replyInteractionPublic(
         interaction,
