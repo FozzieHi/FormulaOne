@@ -4,6 +4,10 @@ import Try from "../../utility/Try";
 
 export class BannedUserPrecondition extends Precondition {
   public async chatInputRun(interaction: CommandInteraction) {
+    const subcommand = interaction.options.getSubcommand();
+    if (subcommand !== "remove") {
+      return this.ok();
+    }
     const target = interaction.options.getUser("user") as User;
     if (interaction.guild == null || target == null) {
       return this.error({ message: "Guild/target is null or undefined." });
