@@ -16,6 +16,7 @@ import { replyInteraction, replyInteractionError } from "../../utility/Sender";
 import { Constants } from "../../utility/Constants";
 import { ModerationService } from "../../services/ModerationService";
 import { BanishUtil } from "../../utility/BanishUtil";
+import { CommandUtil } from "../../utility/CommandUtil";
 
 export class BanishCommand extends Command {
   public constructor(context: Command.Context) {
@@ -29,14 +30,6 @@ export class BanishCommand extends Command {
   public override registerApplicationCommands(
     registry: ApplicationCommandRegistry
   ): Awaitable<void> {
-    const ruleChoices: Array<ApplicationCommandOptionChoiceData> = [];
-    Constants.RULES.forEach((rule, i) => {
-      ruleChoices.push({
-        name: `Rule ${i + 1} - ${rule}`,
-        value: i,
-      });
-    });
-
     const roleChoices: Array<ApplicationCommandOptionChoiceData> = [];
     Constants.BANISH_ROLES.forEach((role) =>
       roleChoices.push({ name: role.name, value: role.id })
@@ -62,7 +55,7 @@ export class BanishCommand extends Command {
                 name: "reason",
                 description: "The reason for the banish",
                 type: "NUMBER",
-                choices: ruleChoices,
+                choices: CommandUtil.getRuleChoices(),
                 required: true,
               },
               {

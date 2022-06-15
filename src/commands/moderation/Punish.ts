@@ -4,11 +4,8 @@ import {
   Command,
   CommandOptionsRunTypeEnum,
 } from "@sapphire/framework";
-import {
-  ApplicationCommandOptionChoiceData,
-  CommandInteraction,
-  GuildMember,
-} from "discord.js";
+import { CommandInteraction, GuildMember } from "discord.js";
+import { CommandUtil } from "../../utility/CommandUtil";
 import { Constants } from "../../utility/Constants";
 import { PunishUtil } from "../../utility/PunishUtil";
 
@@ -23,14 +20,6 @@ export class PunishCommand extends Command {
   public override registerApplicationCommands(
     registry: ApplicationCommandRegistry
   ): Awaitable<void> {
-    const ruleChoices: Array<ApplicationCommandOptionChoiceData> = [];
-    Constants.RULES.forEach((rule, i) => {
-      ruleChoices.push({
-        name: `Rule ${i + 1} - ${rule}`,
-        value: i,
-      });
-    });
-
     registry.registerChatInputCommand(
       {
         name: this.name,
@@ -51,7 +40,7 @@ export class PunishCommand extends Command {
                 name: "reason",
                 description: "The reason for the punish",
                 type: "NUMBER",
-                choices: ruleChoices,
+                choices: CommandUtil.getRuleChoices(),
                 required: true,
               },
             ],
