@@ -16,7 +16,7 @@ import TryVal from "../utility/TryVal";
 export class ModerationService {
   public static async getPermLevel(guild: Guild, user: User) {
     const member = (await TryVal(guild.members.fetch(user))) as GuildMember;
-    if (!member) {
+    if (member == null) {
       return 0;
     }
     const modRoles = Constants.MOD_ROLES.sort(
