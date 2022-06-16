@@ -146,6 +146,6 @@ export class Constants {
 
   static readonly REGEXES = {
     MARKDOWN: new Re2(/([*~`_])+/g),
-    URL: new Re2(/^https?:\/\/([\w[\]:.-]+)\.([A-Za-z\d-]+)(:\d+)?(\/\S*)?$/),
+    URL: new Re2(/^https?:\/\/([\w[\]:.-]+)\.([A-Za-z\d-]+)(:\d*)?(\/\S*)?$/),
   };
 }
