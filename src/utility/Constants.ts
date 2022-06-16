@@ -1,5 +1,5 @@
 import { Intents, PresenceData, Snowflake } from "discord.js";
-import Re2 from "re2";
+import RE2 from "re2";
 
 export enum PunishmentType {
   WARN = "warn",
@@ -145,7 +145,7 @@ export class Constants {
   };
 
   static readonly REGEXES = {
-    MARKDOWN: new Re2(/([*~`_])+/g),
-    URL: new Re2(/^https?:\/\/([\w[\]:.-]+)\.([A-Za-z\d-]+)(:\d*)?([/#?]\S*)?$/),
+    MARKDOWN: new RE2(/([*~`_])+/g),
+    URL: new RE2(/^https?:\/\/([\w[\]:.-]+)\.([A-Za-z\d-]+)(:\d*)?([/#?]\S*)?$/),
   };
 }
