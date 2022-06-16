@@ -19,6 +19,7 @@
     "discord.js": "^13.8.0",
     "erlpack": "github:discord/erlpack",
     "mongodb": "^4.7.0",
+    "re2": "^1.17.7",
     "utf-8-validate": "^5.0.9"
   },
   "devDependencies": {
