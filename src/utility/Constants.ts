@@ -145,6 +145,6 @@ export class Constants {
 
   static readonly REGEXES = {
     MARKDOWN: /([*~`_])+/g,
-    URL: /^https?:\/\/\S+\.\S+$/,
+    URL: /^https?:\/\/([\w[\]:.-]+)\.([A-Za-z\d-]+)\/*(\S*)$/,
   };
 }
