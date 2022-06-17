@@ -128,8 +128,6 @@ export class Constants {
     DOWN: "303230394008993793",
   };
 
-  static readonly PREFIX = "t$";
-
   static readonly INTENTS: Intents = new Intents([
     Intents.FLAGS.GUILDS,
     Intents.FLAGS.GUILD_MEMBERS,

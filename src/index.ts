@@ -24,7 +24,6 @@ declare module "@sapphire/framework" {
 
 (async () => {
   const client = new SapphireClient({
-    defaultPrefix: Constants.PREFIX,
     intents: Constants.INTENTS,
     presence: Constants.PRESENCE,
   });
