@@ -85,6 +85,7 @@ export class Constants {
     F3: "314909797445271564",
     BEGINNERS_QUESTIONS: "941602889221165066",
     MUTED: "292105874158256128",
+    NOXP: "314910227306643457",
   };
 
   static readonly MOD_ROLES: Array<{ id: Snowflake; permissionLevel: number }> = [
