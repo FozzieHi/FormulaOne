@@ -1,6 +1,6 @@
 import { ApplicationCommandRegistry, Awaitable, Command } from "@sapphire/framework";
 import { CommandInteraction, GuildMember } from "discord.js";
-import { replyInteraction, replyInteractionError } from "../../utility/Sender";
+import { replyInteractionError, replyInteractionPublic } from "../../utility/Sender";
 import { Constants } from "../../utility/Constants";
 
 export class FlairCommand extends Command {
@@ -65,13 +65,16 @@ export class FlairCommand extends Command {
         newNickname,
         "Flair set command"
       );
-      await replyInteraction(interaction, `Successfully set your flair to ${flair}.`);
+      await replyInteractionPublic(
+        interaction,
+        `Successfully set your flair to ${flair}.`
+      );
     } else if (subcommand === "remove") {
       await (interaction.member as GuildMember).setNickname(
         null,
         "Flair remove command"
       );
-      await replyInteraction(interaction, `Successfully removed your flair.`);
+      await replyInteractionPublic(interaction, `Successfully removed your flair.`);
     }
   }
 }
