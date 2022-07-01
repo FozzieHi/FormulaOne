@@ -97,6 +97,7 @@ export class UserInfoCommand extends Command {
           `${dbUser.currentPunishment.toString()}/${dbUser.punishments.length.toString()}`,
           "Currently Muted",
           (await db.muteRepo?.anyMute(user.id, interaction.guild.id)) ||
+          member.roles.cache.has(Constants.ROLES.MUTED) ||
           (member.communicationDisabledUntilTimestamp != null &&
             member.communicationDisabledUntilTimestamp > Date.now())
             ? "Yes"
