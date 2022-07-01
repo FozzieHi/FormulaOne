@@ -8,6 +8,7 @@ import { CommandInteraction, MessageButton } from "discord.js";
 import { replyInteractionPublicFields } from "../../utility/Sender";
 import { Constants } from "../../utility/Constants";
 import { getDBUser } from "../../utility/DatabaseUtil";
+import db from "../../database";
 
 export class UserInfoCommand extends Command {
   public constructor(context: Command.Context) {
@@ -94,6 +95,11 @@ export class UserInfoCommand extends Command {
           roles.length > 0 ? roles.join(" ") : "None",
           "Active/Total Punishment Count",
           `${dbUser.currentPunishment.toString()}/${dbUser.punishments.length.toString()}`,
+          "Currently Muted",
+          (await db.muteRepo?.anyMute(user.id, interaction.guild.id)) ||
+          member.communicationDisabledUntil != null
+            ? "Yes"
+            : "No",
         ],
         {
           author: { name: user.tag, iconURL: user.displayAvatarURL() },
