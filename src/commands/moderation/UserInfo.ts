@@ -74,6 +74,8 @@ export class UserInfoCommand extends Command {
           user.createdAt.toLocaleDateString("en-US", dateOptions),
           "Active/Total Punishment Count",
           `${dbUser.currentPunishment.toString()}/${dbUser.punishments.length.toString()}`,
+          "Currently Muted",
+          (await db.muteRepo?.anyMute(user.id, interaction.guild.id)) ? "Yes" : "No",
         ],
         {
           author: { name: user.tag, iconURL: user.displayAvatarURL() },
