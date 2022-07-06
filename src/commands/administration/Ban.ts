@@ -96,6 +96,9 @@ export class BanCommand extends Command {
       }
       reason = `Rule ${ruleNumber + 1} - ${Constants.RULES[ruleNumber]}`;
 
+      if (await db.banRepo?.anyBan(targetUser.id, interaction.guild.id)) {
+        await db.banRepo?.deleteBan(targetUser.id, interaction.guild.id);
+      }
       await dm(
         targetUser,
         `A moderator has banned you for the reason: ${reason}.`,
