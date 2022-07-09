@@ -4,7 +4,7 @@ import { Constants } from "../utility/Constants";
 import { getDBGuild } from "../utility/DatabaseUtil";
 import db from "../database";
 
-class ProtectionService {
+export default new (class ProtectionService {
   joinStats: { timestamp: number; joinedSince: number };
 
   constructor() {
@@ -14,7 +14,11 @@ class ProtectionService {
   public async checkJoins(guild: Guild) {
     const now = Date.now();
     if (this.joinStats.timestamp + 15000 > Date.now()) {
-      if (this.joinStats.joinedSince + 1 > 15) {
+      this.joinStats = {
+        timestamp: this.joinStats.timestamp,
+        joinedSince: this.joinStats.joinedSince + 1,
+      };
+      if (this.joinStats.joinedSince === 15) {
         const dbGuild = await getDBGuild(guild.id);
         if (
           guild.verificationLevel !== "VERY_HIGH" &&
@@ -35,14 +39,8 @@ class ProtectionService {
           $set: { protectionActivatedAt: now },
         });
       }
-      this.joinStats = {
-        timestamp: this.joinStats.timestamp,
-        joinedSince: this.joinStats.joinedSince + 1,
-      };
     } else {
       this.joinStats = { timestamp: now, joinedSince: 0 };
     }
   }
-}
-
-export = new ProtectionService();
+})();
