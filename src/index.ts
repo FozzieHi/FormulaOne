@@ -8,6 +8,7 @@ import {
   container,
 } from "@sapphire/framework";
 import { Constants } from "./utility/Constants";
+import "./intervals/Protection.ts";
 
 declare module "@sapphire/framework" {
   interface Preconditions {

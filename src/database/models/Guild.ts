@@ -7,6 +7,7 @@ export interface DBGuild extends WithId<Document> {
   lockdown: boolean;
   enabledChannels: Array<Snowflake>;
   youtubeChannels: { blocklisted: Array<string> };
+  protectionActivatedAt: number;
 }
 
 export class Guild {
@@ -20,6 +21,8 @@ export class Guild {
 
   youtubeChannels: { blocklisted: Array<string> };
 
+  protectionActivatedAt: number;
+
   constructor(guildId: Snowflake) {
     this.guildId = guildId;
     this.caseNumber = 1;
@@ -28,5 +31,6 @@ export class Guild {
     this.youtubeChannels = {
       blocklisted: [],
     };
+    this.protectionActivatedAt = 0;
   }
 }

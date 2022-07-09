@@ -89,7 +89,7 @@ export async function genericLog(
 
 export async function modLog(
   guild: Guild,
-  moderator: User,
+  moderator: User | null,
   fieldsAndValues: Array<string>,
   color: number,
   target?: User
@@ -102,13 +102,16 @@ export async function modLog(
 
   const messageOptions: MessageOptions = {};
   const embedOptions: MessageEmbedOptions = {
-    author: {
-      name: moderator.tag,
-      iconURL: moderator.displayAvatarURL(),
-    },
     color,
     timestamp: new Date(),
   };
+
+  if (moderator != null) {
+    embedOptions.author = {
+      name: moderator.tag,
+      iconURL: moderator.displayAvatarURL(),
+    };
+  }
 
   if (target != null) {
     const buttons = [

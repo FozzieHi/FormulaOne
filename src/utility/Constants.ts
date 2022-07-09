@@ -147,4 +147,8 @@ export class Constants {
     MARKDOWN: new RE2(/([*~`_])+/g),
     URL: new RE2(/^https?:\/\/([\w[\]:.-]+)\.([A-Za-z\d-]+)(:\d*)?([/#?]\S*)?$/),
   };
+
+  static readonly INTERVALS = {
+    PROTECTION: 60000,
+  };
 }
