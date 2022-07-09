@@ -16,6 +16,7 @@ setInterval(() => {
       const dbGuild = guilds[i];
       if (dbGuild != null) {
         if (dbGuild.protectionActivatedAt + 1.2e6 > Date.now()) {
+          // 20 minutes
           const guild = container.client.guilds.cache.get(dbGuild.guildId);
           if (guild != null) {
             if (guild.verificationLevel !== "HIGH") {
@@ -23,13 +24,13 @@ setInterval(() => {
                 "HIGH",
                 `Protection deactivated at ${now}`
               );
+              await modLog(
+                guild,
+                null,
+                ["Action", "Protection Deactivated", "Verification Level", "HIGH"],
+                Constants.UNMUTE_COLOR
+              );
             }
-            await modLog(
-              guild,
-              null,
-              ["Action", "Protection Deactivated", "Verification Level", "HIGH"],
-              Constants.KICK_COLOR
-            );
           }
           await db.guildRepo?.upsertGuild(dbGuild.guildId, {
             $set: {
