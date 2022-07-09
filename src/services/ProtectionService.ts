@@ -4,7 +4,7 @@ import { Constants } from "../utility/Constants";
 import { getDBGuild } from "../utility/DatabaseUtil";
 import db from "../database";
 
-export class ProtectionService {
+class ProtectionService {
   joinStats: { timestamp: number; joinedSince: number };
 
   constructor() {
@@ -41,3 +41,5 @@ export class ProtectionService {
     };
   }
 }
+
+export = new ProtectionService();
