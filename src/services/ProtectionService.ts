@@ -13,32 +13,35 @@ class ProtectionService {
 
   public async checkJoins(guild: Guild) {
     const now = Date.now();
-    if (now - this.joinStats.timestamp > 15000) {
-      this.joinStats = { timestamp: now, joinedSince: 0 };
-      return;
-    }
-    if (this.joinStats.joinedSince + 1 > 15) {
-      const dbGuild = await getDBGuild(guild.id);
-      if (
-        guild.verificationLevel !== "VERY_HIGH" &&
-        dbGuild?.protectionActivatedAt === 0
-      ) {
-        await guild.setVerificationLevel("VERY_HIGH", `Protection activated at ${now}`);
-        await modLog(
-          guild,
-          null,
-          ["Action", "Protection Activated", "Verification Level", "VERY_HIGH"],
-          Constants.BAN_COLOR
-        );
+    if (this.joinStats.timestamp + 15000 > Date.now()) {
+      if (this.joinStats.joinedSince + 1 > 15) {
+        const dbGuild = await getDBGuild(guild.id);
+        if (
+          guild.verificationLevel !== "VERY_HIGH" &&
+          dbGuild?.protectionActivatedAt === 0
+        ) {
+          await guild.setVerificationLevel(
+            "VERY_HIGH",
+            `Protection activated at ${now}`
+          );
+          await modLog(
+            guild,
+            null,
+            ["Action", "Protection Activated", "Verification Level", "VERY_HIGH"],
+            Constants.BAN_COLOR
+          );
+        }
+        await db.guildRepo?.upsertGuild(guild.id, {
+          $set: { protectionActivatedAt: now },
+        });
       }
-      await db.guildRepo?.upsertGuild(guild.id, {
-        $set: { protectionActivatedAt: now },
-      });
+      this.joinStats = {
+        timestamp: this.joinStats.timestamp,
+        joinedSince: this.joinStats.joinedSince + 1,
+      };
+    } else {
+      this.joinStats = { timestamp: now, joinedSince: 0 };
     }
-    this.joinStats = {
-      timestamp: this.joinStats.timestamp,
-      joinedSince: this.joinStats.joinedSince + 1,
-    };
   }
 }
 
