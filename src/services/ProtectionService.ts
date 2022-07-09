@@ -13,7 +13,7 @@ class ProtectionService {
 
   public async checkJoins(guild: Guild) {
     const now = Date.now();
-    if (this.joinStats.timestamp + 15000 > now) {
+    if (now - this.joinStats.timestamp > 15000) {
       this.joinStats = { timestamp: now, joinedSince: 0 };
       return;
     }
