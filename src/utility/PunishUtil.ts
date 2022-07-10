@@ -15,7 +15,7 @@ import { PushUpdate } from "../database/updates/PushUpdate";
 import { getDBGuild, getDBUser } from "./DatabaseUtil";
 import { NumberUtil } from "./NumberUtil";
 import { PopUpdate } from "../database/updates/PopUpdate";
-import MutexService from "../services/MutexService";
+import MutexManager from "../managers/MutexManager";
 
 async function increasePunishment(
   memberId: Snowflake,
@@ -130,7 +130,7 @@ export class PunishUtil {
     reason: string,
     amount: number
   ) {
-    await MutexService.getMutex(targetMember.id).runExclusive(async () => {
+    await MutexManager.getMutex(targetMember.id).runExclusive(async () => {
       if (interaction.guild == null || interaction.channel == null) {
         return;
       }

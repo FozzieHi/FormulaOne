@@ -1,7 +1,7 @@
 import { Mutex } from "async-mutex";
 import { Snowflake } from "discord.js";
 
-export default new (class MutexService {
+export default new (class MutexManager {
   mutexes: Map<Snowflake, { mutex: Mutex; lastUsed: number }>;
 
   constructor() {

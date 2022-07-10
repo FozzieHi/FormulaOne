@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import MutexService from "../services/MutexService";
+import MutexManager from "../managers/MutexManager";
 import { Constants } from "../utility/Constants";
 
 setInterval(() => {
-  [...MutexService.mutexes]
+  [...MutexManager.mutexes]
     .filter(
       ([_, value]) => Date.now() - value.lastUsed > 120000 && !value.mutex.isLocked()
     )
-    .forEach(([key]) => MutexService.mutexes.delete(key));
+    .forEach(([key]) => MutexManager.mutexes.delete(key));
 }, Constants.INTERVALS.MUTEXES);
