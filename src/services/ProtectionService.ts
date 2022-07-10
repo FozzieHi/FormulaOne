@@ -6,7 +6,7 @@ import { getDBGuild } from "../utility/DatabaseUtil";
 import db from "../database";
 
 export default new (class ProtectionService {
-  private mutex: Mutex;
+  mutex: Mutex;
 
   private joinStats: { timestamp: number; joinedSince: number };
 
