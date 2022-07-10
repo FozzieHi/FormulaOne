@@ -12,6 +12,7 @@ import { modLog } from "../../services/ModerationService";
 import { StringUtil } from "../../utility/StringUtil";
 import { PushUpdate } from "../../database/updates/PushUpdate";
 import { CommandUtil } from "../../utility/CommandUtil";
+import MutexManager from "../../managers/MutexManager";
 
 export class BanCommand extends Command {
   public constructor(context: Command.Context) {
@@ -81,102 +82,103 @@ export class BanCommand extends Command {
   public async chatInputRun(interaction: CommandInteraction) {
     const subcommand = interaction.options.getSubcommand();
     const targetUser = interaction.options.getUser("user");
-    let reason;
-    if (
-      targetUser == null ||
-      interaction.channel == null ||
-      interaction.guild == null
-    ) {
+    if (targetUser == null) {
       return;
     }
-    if (subcommand === "add") {
-      const ruleNumber = interaction.options.getNumber("reason");
-      if (ruleNumber == null) {
+    await MutexManager.getMutex(targetUser.id).runExclusive(async () => {
+      if (interaction.channel == null || interaction.guild == null) {
         return;
       }
-      reason = `Rule ${ruleNumber + 1} - ${Constants.RULES[ruleNumber]}`;
+      let reason;
+      if (subcommand === "add") {
+        const ruleNumber = interaction.options.getNumber("reason");
+        if (ruleNumber == null) {
+          return;
+        }
+        reason = `Rule ${ruleNumber + 1} - ${Constants.RULES[ruleNumber]}`;
 
-      if (await db.banRepo?.anyBan(targetUser.id, interaction.guild.id)) {
-        await db.banRepo?.deleteBan(targetUser.id, interaction.guild.id);
+        if (await db.banRepo?.anyBan(targetUser.id, interaction.guild.id)) {
+          await db.banRepo?.deleteBan(targetUser.id, interaction.guild.id);
+        }
+        await dm(
+          targetUser,
+          `A moderator has banned you for the reason: ${reason}.`,
+          interaction.channel,
+          interaction.guild.members.cache.has(targetUser.id)
+        );
+        await interaction.guild.members.ban(targetUser, {
+          reason: `(${interaction.user.tag}) ${reason}`,
+        });
+        await replyInteractionPublic(
+          interaction,
+          `Successfully banned ${StringUtil.boldify(targetUser.tag)}.`
+        );
+        await db.userRepo?.upsertUser(targetUser.id, interaction.guild.id, {
+          $inc: { bans: 1 },
+        });
+        await db.userRepo?.upsertUser(
+          targetUser.id,
+          interaction.guild.id,
+          new PushUpdate("punishments", {
+            date: Date.now(),
+            escalation: "Ban",
+            reason,
+            mod: interaction.user.tag,
+            channelId: interaction.channel.id,
+          })
+        );
+        await modLog(
+          interaction.guild,
+          interaction.user,
+          [
+            "Action",
+            "Ban",
+            "User",
+            `${targetUser.tag.toString()} (${targetUser.id})`,
+            "Reason",
+            reason,
+            "Channel",
+            interaction.channel.toString(),
+          ],
+          Constants.BAN_COLOR,
+          targetUser
+        );
+      } else if (subcommand === "remove") {
+        reason = interaction.options.getString("reason");
+        if (reason == null) {
+          return;
+        }
+        await dm(
+          targetUser,
+          `A moderator has unbanned you for the reason: ${reason}.`,
+          undefined,
+          false
+        );
+        await interaction.guild.members.unban(
+          targetUser,
+          `(${interaction.user.tag}) ${reason}`
+        );
+        await replyInteractionPublic(
+          interaction,
+          `Successfully unbanned ${StringUtil.boldify(targetUser.tag)}.`
+        );
+        await modLog(
+          interaction.guild,
+          interaction.user,
+          [
+            "Action",
+            "Unban",
+            "User",
+            `${targetUser.tag.toString()} (${targetUser.id})`,
+            "Reason",
+            reason,
+            "Channel",
+            interaction.channel.toString(),
+          ],
+          Constants.UNBAN_COLOR,
+          targetUser
+        );
       }
-      await dm(
-        targetUser,
-        `A moderator has banned you for the reason: ${reason}.`,
-        interaction.channel,
-        interaction.guild.members.cache.has(targetUser.id)
-      );
-      await interaction.guild.members.ban(targetUser, {
-        reason: `(${interaction.user.tag}) ${reason}`,
-      });
-      await replyInteractionPublic(
-        interaction,
-        `Successfully banned ${StringUtil.boldify(targetUser.tag)}.`
-      );
-      await db.userRepo?.upsertUser(targetUser.id, interaction.guild.id, {
-        $inc: { bans: 1 },
-      });
-      await db.userRepo?.upsertUser(
-        targetUser.id,
-        interaction.guild.id,
-        new PushUpdate("punishments", {
-          date: Date.now(),
-          escalation: "Ban",
-          reason,
-          mod: interaction.user.tag,
-          channelId: interaction.channel.id,
-        })
-      );
-      await modLog(
-        interaction.guild,
-        interaction.user,
-        [
-          "Action",
-          "Ban",
-          "User",
-          `${targetUser.tag.toString()} (${targetUser.id})`,
-          "Reason",
-          reason,
-          "Channel",
-          interaction.channel.toString(),
-        ],
-        Constants.BAN_COLOR,
-        targetUser
-      );
-    } else if (subcommand === "remove") {
-      reason = interaction.options.getString("reason");
-      if (reason == null) {
-        return;
-      }
-      await dm(
-        targetUser,
-        `A moderator has unbanned you for the reason: ${reason}.`,
-        undefined,
-        false
-      );
-      await interaction.guild.members.unban(
-        targetUser,
-        `(${interaction.user.tag}) ${reason}`
-      );
-      await replyInteractionPublic(
-        interaction,
-        `Successfully unbanned ${StringUtil.boldify(targetUser.tag)}.`
-      );
-      await modLog(
-        interaction.guild,
-        interaction.user,
-        [
-          "Action",
-          "Unban",
-          "User",
-          `${targetUser.tag.toString()} (${targetUser.id})`,
-          "Reason",
-          reason,
-          "Channel",
-          interaction.channel.toString(),
-        ],
-        Constants.UNBAN_COLOR,
-        targetUser
-      );
-    }
+    });
   }
 }

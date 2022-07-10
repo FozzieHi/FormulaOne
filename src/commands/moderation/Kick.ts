@@ -11,6 +11,7 @@ import { Constants } from "../../utility/Constants";
 import { modLog } from "../../services/ModerationService";
 import { StringUtil } from "../../utility/StringUtil";
 import { PushUpdate } from "../../database/updates/PushUpdate";
+import MutexManager from "../../managers/MutexManager";
 
 export class KickCommand extends Command {
   public constructor(context: Command.Context) {
@@ -51,51 +52,56 @@ export class KickCommand extends Command {
   }
 
   public async chatInputRun(interaction: CommandInteraction) {
-    const member = interaction.options.getMember("member") as GuildMember;
+    const targetMember = interaction.options.getMember("member") as GuildMember;
     const reason = interaction.options.getString("reason");
-    if (reason == null || interaction.channel == null || interaction.guild == null) {
+    if (targetMember == null) {
       return;
     }
+    await MutexManager.getMutex(targetMember.id).runExclusive(async () => {
+      if (reason == null || interaction.channel == null || interaction.guild == null) {
+        return;
+      }
 
-    await dm(
-      member.user,
-      `A moderator has kicked you for the reason: ${reason}.`,
-      interaction.channel
-    );
-    await member.kick(`(${interaction.user.tag}) ${reason}`);
-    await replyInteractionPublic(
-      interaction,
-      `Successfully kicked ${StringUtil.boldify(member.user.tag)}.`
-    );
-    await db.userRepo?.upsertUser(member.id, interaction.guild.id, {
-      $inc: { kicks: 1 },
+      await dm(
+        targetMember.user,
+        `A moderator has kicked you for the reason: ${reason}.`,
+        interaction.channel
+      );
+      await targetMember.kick(`(${interaction.user.tag}) ${reason}`);
+      await replyInteractionPublic(
+        interaction,
+        `Successfully kicked ${StringUtil.boldify(targetMember.user.tag)}.`
+      );
+      await db.userRepo?.upsertUser(targetMember.id, interaction.guild.id, {
+        $inc: { kicks: 1 },
+      });
+      await db.userRepo?.upsertUser(
+        targetMember.id,
+        interaction.guild.id,
+        new PushUpdate("punishments", {
+          date: Date.now(),
+          escalation: "Kick",
+          reason,
+          mod: interaction.user.tag,
+          channelId: interaction.channel.id,
+        })
+      );
+      await modLog(
+        interaction.guild,
+        interaction.user,
+        [
+          "Action",
+          "Kick",
+          "Member",
+          `${targetMember.user.tag.toString()} (${targetMember.id})`,
+          "Reason",
+          reason,
+          "Channel",
+          interaction.channel.toString(),
+        ],
+        Constants.KICK_COLOR,
+        targetMember.user
+      );
     });
-    await db.userRepo?.upsertUser(
-      member.id,
-      interaction.guild.id,
-      new PushUpdate("punishments", {
-        date: Date.now(),
-        escalation: "Kick",
-        reason,
-        mod: interaction.user.tag,
-        channelId: interaction.channel.id,
-      })
-    );
-    await modLog(
-      interaction.guild,
-      interaction.user,
-      [
-        "Action",
-        "Kick",
-        "Member",
-        `${member.user.tag.toString()} (${member.id})`,
-        "Reason",
-        reason,
-        "Channel",
-        interaction.channel.toString(),
-      ],
-      Constants.KICK_COLOR,
-      member.user
-    );
   }
 }
