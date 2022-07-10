@@ -8,6 +8,7 @@ import { CommandInteraction, GuildTextBasedChannel } from "discord.js";
 import { replyInteractionError, replyInteractionPublic } from "../../utility/Sender";
 import { Constants } from "../../utility/Constants";
 import { modLog } from "../../services/ModerationService";
+import MutexManager from "../../managers/MutexManager";
 
 export class ClearCommand extends Command {
   public constructor(context: Command.Context) {
@@ -44,41 +45,43 @@ export class ClearCommand extends Command {
   }
 
   public async chatInputRun(interaction: CommandInteraction) {
-    const amount = interaction.options.getInteger("amount");
-    if (
-      amount == null ||
-      interaction.channel == null ||
-      interaction.guild == null ||
-      amount < 1 ||
-      amount > 200
-    ) {
-      return;
-    }
-    if (interaction.channel.id === Constants.CHANNELS.MOD_LOGS) {
-      await replyInteractionError(
-        interaction,
-        "You may not clear messages in the log channel."
-      );
-      return;
-    }
+    await MutexManager.getGuildMutex().runExclusive(async () => {
+      const amount = interaction.options.getInteger("amount");
+      if (
+        amount == null ||
+        interaction.channel == null ||
+        interaction.guild == null ||
+        amount < 1 ||
+        amount > 200
+      ) {
+        return;
+      }
+      if (interaction.channel.id === Constants.CHANNELS.MOD_LOGS) {
+        await replyInteractionError(
+          interaction,
+          "You may not clear messages in the log channel."
+        );
+        return;
+      }
 
-    await (interaction.channel as GuildTextBasedChannel).bulkDelete(amount);
-    await replyInteractionPublic(
-      interaction,
-      `Successfully cleared ${amount} message${amount > 1 ? "s" : ""}.`
-    );
-    await modLog(
-      interaction.guild,
-      interaction.user,
-      [
-        "Action",
-        "Clear",
-        "Amount",
-        `${amount} message${amount > 1 ? "s" : ""}`,
-        "Channel",
-        interaction.channel.toString(),
-      ],
-      Constants.WARN_COLOR
-    );
+      await (interaction.channel as GuildTextBasedChannel).bulkDelete(amount);
+      await replyInteractionPublic(
+        interaction,
+        `Successfully cleared ${amount} message${amount > 1 ? "s" : ""}.`
+      );
+      await modLog(
+        interaction.guild,
+        interaction.user,
+        [
+          "Action",
+          "Clear",
+          "Amount",
+          `${amount} message${amount > 1 ? "s" : ""}`,
+          "Channel",
+          interaction.channel.toString(),
+        ],
+        Constants.WARN_COLOR
+      );
+    });
   }
 }

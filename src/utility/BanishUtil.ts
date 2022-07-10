@@ -30,7 +30,7 @@ export class BanishUtil {
     handler: string,
     reason: string
   ) {
-    await MutexManager.getMutex(targetMember.id).runExclusive(async () => {
+    await MutexManager.getUserMutex(targetMember.id).runExclusive(async () => {
       if (interaction.guild == null || interaction.channel == null) {
         return;
       }

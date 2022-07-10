@@ -4,11 +4,14 @@ import { Snowflake } from "discord.js";
 export default new (class MutexManager {
   mutexes: Map<Snowflake, { mutex: Mutex; lastUsed: number }>;
 
+  guildMutex: Mutex;
+
   constructor() {
     this.mutexes = new Map();
+    this.guildMutex = new Mutex();
   }
 
-  public getMutex(id: Snowflake) {
+  public getUserMutex(id: Snowflake) {
     const now = Date.now();
     const mutex = this.mutexes.get(id)?.mutex;
     if (mutex != null) {
@@ -18,5 +21,9 @@ export default new (class MutexManager {
     const newMutex = new Mutex();
     this.mutexes.set(id, { mutex: newMutex, lastUsed: now });
     return newMutex;
+  }
+
+  public getGuildMutex() {
+    return this.guildMutex;
   }
 })();

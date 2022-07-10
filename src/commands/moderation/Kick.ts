@@ -57,7 +57,7 @@ export class KickCommand extends Command {
     if (targetMember == null) {
       return;
     }
-    await MutexManager.getMutex(targetMember.id).runExclusive(async () => {
+    await MutexManager.getUserMutex(targetMember.id).runExclusive(async () => {
       if (reason == null || interaction.channel == null || interaction.guild == null) {
         return;
       }

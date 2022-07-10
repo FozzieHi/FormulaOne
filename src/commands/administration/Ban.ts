@@ -85,7 +85,7 @@ export class BanCommand extends Command {
     if (targetUser == null) {
       return;
     }
-    await MutexManager.getMutex(targetUser.id).runExclusive(async () => {
+    await MutexManager.getUserMutex(targetUser.id).runExclusive(async () => {
       if (interaction.channel == null || interaction.guild == null) {
         return;
       }

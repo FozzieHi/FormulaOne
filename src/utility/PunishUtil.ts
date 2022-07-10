@@ -130,7 +130,7 @@ export class PunishUtil {
     reason: string,
     amount: number
   ) {
-    await MutexManager.getMutex(targetMember.id).runExclusive(async () => {
+    await MutexManager.getUserMutex(targetMember.id).runExclusive(async () => {
       if (interaction.guild == null || interaction.channel == null) {
         return;
       }

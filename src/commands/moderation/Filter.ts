@@ -12,6 +12,7 @@ import { modLog } from "../../services/ModerationService";
 import { PushUpdate } from "../../database/updates/PushUpdate";
 import { PullUpdate } from "../../database/updates/PullUpdate";
 import { getDBGuild } from "../../utility/DatabaseUtil";
+import MutexManager from "../../managers/MutexManager";
 
 export class FilterCommand extends Command {
   public constructor(context: Command.Context) {
@@ -50,88 +51,90 @@ export class FilterCommand extends Command {
   }
 
   public async chatInputRun(interaction: CommandInteraction) {
-    if (
-      interaction.guild == null ||
-      interaction.channel == null ||
-      !interaction.channel.isText()
-    ) {
-      return;
-    }
     const subcommand = interaction.options.getSubcommand();
-    const enabledText = "One word filter is enabled | ";
-    const channelDescription = (interaction.channel as TextChannel).topic;
-
-    const dbGuild = await getDBGuild(interaction.guild.id);
-    if (subcommand === "add") {
-      if (dbGuild?.enabledChannels.includes(interaction.channel.id)) {
-        await replyInteractionError(
-          interaction,
-          `One word filter is already enabled in ${interaction.channel.toString()}`
-        );
+    await MutexManager.getGuildMutex().runExclusive(async () => {
+      if (
+        interaction.guild == null ||
+        interaction.channel == null ||
+        !interaction.channel.isText()
+      ) {
         return;
       }
+      const enabledText = "One word filter is enabled | ";
+      const channelDescription = (interaction.channel as TextChannel).topic;
 
-      await db.guildRepo?.upsertGuild(
-        interaction.guild.id,
-        new PushUpdate("enabledChannels", interaction.channel.id)
-      );
-      await replyInteractionPublic(
-        interaction,
-        `Successfully enabled one word filter in ${interaction.channel.toString()}.`
-      );
-      await modLog(
-        interaction.guild,
-        interaction.user,
-        [
-          "Action",
-          "Toggled One Word Filter",
-          "Status",
-          "Enabled",
-          "Channel",
-          interaction.channel.toString(),
-        ],
-        Constants.WARN_COLOR
-      );
-      if (channelDescription != null) {
-        await (interaction.channel as TextChannel).setTopic(
-          channelDescription.replace(enabledText, "")
+      const dbGuild = await getDBGuild(interaction.guild.id);
+      if (subcommand === "add") {
+        if (dbGuild?.enabledChannels.includes(interaction.channel.id)) {
+          await replyInteractionError(
+            interaction,
+            `One word filter is already enabled in ${interaction.channel.toString()}`
+          );
+          return;
+        }
+
+        await db.guildRepo?.upsertGuild(
+          interaction.guild.id,
+          new PushUpdate("enabledChannels", interaction.channel.id)
         );
-      }
-    } else if (subcommand === "remove") {
-      if (!dbGuild?.enabledChannels.includes(interaction.channel.id)) {
-        await replyInteractionError(
+        await replyInteractionPublic(
           interaction,
-          `One word filter is already disabled in ${interaction.channel.toString()}`
+          `Successfully enabled one word filter in ${interaction.channel.toString()}.`
         );
-        return;
-      }
+        await modLog(
+          interaction.guild,
+          interaction.user,
+          [
+            "Action",
+            "Toggled One Word Filter",
+            "Status",
+            "Enabled",
+            "Channel",
+            interaction.channel.toString(),
+          ],
+          Constants.WARN_COLOR
+        );
+        if (channelDescription != null) {
+          await (interaction.channel as TextChannel).setTopic(
+            channelDescription.replace(enabledText, "")
+          );
+        }
+      } else if (subcommand === "remove") {
+        if (!dbGuild?.enabledChannels.includes(interaction.channel.id)) {
+          await replyInteractionError(
+            interaction,
+            `One word filter is already disabled in ${interaction.channel.toString()}`
+          );
+          return;
+        }
 
-      await db.guildRepo?.upsertGuild(
-        interaction.guild.id,
-        new PullUpdate("enabledChannels", interaction.channel.id)
-      );
-      await replyInteractionPublic(
-        interaction,
-        `Successfully disabled one word filter in ${interaction.channel.toString()}.`
-      );
-      await modLog(
-        interaction.guild,
-        interaction.user,
-        [
-          "Action",
-          "Toggled One Word Filter",
-          "Status",
-          "Disabled",
-          "Channel",
-          interaction.channel.toString(),
-        ],
-        Constants.UNMUTE_COLOR
-      );
-      if (channelDescription != null) {
-        await (interaction.channel as TextChannel).setTopic(
-          enabledText + channelDescription
+        await db.guildRepo?.upsertGuild(
+          interaction.guild.id,
+          new PullUpdate("enabledChannels", interaction.channel.id)
         );
+        await replyInteractionPublic(
+          interaction,
+          `Successfully disabled one word filter in ${interaction.channel.toString()}.`
+        );
+        await modLog(
+          interaction.guild,
+          interaction.user,
+          [
+            "Action",
+            "Toggled One Word Filter",
+            "Status",
+            "Disabled",
+            "Channel",
+            interaction.channel.toString(),
+          ],
+          Constants.UNMUTE_COLOR
+        );
+        if (channelDescription != null) {
+          await (interaction.channel as TextChannel).setTopic(
+            enabledText + channelDescription
+          );
+        }
       }
-    }
+    });
   }
 }

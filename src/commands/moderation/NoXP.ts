@@ -14,6 +14,7 @@ import {
   replyInteractionPublic,
 } from "../../utility/Sender";
 import { StringUtil } from "../../utility/StringUtil";
+import MutexManager from "../../managers/MutexManager";
 
 export class NoXP extends Command {
   public constructor(context: Command.Context) {
@@ -82,99 +83,100 @@ export class NoXP extends Command {
   public async chatInputRun(interaction: CommandInteraction) {
     const subcommand = interaction.options.getSubcommand();
     const targetMember = interaction.options.getMember("member") as GuildMember;
-    let reason;
-    if (
-      interaction.guild == null ||
-      interaction.channel == null ||
-      targetMember == null
-    ) {
+    if (targetMember == null) {
       return;
     }
-    const role = await interaction.guild.roles.fetch(Constants.ROLES.NOXP);
-    if (role == null) {
-      return;
-    }
-    if (subcommand === "add") {
-      const ruleNumber = interaction.options.getNumber("reason");
-      if (ruleNumber == null) {
+    await MutexManager.getUserMutex(targetMember.id).runExclusive(async () => {
+      let reason;
+      if (interaction.guild == null || interaction.channel == null) {
         return;
       }
-      reason = `Rule ${ruleNumber + 1} - ${Constants.RULES[ruleNumber]}`;
+      const role = await interaction.guild.roles.fetch(Constants.ROLES.NOXP);
+      if (role == null) {
+        return;
+      }
+      if (subcommand === "add") {
+        const ruleNumber = interaction.options.getNumber("reason");
+        if (ruleNumber == null) {
+          return;
+        }
+        reason = `Rule ${ruleNumber + 1} - ${Constants.RULES[ruleNumber]}`;
 
-      if (targetMember.roles.cache.has(Constants.ROLES.NOXP)) {
-        await replyInteractionError(
-          interaction,
-          `${StringUtil.boldify(targetMember.user.tag)} already has the NoXP role.`
+        if (targetMember.roles.cache.has(Constants.ROLES.NOXP)) {
+          await replyInteractionError(
+            interaction,
+            `${StringUtil.boldify(targetMember.user.tag)} already has the NoXP role.`
+          );
+          return;
+        }
+
+        await targetMember.roles.add(role);
+        await dm(
+          targetMember.user,
+          "A moderator has given you the NoXP role. You are now unable to gain XP.",
+          interaction.channel
         );
-        return;
-      }
-
-      await targetMember.roles.add(role);
-      await dm(
-        targetMember.user,
-        "A moderator has given you the NoXP role. You are now unable to gain XP.",
-        interaction.channel
-      );
-      await replyInteractionPublic(
-        interaction,
-        `Successfully added NoXP to ${StringUtil.boldify(targetMember.user.tag)}.`
-      );
-      await modLog(
-        interaction.guild,
-        interaction.user,
-        [
-          "Action",
-          "Added NoXP",
-          "Member",
-          `${targetMember.user.tag} (${targetMember.id})`,
-          "Reason",
-          reason,
-          "Channel",
-          interaction.channel.toString(),
-        ],
-        Constants.BANISH_COLOR,
-        targetMember.user
-      );
-    } else if (subcommand === "remove") {
-      reason = interaction.options.getString("reason");
-      if (reason == null) {
-        return;
-      }
-
-      if (!targetMember.roles.cache.has(Constants.ROLES.NOXP)) {
-        await replyInteractionError(
+        await replyInteractionPublic(
           interaction,
-          `${StringUtil.boldify(targetMember.user.tag)} does not have the NoXP role.`
+          `Successfully added NoXP to ${StringUtil.boldify(targetMember.user.tag)}.`
         );
-        return;
-      }
+        await modLog(
+          interaction.guild,
+          interaction.user,
+          [
+            "Action",
+            "Added NoXP",
+            "Member",
+            `${targetMember.user.tag} (${targetMember.id})`,
+            "Reason",
+            reason,
+            "Channel",
+            interaction.channel.toString(),
+          ],
+          Constants.BANISH_COLOR,
+          targetMember.user
+        );
+      } else if (subcommand === "remove") {
+        reason = interaction.options.getString("reason");
+        if (reason == null) {
+          return;
+        }
 
-      await targetMember.roles.remove(role);
-      await dm(
-        targetMember.user,
-        "A moderator has removed the NoXP role from you. You are now able to gain XP.",
-        interaction.channel
-      );
-      await replyInteractionPublic(
-        interaction,
-        `Successfully removed NoXP from ${StringUtil.boldify(targetMember.user.tag)}.`
-      );
-      await modLog(
-        interaction.guild,
-        interaction.user,
-        [
-          "Action",
-          "Removed NoXP",
-          "Member",
-          `${targetMember.user.tag} (${targetMember.id})`,
-          "Reason",
-          reason,
-          "Channel",
-          interaction.channel.toString(),
-        ],
-        Constants.UNMUTE_COLOR,
-        targetMember.user
-      );
-    }
+        if (!targetMember.roles.cache.has(Constants.ROLES.NOXP)) {
+          await replyInteractionError(
+            interaction,
+            `${StringUtil.boldify(targetMember.user.tag)} does not have the NoXP role.`
+          );
+          return;
+        }
+
+        await targetMember.roles.remove(role);
+        await dm(
+          targetMember.user,
+          "A moderator has removed the NoXP role from you. You are now able to gain XP.",
+          interaction.channel
+        );
+        await replyInteractionPublic(
+          interaction,
+          `Successfully removed NoXP from ${StringUtil.boldify(targetMember.user.tag)}.`
+        );
+        await modLog(
+          interaction.guild,
+          interaction.user,
+          [
+            "Action",
+            "Removed NoXP",
+            "Member",
+            `${targetMember.user.tag} (${targetMember.id})`,
+            "Reason",
+            reason,
+            "Channel",
+            interaction.channel.toString(),
+          ],
+          Constants.UNMUTE_COLOR,
+          targetMember.user
+        );
+      }
+    });
   }
 }
