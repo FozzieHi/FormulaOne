@@ -150,5 +150,6 @@ export class Constants {
 
   static readonly INTERVALS = {
     PROTECTION: 60000,
+    MUTEXES: 60000,
   };
 }

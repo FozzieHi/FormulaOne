@@ -9,6 +9,7 @@ import {
 } from "@sapphire/framework";
 import { Constants } from "./utility/Constants";
 import "./intervals/Protection.ts";
+import "./intervals/MutexClear.ts";
 
 declare module "@sapphire/framework" {
   interface Preconditions {
