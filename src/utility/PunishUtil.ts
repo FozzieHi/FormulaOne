@@ -63,7 +63,7 @@ async function mute(
 
   await targetMember.disableCommunicationUntil(
     Date.now() + length,
-    `${moderator.user.tag} ${displayLog} - ${reason}`
+    `(${moderator.user.tag}) ${displayLog} - ${reason}`
   );
   await targetMember.roles.add(role);
   await db.muteRepo?.insertMute(targetMember.id, guild.id, length);
