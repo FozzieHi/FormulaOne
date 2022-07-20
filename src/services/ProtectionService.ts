@@ -26,6 +26,12 @@ export default new (class ProtectionService {
         if (this.joinStats.joinedSince === 15) {
           const dbGuild = await getDBGuild(guild.id);
           if (
+            guild.verificationLevel === "VERY_HIGH" &&
+            dbGuild?.protectionActivatedAt === 0
+          ) {
+            return;
+          }
+          if (
             guild.verificationLevel !== "VERY_HIGH" &&
             dbGuild?.protectionActivatedAt === 0
           ) {

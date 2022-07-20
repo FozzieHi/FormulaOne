@@ -17,7 +17,10 @@ setInterval(() => {
       for (let i = 0; i < guilds.length; i += 1) {
         const dbGuild = guilds[i];
         if (dbGuild != null) {
-          if (Date.now() - dbGuild.protectionActivatedAt > 1.2e6) {
+          if (
+            dbGuild.protectionActivatedAt !== 0 &&
+            Date.now() - dbGuild.protectionActivatedAt > 1.2e6
+          ) {
             // 20 minutes
             const guild = container.client.guilds.cache.get(dbGuild.guildId);
             if (guild != null) {
