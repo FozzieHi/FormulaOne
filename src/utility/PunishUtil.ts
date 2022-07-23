@@ -7,7 +7,13 @@ import {
   Snowflake,
 } from "discord.js";
 import { Constants, PunishmentLevel, PunishmentType } from "./Constants";
-import { dm, replyInteractionError, replyInteractionPublic } from "./Sender";
+import {
+  dm,
+  replyInteraction,
+  replyInteractionError,
+  replyInteractionPublic,
+  send,
+} from "./Sender";
 import db from "../database";
 import { modLog } from "../services/ModerationService";
 import { StringUtil } from "./StringUtil";
@@ -202,8 +208,9 @@ export class PunishUtil {
           color = Constants.BAN_COLOR;
         }
 
-        await replyInteractionPublic(
-          interaction,
+        await replyInteraction(interaction, `Successfully punished member.`);
+        await send(
+          interaction.channel,
           `Successfully ${punishmentDisplay.displayPastTense} ${StringUtil.boldify(
             targetMember.user.tag
           )}${

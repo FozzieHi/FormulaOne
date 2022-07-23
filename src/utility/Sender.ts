@@ -114,7 +114,12 @@ async function replyInteractionHandler(
 }
 
 export async function replyInteraction(
-  interaction: CommandInteraction | ButtonInteraction | ContextMenuInteraction,
+  interaction:
+    | CommandInteraction
+    | ButtonInteraction
+    | ContextMenuInteraction
+    | SelectMenuInteraction
+    | ModalSubmitInteraction,
   description: string | undefined,
   embedOptions: MessageEmbedOptions | null = {},
   messageOptions: InteractionReplyOptions = {}
