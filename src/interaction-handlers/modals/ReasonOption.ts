@@ -3,8 +3,16 @@ import {
   InteractionHandlerTypes,
   PieceContext,
 } from "@sapphire/framework";
-import { ModalSubmitInteraction } from "discord.js";
+import {
+  GuildTextBasedChannel,
+  Message,
+  ModalSubmitInteraction,
+  Snowflake,
+} from "discord.js";
 import { BanishUtil } from "../../utility/BanishUtil";
+import { ModerationUtil } from "../../utility/ModerationUtil";
+import { BotQueueService } from "../../services/BotQueueService";
+import { replyInteraction } from "../../utility/Sender";
 
 export class ReasonOption extends InteractionHandler {
   public constructor(context: PieceContext) {
@@ -20,23 +28,45 @@ export class ReasonOption extends InteractionHandler {
     if (interaction.guild == null) {
       return;
     }
+    const moderator = await interaction.guild.members.fetch(parsedData.moderatorId);
+    const targetMember = await interaction.guild.members.fetch(
+      parsedData.targetMemberId
+    );
+    if (moderator == null || targetMember == null) {
+      return;
+    }
     if (parsedData.commandName === "banish") {
-      const moderator = interaction.guild.members.cache.get(parsedData.moderatorId);
-      const targetMember = interaction.guild.members.cache.get(
-        parsedData.targetMemberId
-      );
-      if (moderator == null || targetMember == null) {
-        return;
-      }
       await BanishUtil.banish(
         interaction,
         moderator,
         targetMember,
-        parsedData.targetRoleId,
-        "remove",
+        parsedData.targetRoleId as string,
+        parsedData.action as string,
         "interaction",
         parsedData.reason
       );
+    } else if (parsedData.commandName === "ban") {
+      const channel = (await interaction.guild.channels.fetch(
+        parsedData.channelId as Snowflake
+      )) as GuildTextBasedChannel;
+      if (channel == null) {
+        return;
+      }
+      await ModerationUtil.ban(
+        interaction.guild,
+        targetMember.user,
+        moderator.user,
+        parsedData.reason,
+        channel
+      );
+      await BotQueueService.archiveLog(
+        interaction.guild,
+        targetMember.id,
+        moderator.user,
+        interaction.message as Message,
+        "Banned"
+      );
+      await replyInteraction(interaction, "Successfully banned user.");
     }
   }
 
@@ -46,15 +76,33 @@ export class ReasonOption extends InteractionHandler {
     }
     const split = interaction.customId.split("-");
     split.shift();
-    const [commandName, moderatorId, targetMemberId, targetRoleId, action] = split;
+    const [commandName] = split;
+    split.shift();
     const reason = interaction.fields.getTextInputValue("reason");
-    return this.some({
-      commandName,
-      moderatorId,
-      targetMemberId,
-      targetRoleId,
-      action,
-      reason,
-    });
+    if (commandName === "banish") {
+      const [moderatorId, targetMemberId, targetRoleId, action] = split;
+      return this.some({
+        commandName,
+        moderatorId,
+        targetMemberId,
+        targetRoleId,
+        action,
+        channelId: null,
+        reason,
+      });
+    }
+    if (commandName === "ban") {
+      const [moderatorId, targetMemberId, channelId] = split;
+      return this.some({
+        commandName,
+        moderatorId,
+        targetMemberId,
+        targetRoleId: null,
+        action: null,
+        channelId,
+        reason,
+      });
+    }
+    return this.none();
   }
 }

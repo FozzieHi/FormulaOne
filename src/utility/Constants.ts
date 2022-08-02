@@ -12,6 +12,12 @@ export type PunishmentLevel = {
   length?: number;
 };
 
+export enum ModerationQueueButtons {
+  BAN = "BAN",
+  UNMUTE = "UNMUTE",
+  IGNORE = "IGNORE",
+}
+
 export class Constants {
   static readonly DEFAULT_COLORS: Array<number> = [
     0xff269a, 0x00ff00, 0x00e828, 0x08f8ff, 0xf226ff, 0xff1c8e, 0x68ff22, 0xffbe11,
@@ -121,6 +127,8 @@ export class Constants {
     NEWS: "335167453350854666",
     LOGS: "273927887034515457",
     MOD_LOGS: "447397947261452288",
+    MOD_QUEUE: "920333278593024071",
+    MOD_QUEUE_ARCHIVE: "920333356250587156",
     EMOJIS: "639401538485485569",
   };
 
@@ -132,6 +140,7 @@ export class Constants {
   static readonly INTENTS: Intents = new Intents([
     Intents.FLAGS.GUILDS,
     Intents.FLAGS.GUILD_MEMBERS,
+    Intents.FLAGS.GUILD_MESSAGES,
   ]);
 
   static readonly PRESENCE: PresenceData = {

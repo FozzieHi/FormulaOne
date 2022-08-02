@@ -5,10 +5,11 @@ import {
   MessageButton,
   MessageEmbedOptions,
   MessageOptions,
+  Snowflake,
   User,
 } from "discord.js";
 import { container } from "@sapphire/framework";
-import { Constants } from "../utility/Constants";
+import { Constants, ModerationQueueButtons } from "../utility/Constants";
 import { send } from "../utility/Sender";
 import { NumberUtil } from "../utility/NumberUtil";
 import TryVal from "../utility/TryVal";
@@ -31,6 +32,42 @@ export class ModerationService {
   public static async isModerator(guild: Guild, user: User) {
     return user.bot || (await this.getPermLevel(guild, user)) > 0;
   }
+}
+
+function getModerationQueueButtons(
+  buttons: Array<ModerationQueueButtons>,
+  targetUserId: Snowflake,
+  channelId: Snowflake
+) {
+  const returnButtons: Array<MessageButton> = [];
+  buttons.forEach((button) => {
+    if (button === "BAN") {
+      returnButtons.push(
+        new MessageButton({
+          customId: `showreasonoption-ban-${targetUserId}-${channelId}`,
+          label: `Ban`,
+          style: "DANGER",
+        })
+      );
+    } else if (button === "UNMUTE") {
+      returnButtons.push(
+        new MessageButton({
+          customId: `unconfirmed-unmute-${targetUserId}`,
+          label: `Unmute`,
+          style: "SUCCESS",
+        })
+      );
+    } else if (button === "IGNORE") {
+      returnButtons.push(
+        new MessageButton({
+          customId: `ignore-${targetUserId}`,
+          label: `Ignore`,
+          style: "SECONDARY",
+        })
+      );
+    }
+  });
+  return returnButtons;
 }
 
 export async function genericLog(
@@ -60,10 +97,11 @@ export async function genericLog(
 
   const buttons = [
     [
-      new MessageButton()
-        .setCustomId(`userid-${user.id}`)
-        .setLabel("User ID")
-        .setStyle("SECONDARY"),
+      new MessageButton({
+        customId: `userid-${user.id}`,
+        label: `User ID`,
+        style: "SECONDARY",
+      }),
     ],
   ];
   messageOptions.components = buttons.map((b) => ({ type: 1, components: b }));
@@ -116,14 +154,77 @@ export async function modLog(
   if (target != null) {
     const buttons = [
       [
-        new MessageButton()
-          .setCustomId(`userid-${target.id}`)
-          .setLabel("User ID")
-          .setStyle("SECONDARY"),
+        new MessageButton({
+          customId: `userid-${target.id}`,
+          label: `User ID`,
+          style: "SECONDARY",
+        }),
       ],
     ];
     messageOptions.components = buttons.map((b) => ({ type: 1, components: b }));
   }
+
+  embedOptions.fields = [];
+
+  for (let i = 0; i < fieldsAndValues.length - 1; i += 1) {
+    if (NumberUtil.isEven(i)) {
+      embedOptions.fields.push({
+        name: fieldsAndValues[i],
+        value: fieldsAndValues[i + 1].toString(),
+      });
+    }
+  }
+
+  await send(
+    logChannel as GuildTextBasedChannel,
+    undefined,
+    embedOptions,
+    messageOptions
+  );
+}
+
+export async function modQueue(
+  guild: Guild,
+  target: User,
+  channelId: Snowflake,
+  messageId: Snowflake,
+  fieldsAndValues: Array<string>,
+  color: number,
+  buttons: Array<ModerationQueueButtons>
+) {
+  const logChannel = guild.channels.cache.get(Constants.CHANNELS.MOD_QUEUE);
+  if (logChannel == null) {
+    container.logger.error("MOD_QUEUE is null or undefined.");
+    return;
+  }
+
+  const messageOptions: MessageOptions = {};
+  const embedOptions: MessageEmbedOptions = {
+    footer: {
+      text: `User ID: ${target.id} - Message ID: ${messageId}`,
+    },
+    color,
+    timestamp: new Date(),
+  };
+
+  embedOptions.author = {
+    name: target.tag,
+    iconURL: target.displayAvatarURL(),
+  };
+
+  const msgButtons = [
+    [
+      new MessageButton({
+        customId: `userid-${target.id}`,
+        label: `User ID`,
+        style: "SECONDARY",
+      }),
+    ],
+  ];
+  getModerationQueueButtons(buttons, target.id, channelId).forEach((button) =>
+    msgButtons[0].push(button)
+  );
+  messageOptions.components = msgButtons.map((b) => ({ type: 1, components: b }));
 
   embedOptions.fields = [];
 
