@@ -3,11 +3,12 @@ import {
   InteractionHandlerTypes,
   PieceContext,
 } from "@sapphire/framework";
-import { ButtonInteraction, Guild, Message, Snowflake } from "discord.js";
+import { ButtonInteraction, Guild, Message, Snowflake, TextChannel } from "discord.js";
 import { Constants } from "../../utility/Constants";
 import MutexManager from "../../managers/MutexManager";
 import { replyInteraction, replyInteractionError } from "../../utility/Sender";
 import { BotQueueService } from "../../services/BotQueueService";
+import TryVal from "../../utility/TryVal";
 
 export class IgnoreInteraction extends InteractionHandler {
   public constructor(context: PieceContext) {
@@ -25,12 +26,19 @@ export class IgnoreInteraction extends InteractionHandler {
       return;
     }
     await MutexManager.getUserMutex(userId).runExclusive(async () => {
-      const targetMessage = interaction.message as Message;
+      const logMessage = await TryVal(
+        (interaction.channel as TextChannel).messages.fetch(
+          (interaction.message as Message).id
+        )
+      );
+      if (logMessage == null) {
+        return;
+      }
       const messageSent = await BotQueueService.archiveLog(
         interaction.guild as Guild,
         userId,
         interaction.user,
-        targetMessage,
+        logMessage as Message,
         "Ignored"
       );
       if (messageSent) {
