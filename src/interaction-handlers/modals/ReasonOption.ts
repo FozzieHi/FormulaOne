@@ -9,6 +9,7 @@ import {
   Message,
   ModalSubmitInteraction,
   Snowflake,
+  TextChannel,
 } from "discord.js";
 import { BanishUtil } from "../../utility/BanishUtil";
 import { ModerationUtil } from "../../utility/ModerationUtil";
@@ -16,6 +17,7 @@ import { BotQueueService } from "../../services/BotQueueService";
 import { replyInteraction } from "../../utility/Sender";
 import MutexManager from "../../managers/MutexManager";
 import { Constants } from "../../utility/Constants";
+import TryVal from "../../utility/TryVal";
 
 export class ReasonOption extends InteractionHandler {
   public constructor(context: PieceContext) {
@@ -56,6 +58,14 @@ export class ReasonOption extends InteractionHandler {
         return;
       }
       await MutexManager.getUserMutex(targetMember.id).runExclusive(async () => {
+        const logMessage = await TryVal(
+          (interaction.channel as TextChannel).messages.fetch(
+            (interaction.message as Message).id
+          )
+        );
+        if (logMessage == null) {
+          return;
+        }
         await ModerationUtil.ban(
           interaction.guild as Guild,
           targetMember.user,
@@ -67,7 +77,7 @@ export class ReasonOption extends InteractionHandler {
           interaction.guild as Guild,
           targetMember.id,
           moderator.user,
-          interaction.message as Message,
+          logMessage as Message,
           "Banned"
         );
         await replyInteraction(interaction, "Successfully banned user.", {
