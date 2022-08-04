@@ -2,6 +2,7 @@ import {
   CommandInteraction,
   Guild,
   GuildMember,
+  Message,
   ModalSubmitInteraction,
   SelectMenuInteraction,
   Snowflake,
@@ -13,6 +14,7 @@ import {
   replyInteractionError,
   replyInteractionPublic,
   send,
+  updateInteraction,
 } from "./Sender";
 import db from "../database";
 import { modLog } from "../services/ModerationService";
@@ -22,6 +24,7 @@ import { getDBGuild, getDBUser } from "./DatabaseUtil";
 import { NumberUtil } from "./NumberUtil";
 import { PopUpdate } from "../database/updates/PopUpdate";
 import MutexManager from "../managers/MutexManager";
+import { Punishment } from "../database/models/User";
 
 async function increasePunishment(
   memberId: Snowflake,
@@ -134,8 +137,10 @@ export class PunishUtil {
     targetMember: GuildMember,
     action: string,
     reason: string,
-    amount: number
-  ) {
+    amount: number,
+    message?: Message
+  ): Promise<Message | null> {
+    let messageSent;
     await MutexManager.getUserMutex(targetMember.id).runExclusive(async () => {
       if (interaction.guild == null || interaction.channel == null) {
         return;
@@ -208,8 +213,17 @@ export class PunishUtil {
           color = Constants.BAN_COLOR;
         }
 
-        await replyInteraction(interaction, `Successfully punished member.`);
-        await send(
+        if (interaction.channel.id === Constants.CHANNELS.MOD_QUEUE) {
+          await updateInteraction(
+            interaction as SelectMenuInteraction,
+            `Successfully punished member.`,
+            {},
+            { content: null, components: [] }
+          );
+        } else {
+          await replyInteraction(interaction, `Successfully punished member.`);
+        }
+        messageSent = await send(
           interaction.channel,
           `Successfully ${punishmentDisplay.displayPastTense} ${StringUtil.boldify(
             targetMember.user.tag
@@ -218,33 +232,43 @@ export class PunishUtil {
           } for the reason ${reason}.\n\nThey have ${currentPun} punishments in the last 30 days.`
         );
 
+        const punishData: Punishment = {
+          date: Date.now(),
+          escalation: `${currentPun + escalations} (${punishmentDisplay.displayLog})${
+            escalations > 1 ? ` (${escalations} escalations)` : ""
+          }`,
+          reason,
+          mod: moderator.user.tag,
+          channelId: message?.channel.id ?? interaction.channel.id,
+        };
+        if (message != null) {
+          punishData.messageContent = message.content;
+        }
         await db.userRepo?.upsertUser(
           targetMember.id,
           interaction.guild.id,
-          new PushUpdate("punishments", {
-            date: Date.now(),
-            escalation: `${currentPun + escalations} (${punishmentDisplay.displayLog})${
-              escalations > 1 ? ` (${escalations} escalations)` : ""
-            }`,
-            reason,
-            mod: moderator.user.tag,
-            channelId: interaction.channel.id,
-          })
+          new PushUpdate("punishments", punishData)
         );
-        await increasePunishment(targetMember.id, interaction.guild.id, 1);
+        await increasePunishment(targetMember.id, interaction.guild.id, escalations);
+        const modLogFieldAndValues = [
+          "Action",
+          `${punishmentDisplay.displayLog}${
+            escalations > 1 ? ` (${escalations} escalations)` : ""
+          }`,
+          "Member",
+          `${targetMember.user.tag} (${targetMember.id})`,
+          "Reason",
+          reason,
+          "Channel",
+          message?.channel.toString() ?? interaction.channel.toString(),
+        ];
+        if (message != null) {
+          modLogFieldAndValues.push("Content", message.content);
+        }
         await modLog(
           interaction.guild,
           moderator.user,
-          [
-            "Action",
-            punishmentDisplay.displayLog,
-            "Member",
-            `${targetMember.user.tag} (${targetMember.id})`,
-            "Reason",
-            reason,
-            "Channel",
-            interaction.channel.toString(),
-          ],
+          modLogFieldAndValues,
           color,
           targetMember.user
         );
@@ -296,5 +320,9 @@ export class PunishUtil {
         );
       }
     });
+    if (messageSent != null) {
+      return messageSent;
+    }
+    return null;
   }
 }

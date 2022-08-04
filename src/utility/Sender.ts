@@ -182,7 +182,10 @@ export async function replyInteractionError(
 }
 
 async function updateInteractionHandler(
-  interaction: MessageComponentInteraction,
+  interaction:
+    | SelectMenuInteraction
+    | ModalSubmitInteraction
+    | MessageComponentInteraction,
   description: string | undefined,
   embedOptions: MessageEmbedOptions | null = {},
   messageOptions: InteractionUpdateOptions = {}
@@ -197,7 +200,10 @@ async function updateInteractionHandler(
 }
 
 export async function updateInteraction(
-  interaction: MessageComponentInteraction,
+  interaction:
+    | SelectMenuInteraction
+    | ModalSubmitInteraction
+    | MessageComponentInteraction,
   description: string | undefined,
   embedOptions: MessageEmbedOptions | null = {},
   messageOptions: InteractionUpdateOptions = {}

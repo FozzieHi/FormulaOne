@@ -180,7 +180,7 @@ export class BanishCommand extends Command {
     const optionSelect: Array<Array<MessageSelectMenu>> = [
       [
         new MessageSelectMenu({
-          customId: `banishchannelselect-${moderator.id}-${targetMember.id}`,
+          customId: `banishchannelselect-${targetMember.id}`,
           placeholder: "Select banish channel",
           options: roleOptions,
         }),

@@ -13,6 +13,7 @@ export type PunishmentLevel = {
 };
 
 export enum ModerationQueueButtons {
+  PUNISH = "PUNISH",
   BAN = "BAN",
   UNMUTE = "UNMUTE",
   IGNORE = "IGNORE",

@@ -35,7 +35,7 @@ export class AddRemoveOption extends InteractionHandler {
       const optionSelect: Array<Array<MessageSelectMenu>> = [
         [
           new MessageSelectMenu({
-            customId: `ruleselect-${parsedData.commandName}-${parsedData.moderatorId}-${parsedData.targetMemberId}-${parsedData.targetRoleId}-${parsedData.action}`,
+            customId: `ruleselect-${parsedData.commandName}-${parsedData.targetMemberId}-${parsedData.targetRoleId}-${parsedData.action}`,
             placeholder: "Select rule",
             options: ruleOptions,
           }),
@@ -60,7 +60,7 @@ export class AddRemoveOption extends InteractionHandler {
         ],
       ];
       await interaction.showModal({
-        customId: `reasonoption-${parsedData.commandName}-${parsedData.moderatorId}-${parsedData.targetMemberId}-${parsedData.targetRoleId}-${parsedData.action}`,
+        customId: `reasonoption-${parsedData.commandName}-${parsedData.targetMemberId}-${parsedData.targetRoleId}-${parsedData.action}`,
         title: "Reason",
         components: inputs.map((input) => ({
           type: "ACTION_ROW",
@@ -76,10 +76,9 @@ export class AddRemoveOption extends InteractionHandler {
     }
     const split = interaction.customId.split("-");
     split.shift();
-    const [commandName, moderatorId, targetMemberId, targetRoleId, action] = split;
+    const [commandName, targetMemberId, targetRoleId, action] = split;
     return this.some({
       commandName,
-      moderatorId,
       targetMemberId,
       targetRoleId,
       action,

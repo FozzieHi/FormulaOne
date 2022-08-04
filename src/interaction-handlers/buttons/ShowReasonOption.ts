@@ -27,7 +27,7 @@ export class ShowReasonOptionInteraction extends InteractionHandler {
       ],
     ];
     await interaction.showModal({
-      customId: `reasonoption-${parsedData.action}-${interaction.user.id}-${parsedData.targetUserId}-${parsedData.channelId}`,
+      customId: `reasonoption-${parsedData.action}-${parsedData.targetUserId}-${parsedData.channelId}`,
       title: `${StringUtil.upperFirstChar(parsedData.action)} Reason`,
       components: inputs.map((input) => ({
         type: "ACTION_ROW",

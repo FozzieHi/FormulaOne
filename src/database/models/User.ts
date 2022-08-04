@@ -14,7 +14,7 @@ export interface DBUser extends WithId<Document> {
   leftRoles: Array<Snowflake>;
 }
 
-type Punishment = {
+export type Punishment = {
   date: number;
   escalation: string;
   reason: string;

@@ -5,6 +5,7 @@ import {
 } from "@sapphire/framework";
 import {
   Guild,
+  GuildMember,
   GuildTextBasedChannel,
   Message,
   ModalSubmitInteraction,
@@ -33,17 +34,16 @@ export class ReasonOption extends InteractionHandler {
     if (interaction.guild == null) {
       return;
     }
-    const moderator = await interaction.guild.members.fetch(parsedData.moderatorId);
     const targetMember = await interaction.guild.members.fetch(
       parsedData.targetMemberId
     );
-    if (moderator == null || targetMember == null) {
+    if (targetMember == null) {
       return;
     }
     if (parsedData.commandName === "banish") {
       await BanishUtil.banish(
         interaction,
-        moderator,
+        interaction.member as GuildMember,
         targetMember,
         parsedData.targetRoleId as string,
         parsedData.action as string,
@@ -69,14 +69,14 @@ export class ReasonOption extends InteractionHandler {
         await ModerationUtil.ban(
           interaction.guild as Guild,
           targetMember.user,
-          moderator.user,
+          interaction.user,
           parsedData.reason,
           channel
         );
         await BotQueueService.archiveLog(
           interaction.guild as Guild,
           targetMember.id,
-          moderator.user,
+          interaction.user,
           logMessage as Message,
           "Banned"
         );
@@ -97,10 +97,9 @@ export class ReasonOption extends InteractionHandler {
     split.shift();
     const reason = interaction.fields.getTextInputValue("reason");
     if (commandName === "banish") {
-      const [moderatorId, targetMemberId, targetRoleId, action] = split;
+      const [targetMemberId, targetRoleId, action] = split;
       return this.some({
         commandName,
-        moderatorId,
         targetMemberId,
         targetRoleId,
         action,
@@ -109,10 +108,9 @@ export class ReasonOption extends InteractionHandler {
       });
     }
     if (commandName === "ban") {
-      const [moderatorId, targetMemberId, channelId] = split;
+      const [targetMemberId, channelId] = split;
       return this.some({
         commandName,
-        moderatorId,
         targetMemberId,
         targetRoleId: null,
         action: null,

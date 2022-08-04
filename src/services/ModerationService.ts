@@ -37,23 +37,32 @@ export class ModerationService {
 function getModerationQueueButtons(
   buttons: Array<ModerationQueueButtons>,
   targetUserId: Snowflake,
-  channelId: Snowflake
+  channelId: Snowflake,
+  messageId: Snowflake
 ) {
   const returnButtons: Array<MessageButton> = [];
   buttons.forEach((button) => {
-    if (button === "BAN") {
+    if (button === "PUNISH") {
+      returnButtons.push(
+        new MessageButton({
+          customId: `showamountselect-${channelId}-${messageId}`,
+          label: "Punish",
+          style: "DANGER",
+        })
+      );
+    } else if (button === "BAN") {
       returnButtons.push(
         new MessageButton({
           customId: `showreasonoption-ban-${targetUserId}-${channelId}`,
-          label: `Ban`,
+          label: "Ban",
           style: "DANGER",
         })
       );
     } else if (button === "UNMUTE") {
       returnButtons.push(
         new MessageButton({
-          customId: `unconfirmed-unmute-${targetUserId}`,
-          label: `Unmute`,
+          customId: `showreasonoption-unmute-${targetUserId}`,
+          label: "Unmute",
           style: "SUCCESS",
         })
       );
@@ -61,7 +70,7 @@ function getModerationQueueButtons(
       returnButtons.push(
         new MessageButton({
           customId: `ignore-${targetUserId}`,
-          label: `Ignore`,
+          label: "Ignore",
           style: "SECONDARY",
         })
       );
@@ -221,8 +230,8 @@ export async function modQueue(
       }),
     ],
   ];
-  getModerationQueueButtons(buttons, target.id, channelId).forEach((button) =>
-    msgButtons[0].push(button)
+  getModerationQueueButtons(buttons, target.id, channelId, messageId).forEach(
+    (button) => msgButtons[0].push(button)
   );
   messageOptions.components = msgButtons.map((b) => ({ type: 1, components: b }));
 

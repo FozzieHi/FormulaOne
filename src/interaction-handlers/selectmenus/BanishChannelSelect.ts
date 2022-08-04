@@ -27,13 +27,13 @@ export class BanishChannelSelect extends InteractionHandler {
     const buttons: Array<Array<MessageButton>> = [
       [
         new MessageButton({
-          customId: `addremoveoption-banish-${parsedData.moderatorId}-${parsedData.targetMemberId}-${parsedData.targetRoleId}-add`,
+          customId: `addremoveoption-banish-${parsedData.targetMemberId}-${parsedData.targetRoleId}`,
           label: "Add",
           style: "SECONDARY",
           disabled: member.roles.cache.has(parsedData.targetRoleId),
         }),
         new MessageButton({
-          customId: `addremoveoption-banish-${parsedData.moderatorId}-${parsedData.targetMemberId}-${parsedData.targetRoleId}-remove`,
+          customId: `addremoveoption-banish-${parsedData.targetMemberId}-${parsedData.targetRoleId}`,
           label: "Remove",
           style: "SECONDARY",
           disabled: !member.roles.cache.has(parsedData.targetRoleId),
@@ -56,8 +56,8 @@ export class BanishChannelSelect extends InteractionHandler {
     }
     const split = interaction.customId.split("-");
     split.shift();
-    const [moderatorId, targetMemberId] = split;
+    const [targetMemberId] = split;
     const targetRoleId = interaction.values[0];
-    return this.some({ moderatorId, targetMemberId, targetRoleId });
+    return this.some({ targetMemberId, targetRoleId });
   }
 }
