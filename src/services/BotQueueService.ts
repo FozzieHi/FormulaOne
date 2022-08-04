@@ -3,9 +3,16 @@ import { Constants } from "../utility/Constants";
 import { StringUtil } from "../utility/StringUtil";
 import { FilterService } from "./FilterService";
 import ViolationService from "./ViolationService";
+import { ModerationService } from "./ModerationService";
 
 export class BotQueueService {
   public static async checkMessage(message: Message) {
+    if (
+      message.guild == null ||
+      (await ModerationService.getPermLevel(message.guild, message.author)) > 0
+    ) {
+      return;
+    }
     const result = await FilterService.checkInvites(message);
     if (result) {
       await ViolationService.checkViolations(message);
