@@ -30,7 +30,7 @@ export class FilterService {
       [
         "Action",
         `Filter Trigger${
-          aboveMessage != null ? `[Jump to message above](${aboveMessage})` : ""
+          aboveMessage != null ? ` [Jump to message above](${aboveMessage})` : ""
         }`,
         "Filter Name",
         "Invites",
