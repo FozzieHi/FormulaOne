@@ -1,8 +1,17 @@
 import { Guild, Message, MessageButton, TextChannel, User } from "discord.js";
 import { Constants } from "../utility/Constants";
 import { StringUtil } from "../utility/StringUtil";
+import { FilterService } from "./FilterService";
+import ViolationService from "./ViolationService";
 
 export class BotQueueService {
+  public static async checkMessage(message: Message) {
+    const result = await FilterService.checkInvites(message);
+    if (result) {
+      await ViolationService.checkViolations(message);
+    }
+  }
+
   public static async archiveLog(
     guild: Guild,
     targetUserId: string,

@@ -61,7 +61,7 @@ function getModerationQueueButtons(
     } else if (button === "UNMUTE") {
       returnButtons.push(
         new MessageButton({
-          customId: `showreasonoption-unmute-${targetUserId}`,
+          customId: `unmute-${targetUserId}`,
           label: "Unmute",
           style: "SUCCESS",
         })

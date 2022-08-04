@@ -15,6 +15,7 @@ import { BanishUtil } from "../../utility/BanishUtil";
 import { Constants } from "../../utility/Constants";
 import { PunishUtil } from "../../utility/PunishUtil";
 import { BotQueueService } from "../../services/BotQueueService";
+import Try from "../../utility/Try";
 
 export class RuleSelect extends InteractionHandler {
   public constructor(context: PieceContext) {
@@ -81,7 +82,7 @@ export class RuleSelect extends InteractionHandler {
         "Punished"
       );
       await setTimeout(10000, "result");
-      await messageSent.delete();
+      await Try(messageSent.delete());
     }
   }
 
