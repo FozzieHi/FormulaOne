@@ -28,7 +28,10 @@ export default new (class ViolationService {
             violations: newViolations,
           });
           if (newViolations === 3) {
-            await message.member.roles.add(Constants.ROLES.MUTED);
+            await message.member.roles.add(
+              Constants.ROLES.MUTED,
+              "Reaching three moderation-queue violations"
+            );
             await modQueue(
               message.guild,
               message.member.user,
