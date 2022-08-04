@@ -5,7 +5,7 @@ import { modQueue } from "./ModerationService";
 import Try from "../utility/Try";
 
 export class FilterService {
-  public static async checkInvites(message: Message) {
+  public static async checkInvites(message: Message): Promise<boolean> {
     const inviteMatch = Constants.REGEXES.INVITES.match(message.content);
     if (inviteMatch == null || message.guild == null) {
       return false;
