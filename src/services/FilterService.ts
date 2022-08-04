@@ -20,12 +20,18 @@ export class FilterService {
       return false;
     }
     await Try(message.delete());
+    const messages = await message.channel.messages.fetch({ limit: 2 });
+    const aboveMessage = messages.last()?.url;
     await modQueue(
       message.guild,
       message.author,
       message.channel.id,
       message.id,
       [
+        "Action",
+        `Filter Trigger${
+          aboveMessage != null ? `[Jump to message above](${aboveMessage})` : ""
+        }`,
         "Filter Name",
         "Invites",
         "Invite Server",
