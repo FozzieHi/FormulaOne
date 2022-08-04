@@ -27,10 +27,10 @@ export class FilterService {
       [
         "Filter Name",
         "Invites",
-        "Invite Code",
-        inviteCode,
         "Invite Server",
         `${invite.guild.name} (${invite.guild.id})`,
+        "Channel",
+        message.channel.toString(),
         "Content",
         message.content,
       ],
