@@ -3,8 +3,11 @@ import {
   InteractionHandlerTypes,
   PieceContext,
 } from "@sapphire/framework";
-import { ButtonInteraction, TextInputComponent } from "discord.js";
+import { ButtonInteraction, Message, TextInputComponent } from "discord.js";
 import { StringUtil } from "../../utility/StringUtil";
+import Try from "../../utility/Try";
+import { BotQueueService } from "../../services/BotQueueService";
+import { replyInteraction } from "../../utility/Sender";
 
 export class ShowReasonOptionInteraction extends InteractionHandler {
   public constructor(context: PieceContext) {
@@ -17,6 +20,21 @@ export class ShowReasonOptionInteraction extends InteractionHandler {
     interaction: ButtonInteraction,
     parsedData: InteractionHandler.ParseResult<this>
   ) {
+    if (interaction.guild == null) {
+      return;
+    }
+    if (parsedData.action === "ban") {
+      if (await Try(interaction.guild.bans.fetch(parsedData.targetUserId))) {
+        await BotQueueService.archiveLog(
+          interaction.guild,
+          parsedData.targetUserId,
+          null,
+          interaction.message as Message,
+          "Already banned"
+        );
+        await replyInteraction(interaction, "Member is already banned.");
+      }
+    }
     const inputs = [
       [
         new TextInputComponent({

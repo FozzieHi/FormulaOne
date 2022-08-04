@@ -15,7 +15,7 @@ export class BotQueueService {
   public static async archiveLog(
     guild: Guild,
     targetUserId: string,
-    moderator: User,
+    moderator: User | null,
     message: Message,
     action: string
   ): Promise<Message | null> {
@@ -41,7 +41,9 @@ export class BotQueueService {
     ];
 
     const messageSent = await archiveThread.send({
-      content: `${action} by ${StringUtil.boldify(moderator.tag)}`,
+      content: `${action}${
+        moderator != null ? ` by ${StringUtil.boldify(moderator.tag)}` : ""
+      }`,
       embeds: [messageEmbed],
       components: buttons.map((button) => ({
         type: "ACTION_ROW",
