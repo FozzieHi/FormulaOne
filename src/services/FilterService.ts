@@ -1,8 +1,9 @@
-import { Message } from "discord.js";
+import { Invite, Message } from "discord.js";
 import { container } from "@sapphire/framework";
 import { Constants, ModerationQueueButtons } from "../utility/Constants";
 import { modQueue } from "./ModerationService";
 import Try from "../utility/Try";
+import TryVal from "../utility/TryVal";
 
 export class FilterService {
   public static async checkInvites(message: Message): Promise<boolean> {
@@ -11,7 +12,7 @@ export class FilterService {
       return false;
     }
     const inviteCode = inviteMatch[2];
-    const invite = await container.client.fetchInvite(inviteCode);
+    const invite = (await TryVal(container.client.fetchInvite(inviteCode))) as Invite;
     if (invite == null || invite.guild == null) {
       return false;
     }
