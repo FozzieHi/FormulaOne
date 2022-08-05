@@ -15,7 +15,7 @@ import {
 import { BanishUtil } from "../../utility/BanishUtil";
 import { ModerationUtil } from "../../utility/ModerationUtil";
 import { BotQueueService } from "../../services/BotQueueService";
-import { replyInteraction } from "../../utility/Sender";
+import { followUpInteraction } from "../../utility/Sender";
 import MutexManager from "../../managers/MutexManager";
 import { Constants } from "../../utility/Constants";
 import TryVal from "../../utility/TryVal";
@@ -81,7 +81,7 @@ export class ReasonOption extends InteractionHandler {
           logMessage as Message,
           "Banned"
         );
-        await replyInteraction(interaction, "Successfully banned user.", {
+        await followUpInteraction(interaction, "Successfully banned user.", {
           color: Constants.UNMUTE_COLOR,
         });
       });

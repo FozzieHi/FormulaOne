@@ -217,3 +217,34 @@ export async function updateInteraction(
     messageOptions
   );
 }
+
+async function followUpInteractionHandler(
+  interaction: ModalSubmitInteraction,
+  description: string | undefined,
+  embedOptions: MessageEmbedOptions | null = {},
+  messageOptions: InteractionReplyOptions = {}
+) {
+  if (embedOptions != null && description != null) {
+    embedOptions.description = description;
+  }
+  if (embedOptions != null) {
+    messageOptions.embeds = [new Embed(embedOptions)];
+  }
+  return interaction.followUp(messageOptions);
+}
+
+export async function followUpInteraction(
+  interaction: ModalSubmitInteraction,
+  description: string | undefined,
+  embedOptions: MessageEmbedOptions | null = {},
+  messageOptions: InteractionReplyOptions = {}
+) {
+  return followUpInteractionHandler(
+    interaction,
+    description != null
+      ? `${StringUtil.boldify(interaction.user.tag)}, ${description}`
+      : undefined,
+    embedOptions,
+    messageOptions
+  );
+}
