@@ -54,9 +54,7 @@ export class BanishChannelSelect extends InteractionHandler {
     if (!interaction.customId.startsWith("banishchannelselect-")) {
       return this.none();
     }
-    const split = interaction.customId.split("-");
-    split.shift();
-    const [targetMemberId] = split;
+    const targetMemberId = interaction.customId.split("-")[1];
     const targetRoleId = interaction.values[0];
     return this.some({ targetMemberId, targetRoleId });
   }
