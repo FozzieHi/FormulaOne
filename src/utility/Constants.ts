@@ -140,6 +140,7 @@ export class Constants {
 
   static readonly INTENTS: Intents = new Intents([
     Intents.FLAGS.GUILDS,
+    Intents.FLAGS.GUILD_BANS,
     Intents.FLAGS.GUILD_MEMBERS,
     Intents.FLAGS.GUILD_MESSAGES,
   ]);
