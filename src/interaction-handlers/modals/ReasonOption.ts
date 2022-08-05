@@ -51,6 +51,7 @@ export class ReasonOption extends InteractionHandler {
         parsedData.reason
       );
     } else if (parsedData.commandName === "ban") {
+      await interaction.deferReply({ ephemeral: true });
       const channel = (await interaction.guild.channels.fetch(
         parsedData.channelId as Snowflake
       )) as GuildTextBasedChannel;
