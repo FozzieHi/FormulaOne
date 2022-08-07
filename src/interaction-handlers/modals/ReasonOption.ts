@@ -1,4 +1,5 @@
 import {
+  container,
   InteractionHandler,
   InteractionHandlerTypes,
   PieceContext,
@@ -34,13 +35,13 @@ export class ReasonOption extends InteractionHandler {
     if (interaction.guild == null) {
       return;
     }
-    const targetMember = await interaction.guild.members.fetch(
-      parsedData.targetMemberId
-    );
-    if (targetMember == null) {
-      return;
-    }
     if (parsedData.commandName === "banish") {
+      const targetMember = await interaction.guild.members.fetch(
+        parsedData.targetMemberId
+      );
+      if (targetMember == null) {
+        return;
+      }
       await BanishUtil.banish(
         interaction,
         interaction.member as GuildMember,
@@ -52,13 +53,17 @@ export class ReasonOption extends InteractionHandler {
       );
     } else if (parsedData.commandName === "ban") {
       await interaction.deferReply({ ephemeral: true });
+      const targetUser = await container.client.users.fetch(parsedData.targetMemberId);
+      if (targetUser == null) {
+        return;
+      }
       const channel = (await interaction.guild.channels.fetch(
         parsedData.channelId as Snowflake
       )) as GuildTextBasedChannel;
       if (channel == null) {
         return;
       }
-      await MutexManager.getUserMutex(targetMember.id).runExclusive(async () => {
+      await MutexManager.getUserMutex(targetUser.id).runExclusive(async () => {
         const logMessage = await TryVal(
           (interaction.channel as TextChannel).messages.fetch(
             (interaction.message as Message).id
@@ -69,14 +74,14 @@ export class ReasonOption extends InteractionHandler {
         }
         await ModerationUtil.ban(
           interaction.guild as Guild,
-          targetMember.user,
+          targetUser,
           interaction.user,
           parsedData.reason,
           channel
         );
         await BotQueueService.archiveLog(
           interaction.guild as Guild,
-          targetMember.id,
+          targetUser.id,
           interaction.user,
           logMessage as Message,
           "Banned"
