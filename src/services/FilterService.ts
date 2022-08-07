@@ -4,6 +4,7 @@ import { Constants, ModerationQueueButtons } from "../utility/Constants";
 import { modQueue } from "./ModerationService";
 import Try from "../utility/Try";
 import TryVal from "../utility/TryVal";
+import { StringUtil } from "../utility/StringUtil";
 
 export class FilterService {
   public static async checkInvites(message: Message): Promise<boolean> {
@@ -39,7 +40,7 @@ export class FilterService {
         "Channel",
         message.channel.toString(),
         "Content",
-        message.content,
+        StringUtil.removeClickableLinks(message.content),
       ],
       Constants.KICK_COLOR,
       [ModerationQueueButtons.PUNISH, ModerationQueueButtons.IGNORE]
