@@ -19,7 +19,7 @@ export class StringUtil {
     let returnVal = str;
     if (urls != null) {
       urls.forEach((url) => {
-        returnVal = str.replace(url, this.unlinkify(url));
+        returnVal = returnVal.replace(url, this.unlinkify(url));
       });
     }
     return returnVal;
