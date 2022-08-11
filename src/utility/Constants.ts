@@ -161,7 +161,7 @@ export class Constants {
 
   static readonly GLOBAL_REGEXES = {
     MARKDOWN: new RE2(/([*~`_])+/g),
-    URL: new RE2(/^https?:\/\/([\w[\]:.-]+)\.([A-Za-z\d-]+)(:\d*)?([/#?]\S*)?$/g),
+    URL: new RE2(/https?:\/\/([\w[\]:.-]+)\.([A-Za-z\d-]+)(:\d*)?([/#?]\S*)?/g),
   };
 
   static readonly INTERVALS = {

@@ -16,7 +16,7 @@ export class StringUtil {
   static removeClickableLinks(str: string) {
     const pattern = Constants.GLOBAL_REGEXES.URL;
     const urls = str.match(pattern);
-    let returnVal = "";
+    let returnVal = str;
     if (urls) {
       urls.forEach((url) => {
         returnVal = str.replace(url, this.unlinkify(url));
