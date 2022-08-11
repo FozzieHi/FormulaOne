@@ -17,7 +17,7 @@ export class StringUtil {
     const pattern = Constants.GLOBAL_REGEXES.URL;
     const urls = str.match(pattern);
     let returnVal = str;
-    if (urls) {
+    if (urls != null) {
       urls.forEach((url) => {
         returnVal = str.replace(url, this.unlinkify(url));
       });
