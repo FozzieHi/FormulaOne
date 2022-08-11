@@ -28,10 +28,6 @@ module.exports = {
           { exceptMethods: ["chatInputRun", "contextMenuRun", "run"] },
         ],
         "import/prefer-default-export": "off",
-        "no-param-reassign": [
-          "error",
-          { ignorePropertyModificationsFor: ["embedOptions", "messageOptions"] },
-        ],
         "no-underscore-dangle": ["error", { allow: ["_id"] }],
       },
     },

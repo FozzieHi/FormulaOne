@@ -4,8 +4,9 @@ import { Random } from "../utility/Random";
 
 export class Embed extends MessageEmbed {
   constructor(data: MessageEmbedOptions) {
-    data.color ??= Random.arrayElement(Constants.DEFAULT_COLORS);
+    const returnVal = data;
+    returnVal.color ??= Random.arrayElement(Constants.DEFAULT_COLORS);
 
-    super(data);
+    super(returnVal);
   }
 }

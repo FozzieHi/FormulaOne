@@ -39,11 +39,13 @@ export async function send(
   embedOptions: MessageEmbedOptions = {},
   messageOptions: MessageOptions = {}
 ): Promise<Message> {
+  const newEmbedOptions = embedOptions;
+  const newMessageOptions = messageOptions;
   if (description != null) {
-    embedOptions.description = description;
+    newEmbedOptions.description = description;
   }
-  messageOptions.embeds = [new Embed(embedOptions)];
-  return channel.send(messageOptions);
+  newMessageOptions.embeds = [new Embed(newEmbedOptions)];
+  return channel.send(newMessageOptions);
 }
 
 export async function sendError(channel: TextBasedChannel | User, description: string) {
@@ -55,8 +57,9 @@ export async function sendFields(
   fieldsAndValues: Array<string>,
   embedOptions: MessageEmbedOptions = {}
 ): Promise<Message> {
-  embedOptions.fields = getFields(fieldsAndValues);
-  return send(channel, undefined, embedOptions);
+  const newEmbedOptions = embedOptions;
+  newEmbedOptions.fields = getFields(fieldsAndValues);
+  return send(channel, undefined, newEmbedOptions);
 }
 
 export async function dm(
@@ -104,13 +107,15 @@ async function replyInteractionHandler(
   embedOptions: MessageEmbedOptions | null = {},
   messageOptions: InteractionReplyOptions = {}
 ) {
-  if (embedOptions != null && description != null) {
-    embedOptions.description = description;
+  const newEmbedOptions = embedOptions;
+  const newMessageOptions = messageOptions;
+  if (newEmbedOptions != null && description != null) {
+    newEmbedOptions.description = description;
   }
-  if (embedOptions != null) {
-    messageOptions.embeds = [new Embed(embedOptions)];
+  if (newEmbedOptions != null) {
+    newMessageOptions.embeds = [new Embed(newEmbedOptions)];
   }
-  return interaction.reply(messageOptions);
+  return interaction.reply(newMessageOptions);
 }
 
 export async function replyInteraction(
@@ -124,14 +129,15 @@ export async function replyInteraction(
   embedOptions: MessageEmbedOptions | null = {},
   messageOptions: InteractionReplyOptions = {}
 ) {
-  messageOptions.ephemeral = true;
+  const newMessageOptions = messageOptions;
+  newMessageOptions.ephemeral = true;
   return replyInteractionHandler(
     interaction,
     description != null
       ? `${StringUtil.boldify(interaction.user.tag)}, ${description}`
       : undefined,
     embedOptions,
-    messageOptions
+    newMessageOptions
   );
 }
 
@@ -158,8 +164,14 @@ export async function replyInteractionPublicFields(
   embedOptions: MessageEmbedOptions = {},
   messageOptions: InteractionReplyOptions = {}
 ) {
-  embedOptions.fields = getFields(fieldsAndValues);
-  return replyInteractionHandler(interaction, undefined, embedOptions, messageOptions);
+  const newEmbedOptions = embedOptions;
+  newEmbedOptions.fields = getFields(fieldsAndValues);
+  return replyInteractionHandler(
+    interaction,
+    undefined,
+    newEmbedOptions,
+    messageOptions
+  );
 }
 
 export async function replyInteractionError(
@@ -172,11 +184,12 @@ export async function replyInteractionError(
   description: string,
   embedOptions: MessageEmbedOptions = {}
 ) {
-  embedOptions.color = Constants.ERROR_COLOR;
+  const newEmbedOptions = embedOptions;
+  newEmbedOptions.color = Constants.ERROR_COLOR;
   return replyInteractionHandler(
     interaction,
     `${StringUtil.boldify(interaction.user.tag)}, ${description}`,
-    embedOptions,
+    newEmbedOptions,
     { ephemeral: true }
   );
 }
@@ -190,13 +203,15 @@ async function updateInteractionHandler(
   embedOptions: MessageEmbedOptions | null = {},
   messageOptions: InteractionUpdateOptions = {}
 ) {
-  if (embedOptions != null && description != null) {
-    embedOptions.description = description;
+  const newEmbedOptions = embedOptions;
+  const newMessageOptions = messageOptions;
+  if (newEmbedOptions != null && description != null) {
+    newEmbedOptions.description = description;
   }
-  if (embedOptions != null) {
-    messageOptions.embeds = [new Embed(embedOptions)];
+  if (newEmbedOptions != null) {
+    newMessageOptions.embeds = [new Embed(newEmbedOptions)];
   }
-  return interaction.update(messageOptions);
+  return interaction.update(newMessageOptions);
 }
 
 export async function updateInteraction(
@@ -224,13 +239,15 @@ async function followUpInteractionHandler(
   embedOptions: MessageEmbedOptions | null = {},
   messageOptions: InteractionReplyOptions = {}
 ) {
-  if (embedOptions != null && description != null) {
-    embedOptions.description = description;
+  const newEmbedOptions = embedOptions;
+  const newMessageOptions = messageOptions;
+  if (newEmbedOptions != null && description != null) {
+    newEmbedOptions.description = description;
   }
-  if (embedOptions != null) {
-    messageOptions.embeds = [new Embed(embedOptions)];
+  if (newEmbedOptions != null) {
+    newMessageOptions.embeds = [new Embed(newEmbedOptions)];
   }
-  return interaction.followUp(messageOptions);
+  return interaction.followUp(newMessageOptions);
 }
 
 export async function followUpInteraction(
