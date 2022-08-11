@@ -13,11 +13,11 @@
   "author": "Fozzie#0001",
   "license": "AGPL-3.0",
   "dependencies": {
-    "@sapphire/framework": "^3.0.0-pr-499.9800f28.0",
+    "@sapphire/framework": "^3.0.0-pr-499.b9dcd4c.0",
     "@sapphire/plugin-logger": "^2.2.3",
     "async-mutex": "^0.3.2",
     "bufferutil": "^4.0.6",
-    "discord.js": "^13.8.1",
+    "discord.js": "^13.10.2",
     "erlpack": "github:discord/erlpack",
     "mongodb": "^4.8.1",
     "re2": "^1.17.7",
