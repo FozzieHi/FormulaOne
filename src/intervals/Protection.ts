@@ -1,13 +1,14 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument,@typescript-eslint/restrict-plus-operands,no-await-in-loop */
+/* eslint-disable no-await-in-loop */
 import { container } from "@sapphire/framework";
 import db from "../database";
 import { Constants } from "../utility/Constants";
 import { modLog } from "../services/ModerationService";
 import ProtectionService from "../services/ProtectionService";
+import { Guild } from "../database/models/Guild";
 
 setInterval(() => {
   (async function run() {
-    const guilds = await db.guildRepo?.findMany();
+    const guilds = (await db.guildRepo?.findMany()) as Array<Guild>;
     if (guilds == null) {
       return;
     }

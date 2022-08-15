@@ -18,15 +18,15 @@ export class BaseRepository {
     return this.collection.count(filter);
   }
 
-  async findMany(filter = {}) {
+  async findMany(filter = {}): Promise<Array<Document>> {
     return this.collection.find(filter).toArray();
   }
 
-  async findOne(filter: object) {
+  async findOne(filter: object): Promise<Document | null> {
     return this.collection.findOne(filter);
   }
 
-  async findById(id: ObjectId) {
+  async findById(id: ObjectId): Promise<Document | null> {
     return this.findOne(new IdQuery(id));
   }
 
