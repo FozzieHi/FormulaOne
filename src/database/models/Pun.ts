@@ -1,4 +1,13 @@
 import { Snowflake } from "discord.js";
+import { Document, WithId } from "mongodb";
+
+export interface Pun extends WithId<Document> {
+  userId: Snowflake;
+  guildId: Snowflake;
+  punLength: number;
+  punishedAt: number;
+  amount: number;
+}
 
 export class Pun {
   userId: Snowflake;

@@ -25,6 +25,7 @@ import { NumberUtil } from "./NumberUtil";
 import { PopUpdate } from "../database/updates/PopUpdate";
 import MutexManager from "../managers/MutexManager";
 import { Punishment } from "../database/models/User";
+import { Pun } from "../database/models/Pun";
 
 async function increasePunishment(
   memberId: Snowflake,
@@ -38,7 +39,7 @@ async function increasePunishment(
 }
 
 async function decreasePunishment(memberId: Snowflake, guildId: Snowflake) {
-  const puns = await db.punRepo?.findPun(memberId, guildId);
+  const puns = (await db.punRepo?.findPun(memberId, guildId)) as Array<Pun>;
   if (puns == null) {
     return;
   }
