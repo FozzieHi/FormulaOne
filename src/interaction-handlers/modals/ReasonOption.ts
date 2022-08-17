@@ -46,7 +46,7 @@ export class ReasonOption extends InteractionHandler {
         interaction,
         interaction.member as GuildMember,
         targetMember,
-        parsedData.targetRoleId as string,
+        parsedData.targetRoleId as Snowflake,
         parsedData.action as string,
         "interaction",
         parsedData.reason

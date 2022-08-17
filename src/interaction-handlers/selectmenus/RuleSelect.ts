@@ -48,7 +48,7 @@ export class RuleSelect extends InteractionHandler {
         interaction,
         interaction.member as GuildMember,
         targetMember,
-        parsedData.targetRoleId as string,
+        parsedData.targetRoleId as Snowflake,
         "add",
         "interaction",
         reason
