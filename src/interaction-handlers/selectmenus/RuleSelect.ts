@@ -16,6 +16,7 @@ import { Constants } from "../../utility/Constants";
 import { PunishUtil } from "../../utility/PunishUtil";
 import { BotQueueService } from "../../services/BotQueueService";
 import Try from "../../utility/Try";
+import TryVal from "../../utility/TryVal";
 
 export class RuleSelect extends InteractionHandler {
   public constructor(context: PieceContext) {
@@ -33,7 +34,7 @@ export class RuleSelect extends InteractionHandler {
     }
     if (parsedData.commandName === "banish") {
       const targetMember = await interaction.guild.members.fetch(
-        parsedData.targetMemberId as Snowflake
+        parsedData.targetMemberId
       );
       if (targetMember == null) {
         return;
@@ -57,11 +58,15 @@ export class RuleSelect extends InteractionHandler {
       const logMessage = await botQueueChannel.messages.fetch(
         parsedData.logMessageId as Snowflake
       );
+      const targetMember = await interaction.guild.members.fetch(
+        parsedData.targetMemberId
+      );
       const channel = (await interaction.guild.channels.fetch(
         parsedData.channelId as Snowflake
       )) as TextChannel;
-      const message = await channel.messages.fetch(parsedData.messageId as Snowflake);
-      const targetMember = await interaction.guild.members.fetch(message.author.id);
+      const message = (await TryVal(
+        channel.messages.fetch(parsedData.messageId as Snowflake)
+      )) as Message;
       const reason = `Rule ${parsedData.ruleNumber + 1} - ${
         Constants.RULES[parsedData.ruleNumber]
       }`;
@@ -109,15 +114,15 @@ export class RuleSelect extends InteractionHandler {
       });
     }
     if (commandName === "punish") {
-      const [channelId, messageId, logMessageId, amount] = split;
+      const [targetMemberId, channelId, messageId, logMessageId, amount] = split;
       return this.some({
         commandName,
+        targetMemberId,
         channelId,
         messageId,
         logMessageId,
         amount: parseInt(amount, 10),
         ruleNumber,
-        targetMemberId: null,
         targetRoleId: null,
       });
     }

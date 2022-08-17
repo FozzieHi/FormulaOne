@@ -45,7 +45,7 @@ function getModerationQueueButtons(
     if (button === "PUNISH") {
       returnButtons.push(
         new MessageButton({
-          customId: `showamountselect-${channelId}-${messageId}`,
+          customId: `showamountselect-${targetUserId}-${channelId}-${messageId}`,
           label: "Punish",
           style: "DANGER",
         })

@@ -5,13 +5,14 @@ import {
 } from "@sapphire/framework";
 import {
   ButtonInteraction,
+  GuildMember,
   MessageSelectMenu,
   MessageSelectOptionData,
-  TextChannel,
 } from "discord.js";
 import { getDBUser } from "../../utility/DatabaseUtil";
 import { replyInteractionError } from "../../utility/Sender";
 import { StringUtil } from "../../utility/StringUtil";
+import TryVal from "../../utility/TryVal";
 
 export class ShowAmountSelect extends InteractionHandler {
   public constructor(context: PieceContext) {
@@ -27,11 +28,14 @@ export class ShowAmountSelect extends InteractionHandler {
     if (interaction.guild == null) {
       return;
     }
-    const channel = (await interaction.guild.channels.fetch(
-      parsedData.channelId
-    )) as TextChannel;
-    const message = await channel.messages.fetch(parsedData.messageId);
-    const dbUser = await getDBUser(message.author.id, interaction.guild.id);
+    const targetMember = (await TryVal(
+      interaction.guild.members.fetch(parsedData.targetMemberId)
+    )) as GuildMember;
+    if (targetMember == null) {
+      await replyInteractionError(interaction, "Member not found.");
+      return;
+    }
+    const dbUser = await getDBUser(targetMember.id, interaction.guild.id);
     if (dbUser == null) {
       return;
     }
@@ -39,7 +43,7 @@ export class ShowAmountSelect extends InteractionHandler {
       await replyInteractionError(
         interaction,
         `${StringUtil.boldify(
-          message.author.tag
+          targetMember.user.tag
         )} has exceeded 5 punishments in the last 30 days, escalate their punishment manually.`
       );
       return;
@@ -55,7 +59,7 @@ export class ShowAmountSelect extends InteractionHandler {
     const amountSelect = [
       [
         new MessageSelectMenu({
-          customId: `amountselect-${parsedData.channelId}-${parsedData.messageId}-${interaction.message.id}`,
+          customId: `amountselect-${parsedData.targetMemberId}-${parsedData.channelId}-${parsedData.messageId}-${interaction.message.id}`,
           placeholder: "Select amount",
           options,
         }),
@@ -77,8 +81,9 @@ export class ShowAmountSelect extends InteractionHandler {
     }
     const split = interaction.customId.split("-");
     split.shift();
-    const [channelId, messageId] = split;
+    const [targetMemberId, channelId, messageId] = split;
     return this.some({
+      targetMemberId,
       channelId,
       messageId,
     });
