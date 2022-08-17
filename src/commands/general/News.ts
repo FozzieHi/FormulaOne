@@ -21,7 +21,7 @@ export class NewsCommand extends Command {
         options: [
           {
             name: "url",
-            description: "The URL to send.",
+            description: "The URL to send",
             type: "STRING",
             required: true,
           },

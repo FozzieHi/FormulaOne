@@ -30,14 +30,14 @@ export class MoveChannelCommand extends Command {
         options: [
           {
             name: "to",
-            description: "The channel to move to.",
+            description: "The channel to move to",
             type: "CHANNEL",
             channelTypes: ["GUILD_TEXT"],
             required: true,
           },
           {
             name: "from",
-            description: "The channel to move from.",
+            description: "The channel to move from",
             type: "CHANNEL",
             channelTypes: ["GUILD_TEXT"],
             required: true,
