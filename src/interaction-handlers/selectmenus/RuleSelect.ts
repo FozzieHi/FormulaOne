@@ -17,6 +17,7 @@ import { PunishUtil } from "../../utility/PunishUtil";
 import { BotQueueService } from "../../services/BotQueueService";
 import Try from "../../utility/Try";
 import TryVal from "../../utility/TryVal";
+import { replyInteractionError } from "../../utility/Sender";
 
 export class RuleSelect extends InteractionHandler {
   public constructor(context: PieceContext) {
@@ -33,10 +34,11 @@ export class RuleSelect extends InteractionHandler {
       return;
     }
     if (parsedData.commandName === "banish") {
-      const targetMember = await interaction.guild.members.fetch(
-        parsedData.targetMemberId
-      );
+      const targetMember = (await TryVal(
+        interaction.guild.members.fetch(parsedData.targetMemberId)
+      )) as GuildMember;
       if (targetMember == null) {
+        await replyInteractionError(interaction, "Member not found.");
         return;
       }
       const reason = `Rule ${parsedData.ruleNumber + 1} - ${
@@ -58,9 +60,13 @@ export class RuleSelect extends InteractionHandler {
       const logMessage = await botQueueChannel.messages.fetch(
         parsedData.logMessageId as Snowflake
       );
-      const targetMember = await interaction.guild.members.fetch(
-        parsedData.targetMemberId
-      );
+      const targetMember = (await TryVal(
+        interaction.guild.members.fetch(parsedData.targetMemberId)
+      )) as GuildMember;
+      if (targetMember == null) {
+        await replyInteractionError(interaction, "Member not found.");
+        return;
+      }
       const channel = (await interaction.guild.channels.fetch(
         parsedData.channelId as Snowflake
       )) as TextChannel;
