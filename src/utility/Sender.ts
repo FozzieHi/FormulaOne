@@ -265,3 +265,18 @@ export async function followUpInteraction(
     messageOptions
   );
 }
+
+export async function followUpInteractionError(
+  interaction: ModalSubmitInteraction,
+  description: string,
+  embedOptions: MessageEmbedOptions = {}
+) {
+  const newEmbedOptions = embedOptions;
+  newEmbedOptions.color = Constants.ERROR_COLOR;
+  return followUpInteractionHandler(
+    interaction,
+    `${StringUtil.boldify(interaction.user.tag)}, ${description}`,
+    newEmbedOptions,
+    { ephemeral: true }
+  );
+}

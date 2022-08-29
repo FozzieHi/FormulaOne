@@ -16,7 +16,7 @@ import {
 import { BanishUtil } from "../../utility/BanishUtil";
 import { ModerationUtil } from "../../utility/ModerationUtil";
 import { BotQueueService } from "../../services/BotQueueService";
-import { followUpInteraction } from "../../utility/Sender";
+import { followUpInteraction, followUpInteractionError } from "../../utility/Sender";
 import MutexManager from "../../managers/MutexManager";
 import { Constants } from "../../utility/Constants";
 import TryVal from "../../utility/TryVal";
@@ -72,13 +72,17 @@ export class ReasonOption extends InteractionHandler {
         if (logMessage == null) {
           return;
         }
-        await ModerationUtil.ban(
+        const status = await ModerationUtil.ban(
           interaction.guild as Guild,
           targetUser,
           interaction.user,
           parsedData.reason,
           channel
         );
+        if (!status) {
+          await followUpInteractionError(interaction, "Error banning user.");
+          return;
+        }
         await BotQueueService.archiveLog(
           interaction.guild as Guild,
           targetUser.id,

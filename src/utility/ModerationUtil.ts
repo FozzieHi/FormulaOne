@@ -13,11 +13,14 @@ export class ModerationUtil {
     reason: string,
     channel: GuildTextBasedChannel
   ) {
-    if ((await ModerationService.getPermLevel(guild, moderator)) < 2) {
-      return;
+    if (
+      (await ModerationService.getPermLevel(guild, moderator)) <
+      (channel.id === Constants.CHANNELS.MOD_QUEUE ? 1 : 2)
+    ) {
+      return false;
     }
     if (await ModerationService.isModerator(guild, targetUser)) {
-      return;
+      return false;
     }
     if (await db.banRepo?.anyBan(targetUser.id, guild.id)) {
       await db.banRepo?.deleteBan(targetUser.id, guild.id);
@@ -61,5 +64,6 @@ export class ModerationUtil {
       Constants.BAN_COLOR,
       targetUser
     );
+    return true;
   }
 }

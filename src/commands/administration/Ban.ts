@@ -5,7 +5,11 @@ import {
   CommandOptionsRunTypeEnum,
 } from "@sapphire/framework";
 import { CommandInteraction, GuildTextBasedChannel } from "discord.js";
-import { dm, replyInteractionPublic } from "../../utility/Sender";
+import {
+  dm,
+  replyInteractionError,
+  replyInteractionPublic,
+} from "../../utility/Sender";
 import { Constants } from "../../utility/Constants";
 import { modLog } from "../../services/ModerationService";
 import { StringUtil } from "../../utility/StringUtil";
@@ -96,13 +100,17 @@ export class BanCommand extends Command {
         }
         reason = `Rule ${ruleNumber + 1} - ${Constants.RULES[ruleNumber]}`;
 
-        await ModerationUtil.ban(
+        const status = await ModerationUtil.ban(
           interaction.guild,
           targetUser,
           interaction.user,
           reason,
           interaction.channel as GuildTextBasedChannel
         );
+        if (!status) {
+          await replyInteractionError(interaction, "Error banning user.");
+          return;
+        }
         await replyInteractionPublic(
           interaction,
           `Successfully banned ${StringUtil.boldify(targetUser.tag)}.`
