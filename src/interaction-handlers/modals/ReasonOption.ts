@@ -72,14 +72,14 @@ export class ReasonOption extends InteractionHandler {
         if (logMessage == null) {
           return;
         }
-        const status = await ModerationUtil.ban(
+        const result = await ModerationUtil.ban(
           interaction.guild as Guild,
           targetUser,
           interaction.user,
           parsedData.reason,
           channel
         );
-        if (!status) {
+        if (!result) {
           await followUpInteractionError(interaction, "Error banning user.");
           return;
         }

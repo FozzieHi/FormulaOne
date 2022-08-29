@@ -100,14 +100,14 @@ export class BanCommand extends Command {
         }
         reason = `Rule ${ruleNumber + 1} - ${Constants.RULES[ruleNumber]}`;
 
-        const status = await ModerationUtil.ban(
+        const result = await ModerationUtil.ban(
           interaction.guild,
           targetUser,
           interaction.user,
           reason,
           interaction.channel as GuildTextBasedChannel
         );
-        if (!status) {
+        if (!result) {
           await replyInteractionError(interaction, "Error banning user.");
           return;
         }
