@@ -12,7 +12,7 @@ export class ModerationUtil {
     moderator: User,
     reason: string,
     channel: GuildTextBasedChannel
-  ) {
+  ): Promise<boolean> {
     if (
       (await ModerationService.getPermLevel(guild, moderator)) <
       (channel.id === Constants.CHANNELS.MOD_QUEUE ? 1 : 2)
