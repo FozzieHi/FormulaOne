@@ -13,7 +13,7 @@
   "author": "Fozzie#0001",
   "license": "AGPL-3.0",
   "dependencies": {
-    "@sapphire/framework": "^3.0.0",
+    "@sapphire/framework": "^3.1.0",
     "@sapphire/plugin-logger": "^3.0.0",
     "async-mutex": "^0.3.2",
     "bufferutil": "^4.0.6",
