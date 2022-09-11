@@ -42,6 +42,7 @@ export class ShowReasonOptionInteraction extends InteractionHandler {
           customId: "reason",
           label: "Please provide a reason",
           style: "SHORT",
+          required: true,
         }),
       ],
     ];
