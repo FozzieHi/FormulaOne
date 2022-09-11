@@ -15,12 +15,11 @@ export class ModerationUtil {
     targetChannel?: GuildTextBasedChannel
   ): Promise<boolean> {
     if (
+      reason == null ||
       (await ModerationService.getPermLevel(guild, moderator)) <
-      (originChannel.id === Constants.CHANNELS.MOD_QUEUE ? 1 : 2)
+        (originChannel.id === Constants.CHANNELS.MOD_QUEUE ? 1 : 2) ||
+      (await ModerationService.isModerator(guild, targetUser))
     ) {
-      return false;
-    }
-    if (await ModerationService.isModerator(guild, targetUser)) {
       return false;
     }
     if (await db.banRepo?.anyBan(targetUser.id, guild.id)) {
