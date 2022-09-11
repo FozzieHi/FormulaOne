@@ -11,11 +11,12 @@ export class ModerationUtil {
     targetUser: User,
     moderator: User,
     reason: string,
-    channel: GuildTextBasedChannel
+    originChannel: GuildTextBasedChannel,
+    targetChannel?: GuildTextBasedChannel
   ): Promise<boolean> {
     if (
       (await ModerationService.getPermLevel(guild, moderator)) <
-      (channel.id === Constants.CHANNELS.MOD_QUEUE ? 1 : 2)
+      (originChannel.id === Constants.CHANNELS.MOD_QUEUE ? 1 : 2)
     ) {
       return false;
     }
@@ -28,7 +29,7 @@ export class ModerationUtil {
     await dm(
       targetUser,
       `A moderator has banned you for the reason: ${reason}.`,
-      channel,
+      originChannel,
       guild.members.cache.has(targetUser.id)
     );
     await guild.members.ban(targetUser, {
@@ -45,7 +46,7 @@ export class ModerationUtil {
         escalation: "Ban",
         reason,
         mod: moderator.tag,
-        channelId: channel.id,
+        channelId: targetChannel?.id ?? originChannel.id,
       })
     );
     await modLog(
@@ -59,7 +60,7 @@ export class ModerationUtil {
         "Reason",
         reason,
         "Channel",
-        channel.toString(),
+        targetChannel?.toString() ?? originChannel.toString(),
       ],
       Constants.BAN_COLOR,
       targetUser

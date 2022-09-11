@@ -77,6 +77,7 @@ export class ReasonOption extends InteractionHandler {
           targetUser,
           interaction.user,
           parsedData.reason,
+          interaction.channel as GuildTextBasedChannel,
           channel
         );
         if (!result) {
