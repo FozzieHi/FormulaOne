@@ -53,7 +53,6 @@ export class EscalateButton extends InteractionHandler {
         [
           ModerationQueueButtons.PUNISH,
           ModerationQueueButtons.BAN,
-          ModerationQueueButtons.UNMUTE,
           ModerationQueueButtons.IGNORE,
         ]
       );
