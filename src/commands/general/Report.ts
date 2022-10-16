@@ -30,7 +30,7 @@ export class ReportCommand extends Command {
 
   public async contextMenuRun(interaction: ContextMenuInteraction) {
     const message = interaction.options.getMessage("message") as Message;
-    await MutexManager.getPublicUserMutex(message.author.id).runExclusive(async () => {
+    await MutexManager.getUserPublicMutex(message.author.id).runExclusive(async () => {
       if (interaction.guild == null || interaction.channel == null || message == null) {
         return;
       }

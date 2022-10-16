@@ -18,13 +18,13 @@ function getMutex(id: Snowflake, map: MutexMap) {
 export default new (class MutexManager {
   userMutexes: MutexMap;
 
-  publicUserMutexes: MutexMap;
+  userPublicMutexes: MutexMap;
 
   guildMutex: Mutex;
 
   constructor() {
     this.userMutexes = new Map();
-    this.publicUserMutexes = new Map();
+    this.userPublicMutexes = new Map();
     this.guildMutex = new Mutex();
   }
 
@@ -32,8 +32,8 @@ export default new (class MutexManager {
     return getMutex(id, this.userMutexes);
   }
 
-  public getPublicUserMutex(id: Snowflake) {
-    return getMutex(id, this.publicUserMutexes);
+  public getUserPublicMutex(id: Snowflake) {
+    return getMutex(id, this.userPublicMutexes);
   }
 
   public getGuildMutex() {
