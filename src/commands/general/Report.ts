@@ -34,6 +34,10 @@ export class ReportCommand extends Command {
       if (interaction.guild == null || interaction.channel == null || message == null) {
         return;
       }
+      if (interaction.user.id === message.author.id) {
+        await replyInteractionError(interaction, "You may not report yourself.");
+        return;
+      }
       if (await ModerationService.isModerator(interaction.guild, message.author)) {
         await replyInteractionError(
           interaction,
