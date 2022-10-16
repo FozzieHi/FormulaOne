@@ -86,6 +86,7 @@ export class ReasonOption extends InteractionHandler {
         }
         await BotQueueService.archiveLog(
           interaction.guild as Guild,
+          interaction.channel as TextChannel,
           targetUser.id,
           interaction.user,
           logMessage as Message,

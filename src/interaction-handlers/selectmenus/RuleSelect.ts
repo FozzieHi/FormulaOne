@@ -54,10 +54,7 @@ export class RuleSelect extends InteractionHandler {
         reason
       );
     } else if (parsedData.commandName === "punish") {
-      const botQueueChannel = (await interaction.guild.channels.fetch(
-        Constants.CHANNELS.MOD_QUEUE
-      )) as TextChannel;
-      const logMessage = await botQueueChannel.messages.fetch(
+      const logMessage = await (interaction.channel as TextChannel).messages.fetch(
         parsedData.logMessageId as Snowflake
       );
       const targetMember = (await TryVal(
@@ -87,6 +84,7 @@ export class RuleSelect extends InteractionHandler {
       )) as Message;
       await BotQueueService.archiveLog(
         interaction.guild,
+        interaction.channel as TextChannel,
         targetMember.id,
         interaction.user,
         logMessage,

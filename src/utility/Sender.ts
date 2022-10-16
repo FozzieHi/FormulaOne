@@ -36,15 +36,17 @@ export function getFields(fieldsAndValues: Array<string>): Array<EmbedFieldData>
 export async function send(
   channel: TextBasedChannel | User,
   description: string | undefined,
-  embedOptions: MessageEmbedOptions = {},
+  embedOptions: MessageEmbedOptions | null = {},
   messageOptions: MessageOptions = {}
 ): Promise<Message> {
   const newEmbedOptions = embedOptions;
   const newMessageOptions = messageOptions;
-  if (description != null) {
+  if (newEmbedOptions != null && description != null) {
     newEmbedOptions.description = description;
   }
-  newMessageOptions.embeds = [new Embed(newEmbedOptions)];
+  if (newEmbedOptions != null) {
+    newMessageOptions.embeds = [new Embed(newEmbedOptions)];
+  }
   return channel.send(newMessageOptions);
 }
 

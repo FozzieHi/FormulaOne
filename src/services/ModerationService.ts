@@ -2,7 +2,9 @@ import {
   Guild,
   GuildMember,
   GuildTextBasedChannel,
+  Message,
   MessageButton,
+  MessageEmbed,
   MessageEmbedOptions,
   MessageOptions,
   Snowflake,
@@ -37,23 +39,31 @@ export class ModerationService {
 function getModerationQueueButtons(
   buttons: Array<ModerationQueueButtons>,
   targetUserId: Snowflake,
-  channelId: Snowflake,
-  messageId: Snowflake
+  targetChannelId: Snowflake,
+  targetMessageId: Snowflake
 ) {
   const returnButtons: Array<MessageButton> = [];
   buttons.forEach((button) => {
     if (button === "PUNISH") {
       returnButtons.push(
         new MessageButton({
-          customId: `showamountselect-${targetUserId}-${channelId}-${messageId}`,
+          customId: `showamountselect-${targetUserId}-${targetChannelId}-${targetMessageId}`,
           label: "Punish",
           style: "DANGER",
+        })
+      );
+    } else if (button === "ESCALATE") {
+      returnButtons.push(
+        new MessageButton({
+          customId: `escalate-${targetUserId}-${targetChannelId}-${targetChannelId}`,
+          label: "Escalate",
+          style: "PRIMARY",
         })
       );
     } else if (button === "BAN") {
       returnButtons.push(
         new MessageButton({
-          customId: `showreasonoption-ban-${targetUserId}-${channelId}`,
+          customId: `showreasonoption-ban-${targetUserId}-${targetChannelId}`,
           label: "Ban",
           style: "DANGER",
         })
@@ -195,8 +205,8 @@ export async function modLog(
 export async function modQueue(
   guild: Guild,
   target: User,
-  channelId: Snowflake,
-  messageId: Snowflake,
+  targetChannelId: Snowflake,
+  targetMessageId: Snowflake,
   fieldsAndValues: Array<string>,
   color: number,
   buttons: Array<ModerationQueueButtons>
@@ -210,7 +220,7 @@ export async function modQueue(
   const messageOptions: MessageOptions = {};
   const embedOptions: MessageEmbedOptions = {
     footer: {
-      text: `User ID: ${target.id} - Message ID: ${messageId}`,
+      text: `User ID: ${target.id} - Message ID: ${targetMessageId}`,
     },
     color,
     timestamp: new Date(),
@@ -230,13 +240,15 @@ export async function modQueue(
       }),
     ],
   ];
-  getModerationQueueButtons(buttons, target.id, channelId, messageId).forEach(
-    (button) => msgButtons[0].push(button)
-  );
+  getModerationQueueButtons(
+    buttons,
+    target.id,
+    targetChannelId,
+    targetMessageId
+  ).forEach((button) => msgButtons[0].push(button));
   messageOptions.components = msgButtons.map((b) => ({ type: 1, components: b }));
 
   embedOptions.fields = [];
-
   for (let i = 0; i < fieldsAndValues.length - 1; i += 1) {
     if (NumberUtil.isEven(i)) {
       embedOptions.fields.push({
@@ -252,4 +264,41 @@ export async function modQueue(
     embedOptions,
     messageOptions
   );
+}
+
+export async function escalate(
+  guild: Guild,
+  target: User,
+  targetChannelId: Snowflake,
+  targetMessageId: Snowflake,
+  embed: MessageEmbed,
+  buttons: Array<ModerationQueueButtons>
+): Promise<Message | null> {
+  const logChannel = guild.channels.cache.get(Constants.CHANNELS.STEWARDS_QUEUE);
+  if (logChannel == null) {
+    container.logger.error("STEWARDS_QUEUE is null or undefined.");
+    return null;
+  }
+
+  const messageOptions: MessageOptions = {};
+
+  const msgButtons = [
+    [
+      new MessageButton({
+        customId: `userid-${target.id}`,
+        label: `User ID`,
+        style: "SECONDARY",
+      }),
+    ],
+  ];
+  getModerationQueueButtons(
+    buttons,
+    target.id,
+    targetChannelId,
+    targetMessageId
+  ).forEach((button) => msgButtons[0].push(button));
+  messageOptions.components = msgButtons.map((b) => ({ type: 1, components: b }));
+  messageOptions.embeds = [embed];
+
+  return send(logChannel as GuildTextBasedChannel, undefined, null, messageOptions);
 }

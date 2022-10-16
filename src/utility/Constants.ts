@@ -14,6 +14,7 @@ export type PunishmentLevel = {
 
 export enum ModerationQueueButtons {
   PUNISH = "PUNISH",
+  ESCALATE = "ESCALATE",
   BAN = "BAN",
   UNMUTE = "UNMUTE",
   IGNORE = "IGNORE",
@@ -130,6 +131,7 @@ export class Constants {
     MOD_LOGS: "447397947261452288",
     MOD_QUEUE: "920333278593024071",
     MOD_QUEUE_ARCHIVE: "920333356250587156",
+    STEWARDS_QUEUE: "921485208681848842",
     EMOJIS: "639401538485485569",
   };
 

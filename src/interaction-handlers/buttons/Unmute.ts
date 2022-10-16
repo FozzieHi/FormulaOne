@@ -3,7 +3,7 @@ import {
   InteractionHandlerTypes,
   PieceContext,
 } from "@sapphire/framework";
-import { ButtonInteraction, Message, Snowflake } from "discord.js";
+import { ButtonInteraction, Message, Snowflake, TextChannel } from "discord.js";
 import { Constants } from "../../utility/Constants";
 import { replyInteraction } from "../../utility/Sender";
 import { BotQueueService } from "../../services/BotQueueService";
@@ -26,6 +26,7 @@ export class UnmuteInteraction extends InteractionHandler {
     });
     await BotQueueService.archiveLog(
       interaction.guild,
+      interaction.channel as TextChannel,
       memberId,
       interaction.user,
       interaction.message as Message,

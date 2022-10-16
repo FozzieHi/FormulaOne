@@ -214,7 +214,10 @@ export class PunishUtil {
           color = Constants.BAN_COLOR;
         }
 
-        if (interaction.channel.id === Constants.CHANNELS.MOD_QUEUE) {
+        if (
+          interaction.channel.id === Constants.CHANNELS.MOD_QUEUE ||
+          interaction.channel.id === Constants.CHANNELS.STEWARDS_QUEUE
+        ) {
           await updateInteraction(
             interaction as SelectMenuInteraction,
             `Successfully punished member.`,

@@ -3,7 +3,12 @@ import {
   InteractionHandlerTypes,
   PieceContext,
 } from "@sapphire/framework";
-import { ButtonInteraction, Message, TextInputComponent } from "discord.js";
+import {
+  ButtonInteraction,
+  Message,
+  TextChannel,
+  TextInputComponent,
+} from "discord.js";
 import { StringUtil } from "../../utility/StringUtil";
 import Try from "../../utility/Try";
 import { BotQueueService } from "../../services/BotQueueService";
@@ -27,6 +32,7 @@ export class ShowReasonOptionInteraction extends InteractionHandler {
       if (await Try(interaction.guild.bans.fetch(parsedData.targetUserId))) {
         await BotQueueService.archiveLog(
           interaction.guild,
+          interaction.channel as TextChannel,
           parsedData.targetUserId,
           null,
           interaction.message as Message,

@@ -36,6 +36,7 @@ export class IgnoreInteraction extends InteractionHandler {
       }
       const messageSent = await BotQueueService.archiveLog(
         interaction.guild as Guild,
+        interaction.channel as TextChannel,
         userId,
         interaction.user,
         logMessage as Message,
@@ -46,9 +47,7 @@ export class IgnoreInteraction extends InteractionHandler {
           color: Constants.UNMUTE_COLOR,
         });
       } else {
-        await replyInteractionError(interaction, "Error ignoring log.", {
-          color: Constants.ERROR_COLOR,
-        });
+        await replyInteractionError(interaction, "Error ignoring log.");
       }
     });
   }

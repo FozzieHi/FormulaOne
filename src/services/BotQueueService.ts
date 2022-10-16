@@ -21,6 +21,7 @@ export class BotQueueService {
 
   public static async archiveLog(
     guild: Guild,
+    channel: TextChannel,
     targetUserId: string,
     moderator: User | null,
     message: Message,
@@ -48,9 +49,9 @@ export class BotQueueService {
     ];
 
     const messageSent = await archiveThread.send({
-      content: `${action}${
-        moderator != null ? ` by ${StringUtil.boldify(moderator.tag)}` : ""
-      }`,
+      content: `${
+        channel.id === Constants.CHANNELS.STEWARDS_QUEUE ? "Escalation result - " : ""
+      }${action}${moderator != null ? ` by ${StringUtil.boldify(moderator.tag)}` : ""}`,
       embeds: [messageEmbed],
       components: buttons.map((button) => ({
         type: "ACTION_ROW",

@@ -43,7 +43,11 @@ export class FilterService {
         StringUtil.removeClickableLinks(message.content),
       ],
       Constants.KICK_COLOR,
-      [ModerationQueueButtons.PUNISH, ModerationQueueButtons.IGNORE]
+      [
+        ModerationQueueButtons.PUNISH,
+        ModerationQueueButtons.ESCALATE,
+        ModerationQueueButtons.IGNORE,
+      ]
     );
     return true;
   }
