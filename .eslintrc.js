@@ -25,7 +25,14 @@ module.exports = {
       rules: {
         "class-methods-use-this": [
           "error",
-          { exceptMethods: ["chatInputRun", "contextMenuRun", "run"] },
+          {
+            exceptMethods: [
+              "registerApplicationCommands",
+              "chatInputRun",
+              "contextMenuRun",
+              "run",
+            ],
+          },
         ],
         "import/prefer-default-export": "off",
         "no-underscore-dangle": ["error", { allow: ["_id"] }],
