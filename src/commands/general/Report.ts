@@ -1,8 +1,8 @@
 import { ApplicationCommandRegistry, Awaitable, Command } from "@sapphire/framework";
 import { ContextMenuInteraction, Message, Snowflake } from "discord.js";
 import { Constants, ModerationQueueButtons } from "../../utility/Constants";
-import { modQueue } from "../../services/ModerationService";
-import { replyInteraction } from "../../utility/Sender";
+import { ModerationService, modQueue } from "../../services/ModerationService";
+import { replyInteraction, replyInteractionError } from "../../utility/Sender";
 import MutexManager from "../../managers/MutexManager";
 
 export class ReportCommand extends Command {
@@ -32,6 +32,13 @@ export class ReportCommand extends Command {
     const message = interaction.options.getMessage("message") as Message;
     await MutexManager.getUserPublicMutex(message.author.id).runExclusive(async () => {
       if (interaction.guild == null || interaction.channel == null || message == null) {
+        return;
+      }
+      if (await ModerationService.isModerator(interaction.guild, message.author)) {
+        await replyInteractionError(
+          interaction,
+          "You may not use this command on a moderator."
+        );
         return;
       }
       if (!this.reports.includes(message.id)) {
