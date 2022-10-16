@@ -15,6 +15,7 @@ import { Constants, ModerationQueueButtons } from "../utility/Constants";
 import { send } from "../utility/Sender";
 import { NumberUtil } from "../utility/NumberUtil";
 import TryVal from "../utility/TryVal";
+import { StringUtil } from "../utility/StringUtil";
 
 export class ModerationService {
   public static async getPermLevel(guild: Guild, user: User) {
@@ -268,6 +269,7 @@ export async function modQueue(
 
 export async function escalate(
   guild: Guild,
+  moderator: User,
   target: User,
   targetChannelId: Snowflake,
   targetMessageId: Snowflake,
@@ -281,6 +283,9 @@ export async function escalate(
   }
 
   const messageOptions: MessageOptions = {};
+  messageOptions.content = `<@&${
+    Constants.ROLES.STEWARDS
+  }>, Escalated by ${StringUtil.boldify(moderator.tag)}`;
 
   const msgButtons = [
     [

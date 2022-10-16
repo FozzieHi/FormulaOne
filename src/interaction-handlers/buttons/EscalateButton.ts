@@ -45,6 +45,7 @@ export class EscalateButton extends InteractionHandler {
       }
       const escalationSent = await escalate(
         interaction.guild as Guild,
+        interaction.user,
         targetUser as User,
         parsedData.targetChannelId,
         parsedData.targetMessageId,
