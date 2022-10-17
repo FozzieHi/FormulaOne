@@ -66,7 +66,8 @@ export class ReportCommand extends Command {
             ModerationQueueButtons.PUNISH,
             ModerationQueueButtons.ESCALATE,
             ModerationQueueButtons.IGNORE,
-          ]
+          ],
+          `<@&${Constants.ROLES.MODS}>`
         );
         this.reports.push(message.id);
       }

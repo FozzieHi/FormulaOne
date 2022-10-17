@@ -210,7 +210,8 @@ export async function modQueue(
   targetMessageId: Snowflake,
   fieldsAndValues: Array<string>,
   color: number,
-  buttons: Array<ModerationQueueButtons>
+  buttons: Array<ModerationQueueButtons>,
+  logContent?: string
 ) {
   const logChannel = guild.channels.cache.get(Constants.CHANNELS.MOD_QUEUE);
   if (logChannel == null) {
@@ -219,6 +220,9 @@ export async function modQueue(
   }
 
   const messageOptions: MessageOptions = {};
+  if (logContent != null) {
+    messageOptions.content = logContent;
+  }
   const embedOptions: MessageEmbedOptions = {
     footer: {
       text: `User ID: ${target.id} - Message ID: ${targetMessageId}`,
