@@ -54,10 +54,10 @@ export class ReportCommand extends Command {
           [
             "Action",
             `Report [Jump to message](${message.url})`,
-            "Channel",
-            interaction.channel.toString(),
             "Reporter",
             interaction.user.tag,
+            "Channel",
+            interaction.channel.toString(),
             "Content",
             message.content,
           ],
