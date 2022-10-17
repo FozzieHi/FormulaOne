@@ -6,8 +6,11 @@ import { modQueue } from "./ModerationService";
 export default new (class ViolationService {
   private violations: Map<Snowflake, { violationStart: number; violations: number }>;
 
+  public reports: Array<{ channelId: Snowflake; messageId: Snowflake }>;
+
   constructor() {
     this.violations = new Map();
+    this.reports = [];
   }
 
   public async checkViolations(message: Message) {

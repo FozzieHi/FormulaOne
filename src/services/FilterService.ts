@@ -1,10 +1,11 @@
-import { Invite, Message } from "discord.js";
+import { Guild, Invite, Message } from "discord.js";
 import { container } from "@sapphire/framework";
 import { Constants, ModerationQueueButtons } from "../utility/Constants";
 import { modQueue } from "./ModerationService";
 import Try from "../utility/Try";
 import TryVal from "../utility/TryVal";
 import { StringUtil } from "../utility/StringUtil";
+import ViolationService from "./ViolationService";
 
 export class FilterService {
   public static async checkInvites(message: Message): Promise<boolean> {
@@ -50,5 +51,51 @@ export class FilterService {
       ]
     );
     return true;
+  }
+
+  public static async checkEmotes(message: Message) {
+    let score = 0;
+    const users = await message.reactions.cache
+      .find((reaction) => reaction.emoji.id === Constants.EMOTE_ID)
+      ?.users.fetch();
+    users?.forEach((user) => {
+      score += Constants.EMOTE_SCORES.find((val) => val.id === user.id)?.score ?? 0.05;
+    });
+    if (score >= 0.25) {
+      if (
+        !ViolationService.reports.some(
+          (report) =>
+            report.channelId === message.channel.id && report.messageId === message.id
+        )
+      ) {
+        await modQueue(
+          message.guild as Guild,
+          message.author,
+          message.channel.id,
+          message.id,
+          [
+            "Action",
+            `Emote report [Jump to message](${message.url})`,
+            "Report Score",
+            score.toString(),
+            "Channel",
+            message.channel.toString(),
+            "Content",
+            message.content,
+          ],
+          Constants.WARN_COLOR,
+          [
+            ModerationQueueButtons.PUNISH,
+            ModerationQueueButtons.ESCALATE,
+            ModerationQueueButtons.IGNORE,
+          ],
+          `<@&${Constants.ROLES.MODS}>`
+        );
+        ViolationService.reports.push({
+          channelId: message.channel.id,
+          messageId: message.id,
+        });
+      }
+    }
   }
 }

@@ -27,6 +27,7 @@ declare module "@sapphire/framework" {
 (async () => {
   const client = new SapphireClient({
     intents: Constants.INTENTS,
+    partials: Constants.PARTIALS,
     presence: Constants.PRESENCE,
   });
   ApplicationCommandRegistries.setDefaultBehaviorWhenNotIdentical(

@@ -1,16 +1,14 @@
 import { ApplicationCommandRegistry, Awaitable, Command } from "@sapphire/framework";
-import { ContextMenuInteraction, Message, Snowflake } from "discord.js";
+import { ContextMenuInteraction, Message } from "discord.js";
 import { Constants, ModerationQueueButtons } from "../../utility/Constants";
 import { ModerationService, modQueue } from "../../services/ModerationService";
 import { replyInteraction, replyInteractionError } from "../../utility/Sender";
 import MutexManager from "../../managers/MutexManager";
+import ViolationService from "../../services/ViolationService";
 
 export class ReportCommand extends Command {
-  reports: Array<Snowflake>;
-
   public constructor(context: Command.Context) {
     super(context);
-    this.reports = [];
   }
 
   public override registerApplicationCommands(
@@ -45,7 +43,13 @@ export class ReportCommand extends Command {
         );
         return;
       }
-      if (!this.reports.includes(message.id)) {
+      if (
+        !ViolationService.reports.some(
+          (report) =>
+            report.channelId === interaction.channel?.id &&
+            report.messageId === message.id
+        )
+      ) {
         await modQueue(
           interaction.guild,
           message.author,
@@ -61,7 +65,7 @@ export class ReportCommand extends Command {
             "Content",
             message.content,
           ],
-          Constants.WARN_COLOR,
+          Constants.MUTE_COLOR,
           [
             ModerationQueueButtons.PUNISH,
             ModerationQueueButtons.ESCALATE,
@@ -69,7 +73,10 @@ export class ReportCommand extends Command {
           ],
           `<@&${Constants.ROLES.MODS}>`
         );
-        this.reports.push(message.id);
+        ViolationService.reports.push({
+          channelId: interaction.channel.id,
+          messageId: message.id,
+        });
       }
       await replyInteraction(interaction, "Successfully reported message.");
     });

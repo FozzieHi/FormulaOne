@@ -1,4 +1,4 @@
-import { Intents, PresenceData, Snowflake } from "discord.js";
+import { Intents, PartialTypes, PresenceData, Snowflake } from "discord.js";
 import RE2 from "re2";
 
 export enum PunishmentType {
@@ -82,6 +82,15 @@ export class Constants {
     },
   ];
 
+  static readonly EMOTE_ID = "299650191835922432";
+
+  static readonly EMOTE_SCORES: Array<{ id: Snowflake; score: number }> = [
+    { id: "314910132733739009", score: 0.4 },
+    { id: "314910011358707712", score: 0.3 },
+    { id: "314909797445271564", score: 0.2 },
+    { id: "313677111695245312", score: 0.1 },
+  ];
+
   static readonly ROLES = {
     BOT_DEV: "424590836777484291",
     ADMIN: "177408413381165056",
@@ -146,7 +155,10 @@ export class Constants {
     Intents.FLAGS.GUILD_BANS,
     Intents.FLAGS.GUILD_MEMBERS,
     Intents.FLAGS.GUILD_MESSAGES,
+    Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
   ]);
+
+  static readonly PARTIALS: Array<PartialTypes> = ["MESSAGE", "CHANNEL", "REACTION"];
 
   static readonly PRESENCE: PresenceData = {
     activities: [
