@@ -21,7 +21,7 @@
     "erlpack": "github:discord/erlpack",
     "mongodb": "^4.10.0",
     "re2": "^1.17.7",
-    "utf-8-validate": "^5.0.9"
+    "utf-8-validate": "^5.0.10"
   },
   "devDependencies": {
     "@tsconfig/node18": "^1.0.1",
