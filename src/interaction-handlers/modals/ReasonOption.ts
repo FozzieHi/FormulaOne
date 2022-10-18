@@ -36,9 +36,9 @@ export class ReasonOption extends InteractionHandler {
       return;
     }
     if (parsedData.commandName === "banish") {
-      const targetMember = await interaction.guild.members.fetch(
-        parsedData.targetMemberId
-      );
+      const targetMember = (await TryVal(
+        interaction.guild.members.fetch(parsedData.targetMemberId)
+      )) as GuildMember;
       if (targetMember == null) {
         return;
       }

@@ -61,7 +61,7 @@ export class AddRemoveOption extends InteractionHandler {
         ],
       ];
       await interaction.showModal({
-        customId: `reasonoption-${parsedData.commandName}-${parsedData.targetMemberId}-${parsedData.targetRoleId}`,
+        customId: `reasonoption-${parsedData.commandName}-${parsedData.targetMemberId}-${parsedData.targetRoleId}-${parsedData.action}`,
         title: "Reason",
         components: inputs.map((input) => ({
           type: "ACTION_ROW",
