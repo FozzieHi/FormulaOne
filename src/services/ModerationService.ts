@@ -124,7 +124,10 @@ export async function genericLog(
       }),
     ],
   ];
-  messageOptions.components = buttons.map((b) => ({ type: 1, components: b }));
+  messageOptions.components = buttons.map((b) => ({
+    type: "ACTION_ROW",
+    components: b,
+  }));
 
   embedOptions.fields = [];
 
@@ -181,7 +184,10 @@ export async function modLog(
         }),
       ],
     ];
-    messageOptions.components = buttons.map((b) => ({ type: 1, components: b }));
+    messageOptions.components = buttons.map((b) => ({
+      type: "ACTION_ROW",
+      components: b,
+    }));
   }
 
   embedOptions.fields = [];
@@ -251,7 +257,10 @@ export async function modQueue(
     targetChannelId,
     targetMessageId
   ).forEach((button) => msgButtons[0].push(button));
-  messageOptions.components = msgButtons.map((b) => ({ type: 1, components: b }));
+  messageOptions.components = msgButtons.map((b) => ({
+    type: "ACTION_ROW",
+    components: b,
+  }));
 
   embedOptions.fields = [];
   for (let i = 0; i < fieldsAndValues.length - 1; i += 1) {
@@ -306,7 +315,10 @@ export async function escalate(
     targetChannelId,
     targetMessageId
   ).forEach((button) => msgButtons[0].push(button));
-  messageOptions.components = msgButtons.map((b) => ({ type: 1, components: b }));
+  messageOptions.components = msgButtons.map((b) => ({
+    type: "ACTION_ROW",
+    components: b,
+  }));
   messageOptions.embeds = [embed];
 
   return send(logChannel as GuildTextBasedChannel, undefined, null, messageOptions);

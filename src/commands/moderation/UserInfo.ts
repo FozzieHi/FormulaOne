@@ -81,7 +81,7 @@ export class UserInfoCommand extends Command {
           author: { name: user.tag, iconURL: user.displayAvatarURL() },
           footer: { text: `User ID: ${user.id}` },
         },
-        { components: buttons.map((b) => ({ type: 1, components: b })) }
+        { components: buttons.map((b) => ({ type: "ACTION_ROW", components: b })) }
       );
     } else {
       const roles = member.roles.cache.map((role) => role.toString());
@@ -109,7 +109,7 @@ export class UserInfoCommand extends Command {
           author: { name: user.tag, iconURL: user.displayAvatarURL() },
           footer: { text: `User ID: ${user.id}` },
         },
-        { components: buttons.map((b) => ({ type: 1, components: b })) }
+        { components: buttons.map((b) => ({ type: "ACTION_ROW", components: b })) }
       );
     }
   }
