@@ -6,6 +6,7 @@ import Try from "../utility/Try";
 import TryVal from "../utility/TryVal";
 import { StringUtil } from "../utility/StringUtil";
 import ViolationService from "./ViolationService";
+import MutexManager from "../managers/MutexManager";
 
 export class FilterService {
   public static async checkInvites(message: Message): Promise<boolean> {
@@ -62,40 +63,37 @@ export class FilterService {
       score += Constants.EMOTE_SCORES.find((val) => val.id === user.id)?.score ?? 0.05;
     });
     if (score >= 0.25) {
-      if (
-        !ViolationService.reports.some(
-          (report) =>
-            report.channelId === message.channel.id && report.messageId === message.id
-        )
-      ) {
-        await modQueue(
-          message.guild as Guild,
-          message.author,
-          message.channel.id,
-          message.id,
-          [
-            "Action",
-            `Emote report [Jump to message](${message.url})`,
-            "Report Score",
-            score.toString(),
-            "Channel",
-            message.channel.toString(),
-            "Content",
-            message.content,
-          ],
-          Constants.WARN_COLOR,
-          [
-            ModerationQueueButtons.PUNISH,
-            ModerationQueueButtons.ESCALATE,
-            ModerationQueueButtons.IGNORE,
-          ],
-          `<@&${Constants.ROLES.MODS}>`
-        );
-        ViolationService.reports.push({
-          channelId: message.channel.id,
-          messageId: message.id,
-        });
-      }
+      await MutexManager.getUserPublicMutex(message.author.id).runExclusive(
+        async () => {
+          await modQueue(
+            message.guild as Guild,
+            message.author,
+            message.channel.id,
+            message.id,
+            [
+              "Action",
+              `Emote report [Jump to message](${message.url})`,
+              "Report Score",
+              score.toString(),
+              "Channel",
+              message.channel.toString(),
+              "Content",
+              message.content,
+            ],
+            Constants.WARN_COLOR,
+            [
+              ModerationQueueButtons.PUNISH,
+              ModerationQueueButtons.ESCALATE,
+              ModerationQueueButtons.IGNORE,
+            ],
+            `<@&${Constants.ROLES.MODS}>`
+          );
+          ViolationService.reports.push({
+            channelId: message.channel.id,
+            messageId: message.id,
+          });
+        }
+      );
     }
   }
 }
