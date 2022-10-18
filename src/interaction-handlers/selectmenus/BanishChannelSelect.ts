@@ -29,13 +29,13 @@ export class BanishChannelSelect extends InteractionHandler {
         new MessageButton({
           customId: `addremoveoption-add-banish-${parsedData.targetMemberId}-${parsedData.targetRoleId}`,
           label: "Add",
-          style: "SECONDARY",
+          style: "SUCCESS",
           disabled: member.roles.cache.has(parsedData.targetRoleId),
         }),
         new MessageButton({
           customId: `addremoveoption-remove-banish-${parsedData.targetMemberId}-${parsedData.targetRoleId}`,
           label: "Remove",
-          style: "SECONDARY",
+          style: "DANGER",
           disabled: !member.roles.cache.has(parsedData.targetRoleId),
         }),
       ],
