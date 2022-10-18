@@ -5,9 +5,10 @@ export class CommandUtil {
   public static getRuleChoices() {
     const ruleChoices: Array<ApplicationCommandOptionChoiceData> = [];
     Constants.RULES.forEach((rule, i) => {
+      const text = `Rule ${i + 1} - ${rule}`;
       ruleChoices.push({
-        name: `Rule ${i + 1} - ${rule}`,
-        value: i,
+        name: text,
+        value: text,
       });
     });
     return ruleChoices;

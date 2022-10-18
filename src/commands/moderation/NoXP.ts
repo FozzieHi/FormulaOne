@@ -46,7 +46,7 @@ export class NoXP extends Command {
               {
                 name: "reason",
                 description: "The reason for the banish",
-                type: "NUMBER",
+                type: "STRING",
                 choices: CommandUtil.getRuleChoices(),
                 required: true,
               },
@@ -96,11 +96,11 @@ export class NoXP extends Command {
         return;
       }
       if (subcommand === "add") {
-        const ruleNumber = interaction.options.getNumber("reason");
-        if (ruleNumber == null) {
+        const rule = interaction.options.getString("rule");
+        if (rule == null || !Constants.RULES.includes(rule)) {
           return;
         }
-        reason = `Rule ${ruleNumber + 1} - ${Constants.RULES[ruleNumber]}`;
+        reason = rule;
 
         if (targetMember.roles.cache.has(Constants.ROLES.NOXP)) {
           await replyInteractionError(

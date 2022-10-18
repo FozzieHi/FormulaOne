@@ -54,7 +54,7 @@ export class BanishCommand extends Command {
               {
                 name: "reason",
                 description: "The reason for the banish",
-                type: "NUMBER",
+                type: "STRING",
                 choices: CommandUtil.getRuleChoices(),
                 required: true,
               },
@@ -118,11 +118,11 @@ export class BanishCommand extends Command {
     const member = interaction.options.getMember("member") as GuildMember;
     let reason;
     if (subcommand === "add") {
-      const ruleNumber = interaction.options.getNumber("reason");
-      if (ruleNumber == null) {
+      const rule = interaction.options.getString("rule");
+      if (rule == null || !Constants.RULES.includes(rule)) {
         return;
       }
-      reason = `Rule ${ruleNumber + 1} - ${Constants.RULES[ruleNumber]}`;
+      reason = rule;
     } else if (subcommand === "remove") {
       reason = interaction.options.getString("reason");
     }

@@ -48,7 +48,7 @@ export class BanCommand extends Command {
               {
                 name: "reason",
                 description: "The reason for the ban",
-                type: "NUMBER",
+                type: "STRING",
                 choices: CommandUtil.getRuleChoices(),
                 required: true,
               },
@@ -94,11 +94,11 @@ export class BanCommand extends Command {
       }
       let reason;
       if (subcommand === "add") {
-        const ruleNumber = interaction.options.getNumber("reason");
-        if (ruleNumber == null) {
+        const rule = interaction.options.getString("rule");
+        if (rule == null || !Constants.RULES.includes(rule)) {
           return;
         }
-        reason = `Rule ${ruleNumber + 1} - ${Constants.RULES[ruleNumber]}`;
+        reason = rule;
 
         const result = await ModerationUtil.ban(
           interaction.guild,
