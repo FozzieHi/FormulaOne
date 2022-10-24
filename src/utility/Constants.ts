@@ -171,7 +171,7 @@ export class Constants {
 
   static readonly REGEXES = {
     URL: new RE2(/^https?:\/\/([\w[\]:.-]+)\.([A-Za-z\d-]+)(:\d*)?([/#?]\S*)?$/),
-    INVITES: new RE2(/(discord(?:app)?\.com\/invite|discord\.gg)\/([A-Za-z\d]+)/),
+    INVITES: new RE2(/(discord(?:app)?\.com\/invite|discord\.gg)\/([A-Za-z-\d]+)/),
   };
 
   static readonly GLOBAL_REGEXES = {
