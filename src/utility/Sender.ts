@@ -71,7 +71,13 @@ export async function dm(
   sendErrorMsg = true
 ): Promise<boolean> {
   const result = await Try(send(user, description));
-  if (!result && sendErrorMsg && channel != null) {
+  if (
+    !result &&
+    sendErrorMsg &&
+    channel != null &&
+    channel.id !== Constants.CHANNELS.MOD_QUEUE &&
+    channel.id !== Constants.CHANNELS.STEWARDS_QUEUE
+  ) {
     await sendError(channel, "I do not have permission to DM that user.");
   }
   return result;
