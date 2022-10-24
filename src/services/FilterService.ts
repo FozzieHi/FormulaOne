@@ -55,68 +55,68 @@ export class FilterService {
   }
 
   public static async checkEmotes(reaction: MessageReaction) {
-    if (
-      ViolationService.reports.some(
-        (report) =>
-          report.channelId === reaction.message.channel.id &&
-          report.messageId === reaction.message.id
-      )
-    ) {
-      return;
-    }
-    const message = reaction.message.partial
-      ? await reaction.message.fetch()
-      : reaction.message;
-    if (
-      await ModerationService.isModerator(
-        reaction.message.guild as Guild,
-        reaction.message.author as User
-      )
-    ) {
-      return;
-    }
-    if (reaction.emoji.id === Constants.EMOTE_ID) {
-      let score = 0;
-      const users = await message.reactions.cache
-        .find((msgReaction) => msgReaction.emoji.id === Constants.EMOTE_ID)
-        ?.users.fetch();
-      users?.forEach((user) => {
-        score +=
-          Constants.EMOTE_SCORES.find((val) => val.id === user.id)?.score ?? 0.05;
-      });
-      if (score >= 0.25) {
-        await MutexManager.getUserPublicMutex(message.author.id).runExclusive(
-          async () => {
-            await modQueue(
-              message.guild as Guild,
-              message.author,
-              message.channel.id,
-              message.id,
-              [
-                "Action",
-                `Emote report [Jump to message](${message.url})`,
-                "Report Score",
-                score.toString(),
-                "Channel",
-                message.channel.toString(),
-                "Content",
-                message.content,
-              ],
-              Constants.WARN_COLOR,
-              [
-                ModerationQueueButtons.PUNISH,
-                ModerationQueueButtons.ESCALATE,
-                ModerationQueueButtons.IGNORE,
-              ],
-              `<@&${Constants.ROLES.MODS}>`
-            );
-            ViolationService.reports.push({
-              channelId: message.channel.id,
-              messageId: message.id,
-            });
-          }
-        );
+    await MutexManager.getUserPublicMutex(
+      (reaction.message.author as User)?.id
+    ).runExclusive(async () => {
+      if (
+        ViolationService.reports.some(
+          (report) =>
+            report.channelId === reaction.message.channel.id &&
+            report.messageId === reaction.message.id
+        )
+      ) {
+        return;
       }
-    }
+      const message = reaction.message.partial
+        ? await reaction.message.fetch()
+        : reaction.message;
+      if (
+        await ModerationService.isModerator(
+          reaction.message.guild as Guild,
+          reaction.message.author as User
+        )
+      ) {
+        return;
+      }
+      if (reaction.emoji.id === Constants.EMOTE_ID) {
+        let score = 0;
+        const users = await message.reactions.cache
+          .find((msgReaction) => msgReaction.emoji.id === Constants.EMOTE_ID)
+          ?.users.fetch();
+        users?.forEach((user) => {
+          score +=
+            Constants.EMOTE_SCORES.find((val) => val.id === user.id)?.score ?? 0.05;
+        });
+        if (score >= 0.25) {
+          await modQueue(
+            message.guild as Guild,
+            message.author,
+            message.channel.id,
+            message.id,
+            [
+              "Action",
+              `Emote report [Jump to message](${message.url})`,
+              "Report Score",
+              score.toString(),
+              "Channel",
+              message.channel.toString(),
+              "Content",
+              message.content,
+            ],
+            Constants.WARN_COLOR,
+            [
+              ModerationQueueButtons.PUNISH,
+              ModerationQueueButtons.ESCALATE,
+              ModerationQueueButtons.IGNORE,
+            ],
+            `<@&${Constants.ROLES.MODS}>`
+          );
+          ViolationService.reports.push({
+            channelId: message.channel.id,
+            messageId: message.id,
+          });
+        }
+      }
+    });
   }
 }
