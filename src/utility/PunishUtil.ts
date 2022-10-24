@@ -215,11 +215,12 @@ export class PunishUtil {
         }
 
         if (
-          interaction.channel.id === Constants.CHANNELS.MOD_QUEUE ||
-          interaction.channel.id === Constants.CHANNELS.STEWARDS_QUEUE
+          interaction.isSelectMenu() &&
+          (interaction.channel.id === Constants.CHANNELS.MOD_QUEUE ||
+            interaction.channel.id === Constants.CHANNELS.STEWARDS_QUEUE)
         ) {
           await updateInteraction(
-            interaction as SelectMenuInteraction,
+            interaction,
             `Successfully punished member.`,
             {},
             { content: null, components: [] }
