@@ -95,8 +95,8 @@ export class FilterService {
             message.id,
             [
               "Action",
-              `Emote report [Jump to message](${message.url})`,
-              "Report Score",
+              `Emote Report [Jump to message](${message.url})`,
+              "Score",
               score.toString(),
               "Channel",
               message.channel.toString(),
