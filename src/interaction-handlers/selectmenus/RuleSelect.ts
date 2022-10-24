@@ -54,9 +54,14 @@ export class RuleSelect extends InteractionHandler {
         reason
       );
     } else if (parsedData.commandName === "punish") {
-      const logMessage = await (interaction.channel as TextChannel).messages.fetch(
-        parsedData.logMessageId as Snowflake
-      );
+      const logMessage = (await TryVal(
+        (interaction.channel as TextChannel).messages.fetch(
+          parsedData.logMessageId as Snowflake
+        )
+      )) as Message;
+      if (logMessage == null) {
+        return;
+      }
       const targetMember = (await TryVal(
         interaction.guild.members.fetch(parsedData.targetMemberId)
       )) as GuildMember;
