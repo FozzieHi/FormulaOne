@@ -25,18 +25,16 @@ declare module "@sapphire/framework" {
   }
 }
 
-(async () => {
-  const client = new SapphireClient({
-    intents: Constants.INTENTS,
-    partials: Constants.PARTIALS,
-    presence: Constants.PRESENCE,
-  });
-  ApplicationCommandRegistries.setDefaultBehaviorWhenNotIdentical(
-    RegisterBehavior.Overwrite
-  );
-  const start = Date.now();
-  container.logger.info("Database: Connecting...");
-  await db.connect(credentials.mongodbConnectionURL, credentials.dbName); // eslint-disable-line
-  container.logger.info(`Database: Took ${Date.now() - start}ms to connect.`);
-  await client.login(credentials.token); // eslint-disable-line
-})().catch((err) => container.logger.error(err));
+const client = new SapphireClient({
+  intents: Constants.INTENTS,
+  partials: Constants.PARTIALS,
+  presence: Constants.PRESENCE,
+});
+ApplicationCommandRegistries.setDefaultBehaviorWhenNotIdentical(
+  RegisterBehavior.Overwrite
+);
+const start = Date.now();
+container.logger.info("Database: Connecting...");
+await db.connect(credentials.mongodbConnectionURL, credentials.dbName); // eslint-disable-line
+container.logger.info(`Database: Took ${Date.now() - start}ms to connect.`);
+await client.login(credentials.token); // eslint-disable-line
