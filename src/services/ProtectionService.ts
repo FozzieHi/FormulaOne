@@ -1,9 +1,9 @@
 import { Guild } from "discord.js";
 import { Mutex } from "async-mutex";
-import { modLog } from "./ModerationService";
-import { Constants } from "../utility/Constants";
-import { getDBGuild } from "../utility/DatabaseUtil";
-import db from "../database";
+import { modLog } from "./ModerationService.js";
+import { Constants } from "../utility/Constants.js";
+import { getDBGuild } from "../utility/DatabaseUtil.js";
+import db from "../database/index.js";
 
 export default new (class ProtectionService {
   mutex: Mutex;

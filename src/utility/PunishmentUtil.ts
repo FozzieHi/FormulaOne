@@ -1,7 +1,7 @@
 import { Guild, User } from "discord.js";
-import { getDBUser } from "./DatabaseUtil";
-import { StringUtil } from "./StringUtil";
-import { NumberUtil } from "./NumberUtil";
+import { getDBUser } from "./DatabaseUtil.js";
+import { StringUtil } from "./StringUtil.js";
+import { NumberUtil } from "./NumberUtil.js";
 
 export class PunishmentUtil {
   public static async getHistory(

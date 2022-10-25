@@ -5,9 +5,9 @@ import {
   CommandOptionsRunTypeEnum,
 } from "@sapphire/framework";
 import { CommandInteraction, GuildMember } from "discord.js";
-import { CommandUtil } from "../../utility/CommandUtil";
-import { Constants } from "../../utility/Constants";
-import { PunishUtil } from "../../utility/PunishUtil";
+import { CommandUtil } from "../../utility/CommandUtil.js";
+import { Constants } from "../../utility/Constants.js";
+import { PunishUtil } from "../../utility/PunishUtil.js";
 
 export class PunishCommand extends Command {
   public constructor(context: Command.Context) {

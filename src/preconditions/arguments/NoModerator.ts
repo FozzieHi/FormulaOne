@@ -1,6 +1,6 @@
 import { Precondition } from "@sapphire/framework";
 import { CommandInteraction, GuildMember } from "discord.js";
-import { ModerationService } from "../../services/ModerationService";
+import { ModerationService } from "../../services/ModerationService.js";
 
 export class NoModeratorPrecondition extends Precondition {
   public async chatInputRun(interaction: CommandInteraction) {

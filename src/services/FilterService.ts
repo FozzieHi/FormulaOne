@@ -1,12 +1,12 @@
 import { Guild, Invite, Message, MessageReaction, User } from "discord.js";
 import { container } from "@sapphire/framework";
-import { Constants, ModerationQueueButtons } from "../utility/Constants";
-import { ModerationService, modQueue } from "./ModerationService";
-import Try from "../utility/Try";
-import TryVal from "../utility/TryVal";
-import { StringUtil } from "../utility/StringUtil";
-import ViolationService from "./ViolationService";
-import MutexManager from "../managers/MutexManager";
+import { Constants, ModerationQueueButtons } from "../utility/Constants.js";
+import { ModerationService, modQueue } from "./ModerationService.js";
+import Try from "../utility/Try.js";
+import TryVal from "../utility/TryVal.js";
+import { StringUtil } from "../utility/StringUtil.js";
+import ViolationService from "./ViolationService.js";
+import MutexManager from "../managers/MutexManager.js";
 
 export class FilterService {
   public static async checkInvites(message: Message): Promise<boolean> {

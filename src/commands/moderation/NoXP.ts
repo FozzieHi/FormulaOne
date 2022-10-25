@@ -5,16 +5,16 @@ import {
   CommandOptionsRunTypeEnum,
 } from "@sapphire/framework";
 import { CommandInteraction, GuildMember } from "discord.js";
-import { Constants } from "../../utility/Constants";
-import { CommandUtil } from "../../utility/CommandUtil";
-import { modLog } from "../../services/ModerationService";
+import { Constants } from "../../utility/Constants.js";
+import { CommandUtil } from "../../utility/CommandUtil.js";
+import { modLog } from "../../services/ModerationService.js";
 import {
   dm,
   replyInteractionError,
   replyInteractionPublic,
-} from "../../utility/Sender";
-import { StringUtil } from "../../utility/StringUtil";
-import MutexManager from "../../managers/MutexManager";
+} from "../../utility/Sender.js";
+import { StringUtil } from "../../utility/StringUtil.js";
+import MutexManager from "../../managers/MutexManager.js";
 
 export class NoXP extends Command {
   public constructor(context: Command.Context) {

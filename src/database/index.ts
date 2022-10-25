@@ -1,3 +1,3 @@
-import { Database } from "./db/Database";
+import { Database } from "./db/Database.js";
 
-export = new Database();
+export default new Database();

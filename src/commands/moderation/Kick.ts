@@ -5,13 +5,13 @@ import {
   CommandOptionsRunTypeEnum,
 } from "@sapphire/framework";
 import { CommandInteraction, GuildMember } from "discord.js";
-import db from "../../database";
-import { dm, replyInteractionPublic } from "../../utility/Sender";
-import { Constants } from "../../utility/Constants";
-import { modLog } from "../../services/ModerationService";
-import { StringUtil } from "../../utility/StringUtil";
-import { PushUpdate } from "../../database/updates/PushUpdate";
-import MutexManager from "../../managers/MutexManager";
+import db from "../../database/index.js";
+import { dm, replyInteractionPublic } from "../../utility/Sender.js";
+import { Constants } from "../../utility/Constants.js";
+import { modLog } from "../../services/ModerationService.js";
+import { StringUtil } from "../../utility/StringUtil.js";
+import { PushUpdate } from "../../database/updates/PushUpdate.js";
+import MutexManager from "../../managers/MutexManager.js";
 
 export class KickCommand extends Command {
   public constructor(context: Command.Context) {

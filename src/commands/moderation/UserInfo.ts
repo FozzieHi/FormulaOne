@@ -5,10 +5,10 @@ import {
   CommandOptionsRunTypeEnum,
 } from "@sapphire/framework";
 import { CommandInteraction, MessageButton } from "discord.js";
-import { replyInteractionPublicFields } from "../../utility/Sender";
-import { Constants } from "../../utility/Constants";
-import { getDBUser } from "../../utility/DatabaseUtil";
-import db from "../../database";
+import { replyInteractionPublicFields } from "../../utility/Sender.js";
+import { Constants } from "../../utility/Constants.js";
+import { getDBUser } from "../../utility/DatabaseUtil.js";
+import db from "../../database/index.js";
 
 export class UserInfoCommand extends Command {
   public constructor(context: Command.Context) {

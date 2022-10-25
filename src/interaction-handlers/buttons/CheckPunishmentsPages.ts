@@ -9,10 +9,10 @@ import {
   MessageEmbedOptions,
   User,
 } from "discord.js";
-import { PunishmentUtil } from "../../utility/PunishmentUtil";
-import { Embed } from "../../structures/Embed";
-import { getFields } from "../../utility/Sender";
-import TryVal from "../../utility/TryVal";
+import { PunishmentUtil } from "../../utility/PunishmentUtil.js";
+import { Embed } from "../../structures/Embed.js";
+import { getFields } from "../../utility/Sender.js";
+import TryVal from "../../utility/TryVal.js";
 
 export class CheckPunishmentsPagesInteraction extends InteractionHandler {
   public constructor(context: PieceContext) {

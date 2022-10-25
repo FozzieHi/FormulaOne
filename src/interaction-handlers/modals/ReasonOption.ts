@@ -13,13 +13,13 @@ import {
   Snowflake,
   TextChannel,
 } from "discord.js";
-import { BanishUtil } from "../../utility/BanishUtil";
-import { ModerationUtil } from "../../utility/ModerationUtil";
-import { BotQueueService } from "../../services/BotQueueService";
-import { followUpInteraction, followUpInteractionError } from "../../utility/Sender";
-import MutexManager from "../../managers/MutexManager";
-import { Constants } from "../../utility/Constants";
-import TryVal from "../../utility/TryVal";
+import { BanishUtil } from "../../utility/BanishUtil.js";
+import { ModerationUtil } from "../../utility/ModerationUtil.js";
+import { BotQueueService } from "../../services/BotQueueService.js";
+import { followUpInteraction, followUpInteractionError } from "../../utility/Sender.js";
+import MutexManager from "../../managers/MutexManager.js";
+import { Constants } from "../../utility/Constants.js";
+import TryVal from "../../utility/TryVal.js";
 
 export class ReasonOption extends InteractionHandler {
   public constructor(context: PieceContext) {

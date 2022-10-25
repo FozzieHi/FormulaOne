@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/extensions
 import "@sapphire/plugin-logger/register";
 import {
   ApplicationCommandRegistries,
@@ -5,11 +6,11 @@ import {
   SapphireClient,
   container,
 } from "@sapphire/framework";
-import credentials from "./credentials.json";
-import db from "./database";
-import { Constants } from "./utility/Constants";
-import "./intervals/Protection";
-import "./intervals/MutexClear";
+import credentials from "./credentials.json" assert { type: "json" };
+import db from "./database/index.js";
+import { Constants } from "./utility/Constants.js";
+import "./intervals/Protection.js";
+import "./intervals/MutexClear.js";
 
 declare module "@sapphire/framework" {
   interface Preconditions {

@@ -1,6 +1,6 @@
 import { GuildMember } from "discord.js";
 import { Listener } from "@sapphire/framework";
-import ProtectionService from "../services/ProtectionService";
+import ProtectionService from "../services/ProtectionService.js";
 
 export class GuildMemberAddListener extends Listener {
   public constructor(context: Listener.Context) {

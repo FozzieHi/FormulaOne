@@ -5,8 +5,8 @@ import {
   CommandOptionsRunTypeEnum,
 } from "@sapphire/framework";
 import { CommandInteraction, TextBasedChannel } from "discord.js";
-import { replyInteractionPublic, send } from "../../utility/Sender";
-import { Constants } from "../../utility/Constants";
+import { replyInteractionPublic, send } from "../../utility/Sender.js";
+import { Constants } from "../../utility/Constants.js";
 
 export class SayCommand extends Command {
   public constructor(context: Command.Context) {

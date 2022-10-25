@@ -3,7 +3,7 @@ import {
   Listener,
   UserError,
 } from "@sapphire/framework";
-import { replyInteractionError } from "../utility/Sender";
+import { replyInteractionError } from "../utility/Sender.js";
 
 export class ContextMenuCommandDeniedListener extends Listener {
   public async run(error: UserError, { interaction }: ContextMenuCommandDeniedPayload) {

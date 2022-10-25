@@ -1,7 +1,7 @@
 import { Snowflake } from "discord.js";
-import { BaseRepository } from "./BaseRepository";
-import { GuildQuery } from "../queries/GuildQuery";
-import { DBGuild, Guild } from "../models/Guild";
+import { BaseRepository } from "./BaseRepository.js";
+import { GuildQuery } from "../queries/GuildQuery.js";
+import { DBGuild, Guild } from "../models/Guild.js";
 
 export class GuildRepository extends BaseRepository {
   async anyGuild(guildId: Snowflake) {

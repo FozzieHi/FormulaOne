@@ -1,4 +1,4 @@
-import { Constants } from "./Constants";
+import { Constants } from "./Constants.js";
 
 export class StringUtil {
   static boldify(str: string) {

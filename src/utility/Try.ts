@@ -1,4 +1,4 @@
-export = async (promise: Promise<unknown>) => {
+export default async (promise: Promise<unknown>) => {
   try {
     await promise;
     return true;

@@ -11,13 +11,13 @@ import {
   TextChannel,
 } from "discord.js";
 import { setTimeout } from "timers/promises";
-import { BanishUtil } from "../../utility/BanishUtil";
-import { Constants } from "../../utility/Constants";
-import { PunishUtil } from "../../utility/PunishUtil";
-import { BotQueueService } from "../../services/BotQueueService";
-import Try from "../../utility/Try";
-import TryVal from "../../utility/TryVal";
-import { replyInteractionError } from "../../utility/Sender";
+import { BanishUtil } from "../../utility/BanishUtil.js";
+import { Constants } from "../../utility/Constants.js";
+import { PunishUtil } from "../../utility/PunishUtil.js";
+import { BotQueueService } from "../../services/BotQueueService.js";
+import Try from "../../utility/Try.js";
+import TryVal from "../../utility/TryVal.js";
+import { replyInteractionError } from "../../utility/Sender.js";
 
 export class RuleSelect extends InteractionHandler {
   public constructor(context: PieceContext) {

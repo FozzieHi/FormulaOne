@@ -9,10 +9,10 @@ import {
   TextChannel,
   TextInputComponent,
 } from "discord.js";
-import { StringUtil } from "../../utility/StringUtil";
-import Try from "../../utility/Try";
-import { BotQueueService } from "../../services/BotQueueService";
-import { replyInteractionError } from "../../utility/Sender";
+import { StringUtil } from "../../utility/StringUtil.js";
+import Try from "../../utility/Try.js";
+import { BotQueueService } from "../../services/BotQueueService.js";
+import { replyInteractionError } from "../../utility/Sender.js";
 
 export class ShowReasonOptionInteraction extends InteractionHandler {
   public constructor(context: PieceContext) {

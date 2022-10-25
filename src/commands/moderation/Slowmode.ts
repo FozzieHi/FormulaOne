@@ -5,10 +5,10 @@ import {
   CommandOptionsRunTypeEnum,
 } from "@sapphire/framework";
 import { CommandInteraction, TextChannel } from "discord.js";
-import { replyInteractionError, replyInteractionPublic } from "../../utility/Sender";
-import { Constants } from "../../utility/Constants";
-import { modLog } from "../../services/ModerationService";
-import MutexManager from "../../managers/MutexManager";
+import { replyInteractionError, replyInteractionPublic } from "../../utility/Sender.js";
+import { Constants } from "../../utility/Constants.js";
+import { modLog } from "../../services/ModerationService.js";
+import MutexManager from "../../managers/MutexManager.js";
 
 export class SlowmodeCommand extends Command {
   public constructor(context: Command.Context) {

@@ -4,9 +4,9 @@ import {
   PieceContext,
 } from "@sapphire/framework";
 import { ButtonInteraction, Message, Snowflake, TextChannel } from "discord.js";
-import { Constants } from "../../utility/Constants";
-import { replyInteraction } from "../../utility/Sender";
-import { BotQueueService } from "../../services/BotQueueService";
+import { Constants } from "../../utility/Constants.js";
+import { replyInteraction } from "../../utility/Sender.js";
+import { BotQueueService } from "../../services/BotQueueService.js";
 
 export class UnmuteInteraction extends InteractionHandler {
   public constructor(context: PieceContext) {

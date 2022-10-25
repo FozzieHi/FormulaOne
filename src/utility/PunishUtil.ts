@@ -7,7 +7,7 @@ import {
   SelectMenuInteraction,
   Snowflake,
 } from "discord.js";
-import { Constants, PunishmentLevel, PunishmentType } from "./Constants";
+import { Constants, PunishmentLevel, PunishmentType } from "./Constants.js";
 import {
   dm,
   replyInteraction,
@@ -15,17 +15,17 @@ import {
   replyInteractionPublic,
   send,
   updateInteraction,
-} from "./Sender";
-import db from "../database";
-import { modLog } from "../services/ModerationService";
-import { StringUtil } from "./StringUtil";
-import { PushUpdate } from "../database/updates/PushUpdate";
-import { getDBGuild, getDBUser } from "./DatabaseUtil";
-import { NumberUtil } from "./NumberUtil";
-import { PopUpdate } from "../database/updates/PopUpdate";
-import MutexManager from "../managers/MutexManager";
-import { Punishment } from "../database/models/User";
-import { Pun } from "../database/models/Pun";
+} from "./Sender.js";
+import db from "../database/index.js";
+import { modLog } from "../services/ModerationService.js";
+import { StringUtil } from "./StringUtil.js";
+import { PushUpdate } from "../database/updates/PushUpdate.js";
+import { getDBGuild, getDBUser } from "./DatabaseUtil.js";
+import { NumberUtil } from "./NumberUtil.js";
+import { PopUpdate } from "../database/updates/PopUpdate.js";
+import MutexManager from "../managers/MutexManager.js";
+import { Punishment } from "../database/models/User.js";
+import { Pun } from "../database/models/Pun.js";
 
 async function increasePunishment(
   memberId: Snowflake,
@@ -102,12 +102,12 @@ async function ban(
 }
 
 function getPunishmentDisplay(punishment: PunishmentLevel) {
-  let displayLog = "";
-  let displayCurrent = "";
-  let displayPastTense = "";
+  let displayLog = ".js";
+  let displayCurrent = ".js";
+  let displayPastTense = ".js";
   if (punishment.type === PunishmentType.WARN) {
-    displayLog = "Warning";
-    displayPastTense = "warned";
+    displayLog = "Warning.js";
+    displayPastTense = "warned.js";
   } else if (
     punishment.type === PunishmentType.MUTE ||
     punishment.type === PunishmentType.BAN

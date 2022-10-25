@@ -1,7 +1,7 @@
 import { Snowflake } from "discord.js";
-import db from "../database";
-import { DBGuild } from "../database/models/Guild";
-import { DBUser } from "../database/models/User";
+import db from "../database/index.js";
+import { DBGuild } from "../database/models/Guild.js";
+import { DBUser } from "../database/models/User.js";
 
 export async function getDBGuild(guildId: Snowflake): Promise<DBGuild | undefined> {
   return db.guildRepo?.getGuild(guildId);

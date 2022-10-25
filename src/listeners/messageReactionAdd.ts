@@ -1,6 +1,6 @@
 import { Listener } from "@sapphire/framework";
 import { MessageReaction } from "discord.js";
-import { FilterService } from "../services/FilterService";
+import { FilterService } from "../services/FilterService.js";
 
 export class MessageReactionAddListener extends Listener {
   public constructor(context: Listener.Context) {

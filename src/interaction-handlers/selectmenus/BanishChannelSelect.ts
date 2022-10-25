@@ -4,7 +4,7 @@ import {
   PieceContext,
 } from "@sapphire/framework";
 import { Guild, MessageButton, SelectMenuInteraction } from "discord.js";
-import { updateInteraction } from "../../utility/Sender";
+import { updateInteraction } from "../../utility/Sender.js";
 
 export class BanishChannelSelect extends InteractionHandler {
   public constructor(context: PieceContext) {

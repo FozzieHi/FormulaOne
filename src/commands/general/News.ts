@@ -1,8 +1,8 @@
 import { ApplicationCommandRegistry, Awaitable, Command } from "@sapphire/framework";
 import { CommandInteraction, MessageButton, TextBasedChannel } from "discord.js";
-import { replyInteractionError, replyInteractionPublic } from "../../utility/Sender";
-import { Constants } from "../../utility/Constants";
-import { StringUtil } from "../../utility/StringUtil";
+import { replyInteractionError, replyInteractionPublic } from "../../utility/Sender.js";
+import { Constants } from "../../utility/Constants.js";
+import { StringUtil } from "../../utility/StringUtil.js";
 
 export class NewsCommand extends Command {
   public constructor(context: Command.Context) {

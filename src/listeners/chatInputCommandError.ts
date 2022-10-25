@@ -1,5 +1,5 @@
 import { ChatInputCommandErrorPayload, Listener, UserError } from "@sapphire/framework";
-import { replyInteractionError } from "../utility/Sender";
+import { replyInteractionError } from "../utility/Sender.js";
 
 export class ChatInputCommandDeniedListener extends Listener {
   public async run(error: UserError, { interaction }: ChatInputCommandErrorPayload) {

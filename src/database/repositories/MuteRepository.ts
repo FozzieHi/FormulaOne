@@ -1,7 +1,7 @@
 import { Snowflake } from "discord.js";
-import { BaseRepository } from "./BaseRepository";
-import { UserQuery } from "../queries/UserQuery";
-import { Mute } from "../models/Mute";
+import { BaseRepository } from "./BaseRepository.js";
+import { UserQuery } from "../queries/UserQuery.js";
+import { Mute } from "../models/Mute.js";
 
 export class MuteRepository extends BaseRepository {
   async anyMute(userId: Snowflake, guildId: Snowflake) {

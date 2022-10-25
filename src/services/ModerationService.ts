@@ -11,11 +11,11 @@ import {
   User,
 } from "discord.js";
 import { container } from "@sapphire/framework";
-import { Constants, ModerationQueueButtons } from "../utility/Constants";
-import { send } from "../utility/Sender";
-import { NumberUtil } from "../utility/NumberUtil";
-import TryVal from "../utility/TryVal";
-import { StringUtil } from "../utility/StringUtil";
+import { Constants, ModerationQueueButtons } from "../utility/Constants.js";
+import { send } from "../utility/Sender.js";
+import { NumberUtil } from "../utility/NumberUtil.js";
+import TryVal from "../utility/TryVal.js";
+import { StringUtil } from "../utility/StringUtil.js";
 
 export class ModerationService {
   public static async getPermLevel(guild: Guild, user: User) {

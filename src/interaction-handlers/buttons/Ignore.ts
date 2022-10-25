@@ -4,11 +4,11 @@ import {
   PieceContext,
 } from "@sapphire/framework";
 import { ButtonInteraction, Guild, Message, Snowflake, TextChannel } from "discord.js";
-import { Constants } from "../../utility/Constants";
-import MutexManager from "../../managers/MutexManager";
-import { replyInteraction, replyInteractionError } from "../../utility/Sender";
-import { BotQueueService } from "../../services/BotQueueService";
-import TryVal from "../../utility/TryVal";
+import { Constants } from "../../utility/Constants.js";
+import MutexManager from "../../managers/MutexManager.js";
+import { replyInteraction, replyInteractionError } from "../../utility/Sender.js";
+import { BotQueueService } from "../../services/BotQueueService.js";
+import TryVal from "../../utility/TryVal.js";
 
 export class IgnoreInteraction extends InteractionHandler {
   public constructor(context: PieceContext) {

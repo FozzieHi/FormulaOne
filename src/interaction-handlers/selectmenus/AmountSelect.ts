@@ -8,8 +8,8 @@ import {
   MessageSelectOptionData,
   SelectMenuInteraction,
 } from "discord.js";
-import { Constants } from "../../utility/Constants";
-import { updateInteraction } from "../../utility/Sender";
+import { Constants } from "../../utility/Constants.js";
+import { updateInteraction } from "../../utility/Sender.js";
 
 export class AmountSelect extends InteractionHandler {
   public constructor(context: PieceContext) {

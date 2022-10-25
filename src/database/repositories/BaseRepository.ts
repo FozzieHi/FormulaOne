@@ -1,5 +1,5 @@
 import { Collection, Document, ObjectId } from "mongodb";
-import { IdQuery } from "../queries/IdQuery";
+import { IdQuery } from "../queries/IdQuery.js";
 
 export class BaseRepository {
   collection: Collection;

@@ -5,14 +5,14 @@ import {
   CommandOptionsRunTypeEnum,
 } from "@sapphire/framework";
 import { CommandInteraction, TextChannel } from "discord.js";
-import db from "../../database";
-import { replyInteractionError, replyInteractionPublic } from "../../utility/Sender";
-import { Constants } from "../../utility/Constants";
-import { modLog } from "../../services/ModerationService";
-import { PushUpdate } from "../../database/updates/PushUpdate";
-import { PullUpdate } from "../../database/updates/PullUpdate";
-import { getDBGuild } from "../../utility/DatabaseUtil";
-import MutexManager from "../../managers/MutexManager";
+import db from "../../database/index.js";
+import { replyInteractionError, replyInteractionPublic } from "../../utility/Sender.js";
+import { Constants } from "../../utility/Constants.js";
+import { modLog } from "../../services/ModerationService.js";
+import { PushUpdate } from "../../database/updates/PushUpdate.js";
+import { PullUpdate } from "../../database/updates/PullUpdate.js";
+import { getDBGuild } from "../../utility/DatabaseUtil.js";
+import MutexManager from "../../managers/MutexManager.js";
 
 export class FilterCommand extends Command {
   public constructor(context: Command.Context) {
@@ -60,7 +60,7 @@ export class FilterCommand extends Command {
       ) {
         return;
       }
-      const enabledText = "One word filter is enabled | ";
+      const enabledText = "One word filter is enabled | .js";
       const channelDescription = (interaction.channel as TextChannel).topic;
 
       const dbGuild = await getDBGuild(interaction.guild.id);

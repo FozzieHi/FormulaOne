@@ -1,5 +1,5 @@
-import MutexManager from "../managers/MutexManager";
-import { Constants } from "../utility/Constants";
+import MutexManager from "../managers/MutexManager.js";
+import { Constants } from "../utility/Constants.js";
 
 setInterval(() => {
   [...MutexManager.userMutexes]

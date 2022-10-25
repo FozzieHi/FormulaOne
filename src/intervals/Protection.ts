@@ -1,10 +1,10 @@
 /* eslint-disable no-await-in-loop */
 import { container } from "@sapphire/framework";
-import db from "../database";
-import { Constants } from "../utility/Constants";
-import { modLog } from "../services/ModerationService";
-import ProtectionService from "../services/ProtectionService";
-import { Guild } from "../database/models/Guild";
+import db from "../database/index.js";
+import { Constants } from "../utility/Constants.js";
+import { modLog } from "../services/ModerationService.js";
+import ProtectionService from "../services/ProtectionService.js";
+import { Guild } from "../database/models/Guild.js";
 
 setInterval(() => {
   (async function run() {

@@ -1,6 +1,6 @@
 import { Command, Precondition } from "@sapphire/framework";
 import { CommandInteraction, Guild } from "discord.js";
-import Try = require("../../utility/Try");
+import Try from "../../utility/Try.js";
 import ContextMenuInteraction = Command.ContextMenuInteraction;
 
 export class MemberValidationPrecondition extends Precondition {

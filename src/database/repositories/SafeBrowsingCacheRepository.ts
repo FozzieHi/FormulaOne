@@ -1,6 +1,6 @@
-import { BaseRepository } from "./BaseRepository";
-import { SafeBrowsingCacheQuery } from "../queries/SafeBrowsingCacheQuery";
-import { SafeBrowsingCache } from "../models/SafeBrowsingCache";
+import { BaseRepository } from "./BaseRepository.js";
+import { SafeBrowsingCacheQuery } from "../queries/SafeBrowsingCacheQuery.js";
+import { SafeBrowsingCache } from "../models/SafeBrowsingCache.js";
 
 export class SafeBrowsingCacheRepository extends BaseRepository {
   async findEntry(hash: string) {

@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "The Formula One Discord Bot.",
   "main": "target/index.js",
+  "type": "module",
   "scripts": {
     "prepare": "husky install",
     "prettier:write": "prettier --cache --write .",

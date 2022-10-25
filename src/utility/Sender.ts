@@ -14,11 +14,11 @@ import {
   TextBasedChannel,
   User,
 } from "discord.js";
-import { StringUtil } from "./StringUtil";
-import { Embed } from "../structures/Embed";
-import { Constants } from "./Constants";
-import Try from "./Try";
-import { NumberUtil } from "./NumberUtil";
+import { StringUtil } from "./StringUtil.js";
+import { Embed } from "../structures/Embed.js";
+import { Constants } from "./Constants.js";
+import Try from "./Try.js";
+import { NumberUtil } from "./NumberUtil.js";
 
 export function getFields(fieldsAndValues: Array<string>): Array<EmbedFieldData> {
   const fields = [];

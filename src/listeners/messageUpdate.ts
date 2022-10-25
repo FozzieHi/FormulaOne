@@ -1,6 +1,6 @@
 import { Listener } from "@sapphire/framework";
 import { Message } from "discord.js";
-import { BotQueueService } from "../services/BotQueueService";
+import { BotQueueService } from "../services/BotQueueService.js";
 
 export class MessageUpdateListener extends Listener {
   public constructor(context: Listener.Context) {

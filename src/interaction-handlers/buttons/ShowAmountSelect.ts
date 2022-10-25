@@ -9,10 +9,10 @@ import {
   MessageSelectMenu,
   MessageSelectOptionData,
 } from "discord.js";
-import { getDBUser } from "../../utility/DatabaseUtil";
-import { replyInteractionError } from "../../utility/Sender";
-import { StringUtil } from "../../utility/StringUtil";
-import TryVal from "../../utility/TryVal";
+import { getDBUser } from "../../utility/DatabaseUtil.js";
+import { replyInteractionError } from "../../utility/Sender.js";
+import { StringUtil } from "../../utility/StringUtil.js";
+import TryVal from "../../utility/TryVal.js";
 
 export class ShowAmountSelect extends InteractionHandler {
   public constructor(context: PieceContext) {

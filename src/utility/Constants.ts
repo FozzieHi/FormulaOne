@@ -82,7 +82,7 @@ export class Constants {
     },
   ];
 
-  static readonly EMOTE_ID = "299650191835922432";
+  static readonly EMOTE_ID = "299650191835922432.js";
 
   static readonly EMOTE_SCORES: Array<{ id: Snowflake; score: number }> = [
     { id: "314910132733739009", score: 0.4 },

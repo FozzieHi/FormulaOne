@@ -1,7 +1,7 @@
 import { Snowflake } from "discord.js";
-import { BaseRepository } from "./BaseRepository";
-import { UserQuery } from "../queries/UserQuery";
-import { Pun } from "../models/Pun";
+import { BaseRepository } from "./BaseRepository.js";
+import { UserQuery } from "../queries/UserQuery.js";
+import { Pun } from "../models/Pun.js";
 
 export class PunishmentRepository extends BaseRepository {
   async anyPun(userId: Snowflake, guildId: Snowflake) {

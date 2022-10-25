@@ -1,6 +1,6 @@
-import { BaseRepository } from "./BaseRepository";
-import { YouTubeChannelCacheQuery } from "../queries/YouTubeChannelCacheQuery";
-import { YouTubeChannelCache } from "../models/YouTubeChannelCache";
+import { BaseRepository } from "./BaseRepository.js";
+import { YouTubeChannelCacheQuery } from "../queries/YouTubeChannelCacheQuery.js";
+import { YouTubeChannelCache } from "../models/YouTubeChannelCache.js";
 
 export class YouTubeChannelCacheRepository extends BaseRepository {
   async findEntry(videoId: string) {

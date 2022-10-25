@@ -1,5 +1,5 @@
 import { ApplicationCommandOptionChoiceData } from "discord.js";
-import { Constants } from "./Constants";
+import { Constants } from "./Constants.js";
 
 export class CommandUtil {
   public static getRuleChoices() {

@@ -1,11 +1,11 @@
 import { MongoClient } from "mongodb";
-import { GuildRepository } from "../repositories/GuildRepository";
-import { UserRepository } from "../repositories/UserRepository";
-import { MuteRepository } from "../repositories/MuteRepository";
-import { PunishmentRepository } from "../repositories/PunishmentRepository";
-import { BanRepository } from "../repositories/BanRepository";
-import { SafeBrowsingCacheRepository } from "../repositories/SafeBrowsingCacheRepository";
-import { YouTubeChannelCacheRepository } from "../repositories/YouTubeChannelCacheRepository";
+import { GuildRepository } from "../repositories/GuildRepository.js";
+import { UserRepository } from "../repositories/UserRepository.js";
+import { MuteRepository } from "../repositories/MuteRepository.js";
+import { PunishmentRepository } from "../repositories/PunishmentRepository.js";
+import { BanRepository } from "../repositories/BanRepository.js";
+import { SafeBrowsingCacheRepository } from "../repositories/SafeBrowsingCacheRepository.js";
+import { YouTubeChannelCacheRepository } from "../repositories/YouTubeChannelCacheRepository.js";
 
 export class Database {
   public guildRepo: GuildRepository | undefined;

@@ -4,9 +4,9 @@ import {
   replyInteractionError,
   replyInteractionPublic,
   send,
-} from "../../utility/Sender";
-import { Constants } from "../../utility/Constants";
-import { genericLog } from "../../services/ModerationService";
+} from "../../utility/Sender.js";
+import { Constants } from "../../utility/Constants.js";
+import { genericLog } from "../../services/ModerationService.js";
 
 export class EmojiCommand extends Command {
   public constructor(context: Command.Context) {

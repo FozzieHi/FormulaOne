@@ -1,9 +1,9 @@
 import { Guild, GuildTextBasedChannel, User } from "discord.js";
-import db from "../database";
-import { dm } from "./Sender";
-import { PushUpdate } from "../database/updates/PushUpdate";
-import { ModerationService, modLog } from "../services/ModerationService";
-import { Constants } from "./Constants";
+import db from "../database/index.js";
+import { dm } from "./Sender.js";
+import { PushUpdate } from "../database/updates/PushUpdate.js";
+import { ModerationService, modLog } from "../services/ModerationService.js";
+import { Constants } from "./Constants.js";
 
 export class ModerationUtil {
   public static async ban(

@@ -9,8 +9,8 @@ import {
   GuildBasedChannel,
   GuildTextBasedChannel,
 } from "discord.js";
-import { replyInteraction, send } from "../../utility/Sender";
-import { Constants } from "../../utility/Constants";
+import { replyInteraction, send } from "../../utility/Sender.js";
+import { Constants } from "../../utility/Constants.js";
 
 export class MoveChannelCommand extends Command {
   public constructor(context: Command.Context) {

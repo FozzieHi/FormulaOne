@@ -12,11 +12,11 @@ import {
   MessageSelectMenu,
   MessageSelectOptionData,
 } from "discord.js";
-import { replyInteraction, replyInteractionError } from "../../utility/Sender";
-import { Constants } from "../../utility/Constants";
-import { ModerationService } from "../../services/ModerationService";
-import { BanishUtil } from "../../utility/BanishUtil";
-import { CommandUtil } from "../../utility/CommandUtil";
+import { replyInteraction, replyInteractionError } from "../../utility/Sender.js";
+import { Constants } from "../../utility/Constants.js";
+import { ModerationService } from "../../services/ModerationService.js";
+import { BanishUtil } from "../../utility/BanishUtil.js";
+import { CommandUtil } from "../../utility/CommandUtil.js";
 
 export class BanishCommand extends Command {
   public constructor(context: Command.Context) {

@@ -1,9 +1,9 @@
 import { Guild, Message, MessageButton, TextChannel, User } from "discord.js";
-import { Constants } from "../utility/Constants";
-import { StringUtil } from "../utility/StringUtil";
-import { FilterService } from "./FilterService";
-import ViolationService from "./ViolationService";
-import { ModerationService } from "./ModerationService";
+import { Constants } from "../utility/Constants.js";
+import { StringUtil } from "../utility/StringUtil.js";
+import { FilterService } from "./FilterService.js";
+import ViolationService from "./ViolationService.js";
+import { ModerationService } from "./ModerationService.js";
 
 export class BotQueueService {
   public static async checkMessage(message: Message) {

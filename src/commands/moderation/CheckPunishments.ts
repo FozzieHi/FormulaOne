@@ -8,11 +8,11 @@ import { CommandInteraction, MessageButton, MessageEmbedOptions } from "discord.
 import {
   replyInteractionPublic,
   replyInteractionPublicFields,
-} from "../../utility/Sender";
-import { Constants } from "../../utility/Constants";
-import { StringUtil } from "../../utility/StringUtil";
-import { PunishmentUtil } from "../../utility/PunishmentUtil";
-import { getDBUser } from "../../utility/DatabaseUtil";
+} from "../../utility/Sender.js";
+import { Constants } from "../../utility/Constants.js";
+import { StringUtil } from "../../utility/StringUtil.js";
+import { PunishmentUtil } from "../../utility/PunishmentUtil.js";
+import { getDBUser } from "../../utility/DatabaseUtil.js";
 
 export class CheckPunishmentsCommand extends Command {
   public constructor(context: Command.Context) {

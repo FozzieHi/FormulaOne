@@ -1,7 +1,7 @@
 import { Message, Snowflake } from "discord.js";
-import MutexManager from "../managers/MutexManager";
-import { Constants, ModerationQueueButtons } from "../utility/Constants";
-import { modQueue } from "./ModerationService";
+import MutexManager from "../managers/MutexManager.js";
+import { Constants, ModerationQueueButtons } from "../utility/Constants.js";
+import { modQueue } from "./ModerationService.js";
 
 export default new (class ViolationService {
   private violations: Map<Snowflake, { violationStart: number; violations: number }>;

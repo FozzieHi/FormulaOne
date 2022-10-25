@@ -6,19 +6,19 @@ import {
   SelectMenuInteraction,
   Snowflake,
 } from "discord.js";
-import { Constants } from "./Constants";
+import { Constants } from "./Constants.js";
 import {
   dm,
   replyInteractionError,
   replyInteractionPublic,
   send,
   updateInteraction,
-} from "./Sender";
-import db from "../database";
-import { ModerationService, modLog } from "../services/ModerationService";
-import { StringUtil } from "./StringUtil";
-import { PushUpdate } from "../database/updates/PushUpdate";
-import MutexManager from "../managers/MutexManager";
+} from "./Sender.js";
+import db from "../database/index.js";
+import { ModerationService, modLog } from "../services/ModerationService.js";
+import { StringUtil } from "./StringUtil.js";
+import { PushUpdate } from "../database/updates/PushUpdate.js";
+import MutexManager from "../managers/MutexManager.js";
 
 export class BanishUtil {
   public static async banish(

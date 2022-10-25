@@ -1,7 +1,7 @@
 import { Snowflake } from "discord.js";
-import { UserQuery } from "../queries/UserQuery";
-import { Ban } from "../models/Ban";
-import { BaseRepository } from "./BaseRepository";
+import { UserQuery } from "../queries/UserQuery.js";
+import { Ban } from "../models/Ban.js";
+import { BaseRepository } from "./BaseRepository.js";
 
 export class BanRepository extends BaseRepository {
   async anyBan(userId: Snowflake, guildId: Snowflake) {

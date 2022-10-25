@@ -1,10 +1,10 @@
 import { ApplicationCommandRegistry, Awaitable, Command } from "@sapphire/framework";
 import { ContextMenuInteraction, Message } from "discord.js";
-import { Constants, ModerationQueueButtons } from "../../utility/Constants";
-import { ModerationService, modQueue } from "../../services/ModerationService";
-import { replyInteraction, replyInteractionError } from "../../utility/Sender";
-import MutexManager from "../../managers/MutexManager";
-import ViolationService from "../../services/ViolationService";
+import { Constants, ModerationQueueButtons } from "../../utility/Constants.js";
+import { ModerationService, modQueue } from "../../services/ModerationService.js";
+import { replyInteraction, replyInteractionError } from "../../utility/Sender.js";
+import MutexManager from "../../managers/MutexManager.js";
+import ViolationService from "../../services/ViolationService.js";
 
 export class ReportCommand extends Command {
   public constructor(context: Command.Context) {

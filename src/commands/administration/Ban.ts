@@ -9,13 +9,13 @@ import {
   dm,
   replyInteractionError,
   replyInteractionPublic,
-} from "../../utility/Sender";
-import { Constants } from "../../utility/Constants";
-import { modLog } from "../../services/ModerationService";
-import { StringUtil } from "../../utility/StringUtil";
-import { CommandUtil } from "../../utility/CommandUtil";
-import MutexManager from "../../managers/MutexManager";
-import { ModerationUtil } from "../../utility/ModerationUtil";
+} from "../../utility/Sender.js";
+import { Constants } from "../../utility/Constants.js";
+import { modLog } from "../../services/ModerationService.js";
+import { StringUtil } from "../../utility/StringUtil.js";
+import { CommandUtil } from "../../utility/CommandUtil.js";
+import MutexManager from "../../managers/MutexManager.js";
+import { ModerationUtil } from "../../utility/ModerationUtil.js";
 
 export class BanCommand extends Command {
   public constructor(context: Command.Context) {

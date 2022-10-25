@@ -12,12 +12,12 @@ import {
   TextChannel,
   User,
 } from "discord.js";
-import { escalate } from "../../services/ModerationService";
-import TryVal from "../../utility/TryVal";
-import { Constants, ModerationQueueButtons } from "../../utility/Constants";
-import MutexManager from "../../managers/MutexManager";
-import { replyInteraction, replyInteractionError } from "../../utility/Sender";
-import { BotQueueService } from "../../services/BotQueueService";
+import { escalate } from "../../services/ModerationService.js";
+import TryVal from "../../utility/TryVal.js";
+import { Constants, ModerationQueueButtons } from "../../utility/Constants.js";
+import MutexManager from "../../managers/MutexManager.js";
+import { replyInteraction, replyInteractionError } from "../../utility/Sender.js";
+import { BotQueueService } from "../../services/BotQueueService.js";
 
 export class EscalateButton extends InteractionHandler {
   public constructor(context: PieceContext) {

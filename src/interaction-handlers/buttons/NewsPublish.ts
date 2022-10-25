@@ -4,9 +4,9 @@ import {
   PieceContext,
 } from "@sapphire/framework";
 import { ButtonInteraction, GuildMember, Message, Snowflake } from "discord.js";
-import { replyInteraction, replyInteractionError } from "../../utility/Sender";
-import { ModerationService } from "../../services/ModerationService";
-import { Constants } from "../../utility/Constants";
+import { replyInteraction, replyInteractionError } from "../../utility/Sender.js";
+import { ModerationService } from "../../services/ModerationService.js";
+import { Constants } from "../../utility/Constants.js";
 
 export class NewsPublishInteraction extends InteractionHandler {
   public constructor(context: PieceContext) {

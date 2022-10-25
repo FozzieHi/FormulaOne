@@ -1,7 +1,7 @@
 import { Snowflake } from "discord.js";
-import { BaseRepository } from "./BaseRepository";
-import { UserQuery } from "../queries/UserQuery";
-import { DBUser, User } from "../models/User";
+import { BaseRepository } from "./BaseRepository.js";
+import { UserQuery } from "../queries/UserQuery.js";
+import { DBUser, User } from "../models/User.js";
 
 export class UserRepository extends BaseRepository {
   async anyUser(userId: Snowflake, guildId: Snowflake) {
