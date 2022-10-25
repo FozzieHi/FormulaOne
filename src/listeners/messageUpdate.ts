@@ -8,6 +8,8 @@ export class MessageUpdateListener extends Listener {
   }
 
   public async run(oldMessage: Message, newMessage: Message) {
-    await BotQueueService.checkMessage(newMessage);
+    if (oldMessage.content !== newMessage.content) {
+      await BotQueueService.checkMessage(newMessage);
+    }
   }
 }
