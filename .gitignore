@@ -1,5 +1,6 @@
 # Packages
 node_modules/
+target/
 
 # Authentication
 credentials.json
