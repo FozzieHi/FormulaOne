@@ -59,7 +59,7 @@ export class ReportCommand extends Command {
             "Action",
             `Report [Jump to message](${message.url})`,
             "Reporter",
-            interaction.user.tag,
+            `${interaction.user.tag} (${interaction.user.id})`,
             "Channel",
             interaction.channel.toString(),
             "Content",
