@@ -9,7 +9,6 @@ module.exports = {
   overrides: [
     {
       files: ["*.ts", "*.tsx"],
-      excludedFiles: ["index.ts"],
       extends: [
         "eslint:recommended",
         "plugin:@typescript-eslint/recommended",

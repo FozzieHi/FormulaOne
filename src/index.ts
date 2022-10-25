@@ -1,15 +1,15 @@
 import "@sapphire/plugin-logger/register";
-import credentials from "./credentials.json";
-import db from "./database";
 import {
   ApplicationCommandRegistries,
   RegisterBehavior,
   SapphireClient,
   container,
 } from "@sapphire/framework";
+import credentials from "./credentials.json";
+import db from "./database";
 import { Constants } from "./utility/Constants";
-import "./intervals/Protection.ts";
-import "./intervals/MutexClear.ts";
+import "./intervals/Protection";
+import "./intervals/MutexClear";
 
 declare module "@sapphire/framework" {
   interface Preconditions {
