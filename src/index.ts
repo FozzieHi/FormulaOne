@@ -35,7 +35,7 @@ declare module "@sapphire/framework" {
   );
   const start = Date.now();
   container.logger.info("Database: Connecting...");
-  await db.connect(credentials.mongodbConnectionURL, credentials.dbName);
+  await db.connect(credentials.mongodbConnectionURL, credentials.dbName); // eslint-disable-line
   container.logger.info(`Database: Took ${Date.now() - start}ms to connect.`);
-  await client.login(credentials.token);
+  await client.login(credentials.token); // eslint-disable-line
 })().catch((err) => container.logger.error(err));
