@@ -217,7 +217,7 @@ export async function modQueue(
   fieldsAndValues: Array<string>,
   color: number,
   buttons: Array<ModerationQueueButtons>,
-  logContent?: string
+  mention = false
 ) {
   const logChannel = guild.channels.cache.get(Constants.CHANNELS.MOD_QUEUE);
   if (logChannel == null) {
@@ -226,8 +226,8 @@ export async function modQueue(
   }
 
   const messageOptions: MessageOptions = {};
-  if (logContent != null) {
-    messageOptions.content = logContent;
+  if (mention) {
+    messageOptions.content = `<@&${Constants.ROLES.MODS}>`;
   }
   const embedOptions: MessageEmbedOptions = {
     footer: {

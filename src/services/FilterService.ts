@@ -109,7 +109,7 @@ export class FilterService {
               ModerationQueueButtons.ESCALATE,
               ModerationQueueButtons.IGNORE,
             ],
-            `<@&${Constants.ROLES.MODS}>`
+            true
           );
           ViolationService.reports.push({
             channelId: message.channel.id,
