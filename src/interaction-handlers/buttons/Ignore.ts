@@ -56,6 +56,6 @@ export class IgnoreInteraction extends InteractionHandler {
     if (!interaction.customId.startsWith("ignore-")) {
       return this.none();
     }
-    return this.some(interaction.customId.split("-")[1]);
+    return this.some(interaction.customId.split("-").at(1));
   }
 }

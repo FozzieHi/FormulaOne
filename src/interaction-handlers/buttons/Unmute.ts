@@ -38,6 +38,6 @@ export class UnmuteInteraction extends InteractionHandler {
     if (!interaction.customId.startsWith("unmute-")) {
       return this.none();
     }
-    return this.some(interaction.customId.split("-")[1]);
+    return this.some(interaction.customId.split("-").at(1));
   }
 }

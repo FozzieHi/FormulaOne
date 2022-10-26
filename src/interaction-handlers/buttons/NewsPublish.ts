@@ -77,6 +77,6 @@ export class NewsPublishInteraction extends InteractionHandler {
     if (!interaction.customId.startsWith("publish-")) {
       return this.none();
     }
-    return this.some(interaction.customId.split("-")[1]);
+    return this.some(interaction.customId.split("-").at(1));
   }
 }

@@ -14,7 +14,10 @@ export class FilterService {
     if (inviteMatch == null || message.guild == null) {
       return false;
     }
-    const inviteCode = inviteMatch[2];
+    const inviteCode = inviteMatch.at(2);
+    if (inviteCode == null) {
+      return false;
+    }
     const invite = (await TryVal(container.client.fetchInvite(inviteCode))) as Invite;
     if (invite == null || invite.guild == null) {
       return false;

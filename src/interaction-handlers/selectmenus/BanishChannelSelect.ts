@@ -17,10 +17,13 @@ export class BanishChannelSelect extends InteractionHandler {
     interaction: SelectMenuInteraction,
     parsedData: InteractionHandler.ParseResult<this>
   ) {
+    if (parsedData.targetMemberId == null || parsedData.targetRoleId == null) {
+      return;
+    }
     const member = (interaction.guild as Guild).members.cache.get(
       parsedData.targetMemberId
     );
-    if (member == null || parsedData.targetRoleId == null) {
+    if (member == null) {
       return;
     }
 
@@ -54,7 +57,7 @@ export class BanishChannelSelect extends InteractionHandler {
     if (!interaction.customId.startsWith("banishchannelselect-")) {
       return this.none();
     }
-    const targetMemberId = interaction.customId.split("-")[1];
+    const targetMemberId = interaction.customId.split("-").at(1);
     const targetRoleId = interaction.values.at(0);
     return this.some({ targetMemberId, targetRoleId });
   }

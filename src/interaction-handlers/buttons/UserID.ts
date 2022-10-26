@@ -20,6 +20,6 @@ export class UserIDInteraction extends InteractionHandler {
     if (!interaction.customId.startsWith("userid-")) {
       return this.none();
     }
-    return this.some(interaction.customId.split("-")[1]);
+    return this.some(interaction.customId.split("-").at(1));
   }
 }
