@@ -108,7 +108,11 @@ export class RuleSelect extends InteractionHandler {
     split.shift();
     const [commandName] = split;
     split.shift();
-    const ruleNumber = parseInt(interaction.values[0], 10);
+    const interactionRuleNum = interaction.values.at(0);
+    if (interactionRuleNum == null) {
+      return this.none();
+    }
+    const ruleNumber = parseInt(interactionRuleNum, 10);
     if (commandName === "banish") {
       const [targetMemberId, targetRoleId] = split;
       return this.some({

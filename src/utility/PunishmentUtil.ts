@@ -17,19 +17,21 @@ export class PunishmentUtil {
     const punsMap: Map<number, Array<string>> = new Map();
     const end = start + 5;
     for (let i = start; i < Math.min(allPunishments.length, end); i += 1) {
-      const pun = allPunishments[i];
-      const vals = ["Escalation", pun.escalation, "Moderator", pun.mod];
-      if (pun.reason != null) {
-        vals.push("Reason", pun.reason);
+      const pun = allPunishments.at(i);
+      if (pun != null) {
+        const vals = ["Escalation", pun.escalation, "Moderator", pun.mod];
+        if (pun.reason != null) {
+          vals.push("Reason", pun.reason);
+        }
+        if (pun.messageContent != null) {
+          vals.push("Content", pun.messageContent);
+        }
+        const channel = guild.channels.cache.get(pun.channelId);
+        if (channel != null) {
+          vals.push("Channel", channel.toString());
+        }
+        punsMap.set(pun.date, vals);
       }
-      if (pun.messageContent != null) {
-        vals.push("Content", pun.messageContent);
-      }
-      const channel = guild.channels.cache.get(pun.channelId);
-      if (channel != null) {
-        vals.push("Channel", channel.toString());
-      }
-      punsMap.set(pun.date, vals);
     }
 
     const fields: Array<string> = [];
@@ -38,7 +40,11 @@ export class PunishmentUtil {
       const vals = [];
       for (let i = 0; i < punData.length - 1; i += 1) {
         if (NumberUtil.isEven(i)) {
-          vals.push(`${StringUtil.boldify(`${punData[i]}:`)} ${punData[i + 1]}`);
+          const name = punData.at(i)?.toString();
+          const value = punData.at(i + 1)?.toString();
+          if (name != null && value != null) {
+            vals.push(`${StringUtil.boldify(`${name}:`)} ${value}`);
+          }
         }
       }
       fields.push(vals.join("\n"));

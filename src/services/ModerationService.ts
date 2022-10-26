@@ -133,10 +133,14 @@ export async function genericLog(
 
   for (let i = 0; i < fieldsAndValues.length - 1; i += 1) {
     if (NumberUtil.isEven(i)) {
-      embedOptions.fields.push({
-        name: fieldsAndValues[i],
-        value: fieldsAndValues[i + 1].toString(),
-      });
+      const name = fieldsAndValues.at(i)?.toString();
+      const value = fieldsAndValues.at(i + 1)?.toString();
+      if (name != null && value != null) {
+        embedOptions.fields.push({
+          name,
+          value,
+        });
+      }
     }
   }
 
@@ -194,10 +198,14 @@ export async function modLog(
 
   for (let i = 0; i < fieldsAndValues.length - 1; i += 1) {
     if (NumberUtil.isEven(i)) {
-      embedOptions.fields.push({
-        name: fieldsAndValues[i],
-        value: fieldsAndValues[i + 1].toString(),
-      });
+      const name = fieldsAndValues.at(i)?.toString();
+      const value = fieldsAndValues.at(i + 1)?.toString();
+      if (name != null && value != null) {
+        embedOptions.fields.push({
+          name,
+          value,
+        });
+      }
     }
   }
 
@@ -256,7 +264,7 @@ export async function modQueue(
     target.id,
     targetChannelId,
     targetMessageId
-  ).forEach((button) => msgButtons[0].push(button));
+  ).forEach((button) => msgButtons.at(0)?.push(button));
   messageOptions.components = msgButtons.map((b) => ({
     type: "ACTION_ROW",
     components: b,
@@ -265,10 +273,14 @@ export async function modQueue(
   embedOptions.fields = [];
   for (let i = 0; i < fieldsAndValues.length - 1; i += 1) {
     if (NumberUtil.isEven(i)) {
-      embedOptions.fields.push({
-        name: fieldsAndValues[i],
-        value: fieldsAndValues[i + 1].toString(),
-      });
+      const name = fieldsAndValues.at(i)?.toString();
+      const value = fieldsAndValues.at(i + 1)?.toString();
+      if (name != null && value != null) {
+        embedOptions.fields.push({
+          name,
+          value,
+        });
+      }
     }
   }
 
@@ -314,7 +326,7 @@ export async function escalate(
     target.id,
     targetChannelId,
     targetMessageId
-  ).forEach((button) => msgButtons[0].push(button));
+  ).forEach((button) => msgButtons.at(0)?.push(button));
   messageOptions.components = msgButtons.map((b) => ({
     type: "ACTION_ROW",
     components: b,

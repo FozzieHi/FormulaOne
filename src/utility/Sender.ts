@@ -24,10 +24,14 @@ export function getFields(fieldsAndValues: Array<string>): Array<EmbedFieldData>
   const fields = [];
   for (let i = 0; i < fieldsAndValues.length - 1; i += 1) {
     if (NumberUtil.isEven(i)) {
-      fields.push({
-        name: fieldsAndValues[i],
-        value: fieldsAndValues[i + 1].toString(),
-      });
+      const name = fieldsAndValues.at(i)?.toString();
+      const value = fieldsAndValues.at(i + 1)?.toString();
+      if (name != null && value != null) {
+        fields.push({
+          name,
+          value,
+        });
+      }
     }
   }
   return fields;

@@ -44,7 +44,10 @@ async function decreasePunishment(memberId: Snowflake, guildId: Snowflake) {
     return;
   }
 
-  const pun = puns[puns.length - 1];
+  const pun = puns.at(-1);
+  if (pun == null) {
+    return;
+  }
   await db.punRepo?.deleteById(pun._id);
   await db.userRepo?.upsertUser(memberId, guildId, {
     $inc: { currentPunishment: -pun.amount },
@@ -169,7 +172,10 @@ export class PunishUtil {
         );
         const escalations = maxEscalations - currentPun;
 
-        const punishment = Constants.PUNISHMENTS[maxEscalations - 1];
+        const punishment = Constants.PUNISHMENTS.at(maxEscalations - 1);
+        if (punishment == null) {
+          return;
+        }
         const punishmentDisplay = getPunishmentDisplay(punishment);
 
         await dm(

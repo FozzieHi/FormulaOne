@@ -16,7 +16,7 @@ setInterval(() => {
     const now = Date.now();
     await ProtectionService.mutex.runExclusive(async () => {
       for (let i = 0; i < guilds.length; i += 1) {
-        const dbGuild = guilds[i];
+        const dbGuild = guilds.at(i);
         if (dbGuild != null) {
           if (
             dbGuild.protectionActivatedAt !== 0 &&

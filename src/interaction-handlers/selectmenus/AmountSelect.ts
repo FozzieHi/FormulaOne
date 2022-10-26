@@ -22,6 +22,9 @@ export class AmountSelect extends InteractionHandler {
     interaction: SelectMenuInteraction,
     parsedData: InteractionHandler.ParseResult<this>
   ) {
+    if (parsedData.amount == null) {
+      return;
+    }
     const ruleOptions: Array<MessageSelectOptionData> = [];
     Constants.RULES.forEach((rule, i) => {
       ruleOptions.push({
@@ -56,7 +59,7 @@ export class AmountSelect extends InteractionHandler {
     const split = interaction.customId.split("-");
     split.shift();
     const [targetMemberId, channelId, messageId, logMessageId] = split;
-    const amount = interaction.values[0];
+    const amount = interaction.values.at(0);
     return this.some({
       targetMemberId,
       channelId,

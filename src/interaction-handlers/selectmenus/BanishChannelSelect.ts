@@ -20,7 +20,7 @@ export class BanishChannelSelect extends InteractionHandler {
     const member = (interaction.guild as Guild).members.cache.get(
       parsedData.targetMemberId
     );
-    if (member == null) {
+    if (member == null || parsedData.targetRoleId == null) {
       return;
     }
 
@@ -55,7 +55,7 @@ export class BanishChannelSelect extends InteractionHandler {
       return this.none();
     }
     const targetMemberId = interaction.customId.split("-")[1];
-    const targetRoleId = interaction.values[0];
+    const targetRoleId = interaction.values.at(0);
     return this.some({ targetMemberId, targetRoleId });
   }
 }

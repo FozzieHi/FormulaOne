@@ -36,7 +36,10 @@ export class EscalateButton extends InteractionHandler {
           (interaction.message as Message).id
         )
       );
-      const embed = interaction.message.embeds[0] as MessageEmbed;
+      const embed = interaction.message.embeds.at(0) as MessageEmbed;
+      if (embed == null) {
+        return;
+      }
       const targetUser = await TryVal(
         container.client.users.fetch(parsedData.targetUserId)
       );

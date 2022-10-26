@@ -30,7 +30,10 @@ export class BotQueueService {
     const modQueueChannel = guild.channels.cache.get(
       Constants.CHANNELS.MOD_QUEUE
     ) as TextChannel;
-    const messageEmbed = message.embeds[0];
+    const messageEmbed = message.embeds.at(0);
+    if (messageEmbed == null) {
+      return null;
+    }
     const archiveThread = modQueueChannel.threads.cache.get(
       Constants.CHANNELS.MOD_QUEUE_ARCHIVE
     );

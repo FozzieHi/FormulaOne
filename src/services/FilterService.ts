@@ -19,7 +19,7 @@ export class FilterService {
     if (invite == null || invite.guild == null) {
       return false;
     }
-    if (invite.guild.id === Constants.GUILD_IDS[0]) {
+    if (invite.guild.id === Constants.GUILD_IDS.at(0)) {
       return false;
     }
     await Try(message.delete());

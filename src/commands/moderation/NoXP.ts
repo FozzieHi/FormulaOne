@@ -100,7 +100,11 @@ export class NoXP extends Command {
         if (ruleNumber == null) {
           return;
         }
-        reason = `Rule ${ruleNumber + 1} - ${Constants.RULES[ruleNumber]}`;
+        const rule = Constants.RULES.at(ruleNumber);
+        if (rule == null) {
+          return;
+        }
+        reason = `Rule ${ruleNumber + 1} - ${rule}`;
 
         if (targetMember.roles.cache.has(Constants.ROLES.NOXP)) {
           await replyInteractionError(

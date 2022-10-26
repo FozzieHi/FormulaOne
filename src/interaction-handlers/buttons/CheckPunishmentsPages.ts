@@ -41,9 +41,13 @@ export class CheckPunishmentsPagesInteraction extends InteractionHandler {
       interaction.guild,
       (newPage - 1) * 5
     );
+    const embed = interaction.message.embeds.at(0);
+    if (embed == null) {
+      return;
+    }
     const embedOptions: MessageEmbedOptions = {
       title: `${user.tag}'s Punishment History (${newPage}/${parsedData.maxPages})`,
-      color: interaction.message.embeds[0].color ?? undefined,
+      color: embed.color ?? undefined,
       fields: getFields(fieldsAndValues),
       footer: {
         text: `${user.tag} has ${parsedData.currentPun} punishment${
