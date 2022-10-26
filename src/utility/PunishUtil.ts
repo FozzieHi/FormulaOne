@@ -105,12 +105,12 @@ async function ban(
 }
 
 function getPunishmentDisplay(punishment: PunishmentLevel) {
-  let displayLog = ".js";
-  let displayCurrent = ".js";
-  let displayPastTense = ".js";
+  let displayLog = "";
+  let displayCurrent = "";
+  let displayPastTense = "";
   if (punishment.type === PunishmentType.WARN) {
-    displayLog = "Warning.js";
-    displayPastTense = "warned.js";
+    displayLog = "Warning";
+    displayPastTense = "warned";
   } else if (
     punishment.type === PunishmentType.MUTE ||
     punishment.type === PunishmentType.BAN

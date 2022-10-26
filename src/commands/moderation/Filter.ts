@@ -60,7 +60,7 @@ export class FilterCommand extends Command {
       ) {
         return;
       }
-      const enabledText = "One word filter is enabled | .js";
+      const enabledText = "One word filter is enabled | ";
       const channelDescription = (interaction.channel as TextChannel).topic;
 
       const dbGuild = await getDBGuild(interaction.guild.id);
