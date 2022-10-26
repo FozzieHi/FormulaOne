@@ -1,0 +1,41 @@
+{
+  "env": {
+    "es2022": true,
+    "node": true
+  },
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint"],
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx"],
+      "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@typescript-eslint/recommended-requiring-type-checking",
+        "airbnb-base",
+        "airbnb-typescript/base",
+        "prettier"
+      ],
+      "parserOptions": {
+        "project": ["./tsconfig.json"]
+      },
+      "rules": {
+        "class-methods-use-this": [
+          "error",
+          {
+            "exceptMethods": [
+              "registerApplicationCommands",
+              "chatInputRun",
+              "contextMenuRun",
+              "run"
+            ]
+          }
+        ],
+        "import/prefer-default-export": "off",
+        "no-underscore-dangle": ["error", { "allow": ["_id"] }],
+        "import/extensions": ["error", "always"]
+      }
+    }
+  ]
+}
