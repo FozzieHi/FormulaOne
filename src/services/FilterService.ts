@@ -58,9 +58,11 @@ export class FilterService {
   }
 
   public static async checkEmotes(reaction: MessageReaction) {
-    await MutexManager.getUserPublicMutex(
-      (reaction.message.author as User)?.id
-    ).runExclusive(async () => {
+    const messageUser = reaction.message.author as User;
+    if (messageUser == null) {
+      return;
+    }
+    await MutexManager.getUserPublicMutex(messageUser.id).runExclusive(async () => {
       if (
         ViolationService.reports.some(
           (report) =>
