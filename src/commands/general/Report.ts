@@ -50,21 +50,32 @@ export class ReportCommand extends Command {
             report.messageId === message.id
         )
       ) {
+        const fieldsAndValues = [
+          "Action",
+          `Report [Jump to message](${message.url})`,
+          "Reporter",
+          `${interaction.user.tag} (${interaction.user.id})`,
+          "Channel",
+          interaction.channel.toString(),
+        ];
+        if (message.content.length > 0) {
+          fieldsAndValues.push("Content");
+          fieldsAndValues.push(message.content);
+        }
+        const attachmentVals = [...message.attachments.values()];
+        for (let i = 0; i < message.attachments.size; i += 1) {
+          const attachment = attachmentVals.at(i);
+          if (attachment != null) {
+            fieldsAndValues.push(`Attachment ${i + 1}`);
+            fieldsAndValues.push(`[View](${attachment.proxyURL})`);
+          }
+        }
         await modQueue(
           interaction.guild,
           message.author,
           interaction.channel.id,
           message.id,
-          [
-            "Action",
-            `Report [Jump to message](${message.url})`,
-            "Reporter",
-            `${interaction.user.tag} (${interaction.user.id})`,
-            "Channel",
-            interaction.channel.toString(),
-            "Content",
-            message.content,
-          ],
+          fieldsAndValues,
           Constants.MUTE_COLOR,
           [
             ModerationQueueButtons.PUNISH,
