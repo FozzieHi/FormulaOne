@@ -54,7 +54,12 @@ export class ShowAmountSelect extends InteractionHandler {
       amounts.push(i.toString());
     }
     const options: Array<MessageSelectOptionData> = [];
-    amounts.forEach((amount) => options.push({ label: amount, value: amount }));
+    amounts.forEach((amount) =>
+      options.push({
+        label: `${amount} punishment${parseInt(amount, 10) !== 1 ? "s" : ""}`,
+        value: amount,
+      })
+    );
 
     const amountSelect = [
       [

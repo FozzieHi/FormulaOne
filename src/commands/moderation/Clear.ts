@@ -67,7 +67,7 @@ export class ClearCommand extends Command {
       await (interaction.channel as GuildTextBasedChannel).bulkDelete(amount);
       await replyInteractionPublic(
         interaction,
-        `Successfully cleared ${amount} message${amount > 1 ? "s" : ""}.`
+        `Successfully cleared ${amount} message${amount !== 1 ? "s" : ""}.`
       );
       await modLog(
         interaction.guild,
@@ -76,7 +76,7 @@ export class ClearCommand extends Command {
           "Action",
           "Clear",
           "Amount",
-          `${amount} message${amount > 1 ? "s" : ""}`,
+          `${amount} message${amount !== 1 ? "s" : ""}`,
           "Channel",
           interaction.channel.toString(),
         ],

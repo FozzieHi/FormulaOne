@@ -246,7 +246,7 @@ export class PunishUtil {
         const punishData: Punishment = {
           date: Date.now(),
           escalation: `${currentPun + escalations} (${punishmentDisplay.displayLog})${
-            escalations > 1 ? ` (${escalations} escalations)` : ""
+            escalations > 1 ? ` (${escalations} punishments)` : ""
           }`,
           reason,
           mod: moderator.user.tag,
@@ -264,7 +264,7 @@ export class PunishUtil {
         const modLogFieldAndValues = [
           "Action",
           `${punishmentDisplay.displayLog}${
-            escalations > 1 ? ` (${escalations} escalations)` : ""
+            escalations > 1 ? ` (${escalations} punishments)` : ""
           }`,
           "Member",
           `${targetMember.user.tag} (${targetMember.id})`,
