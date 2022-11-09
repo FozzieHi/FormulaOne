@@ -13,6 +13,8 @@ import { getDBUser } from "../../utility/DatabaseUtil.js";
 import { replyInteractionError } from "../../utility/Sender.js";
 import { StringUtil } from "../../utility/StringUtil.js";
 import TryVal from "../../utility/TryVal.js";
+import { getPunishmentDisplay } from "../../utility/PunishUtil.js";
+import { Constants } from "../../utility/Constants.js";
 
 export class ShowAmountSelect extends InteractionHandler {
   public constructor(context: PieceContext) {
@@ -54,12 +56,19 @@ export class ShowAmountSelect extends InteractionHandler {
       amounts.push(i.toString());
     }
     const options: Array<MessageSelectOptionData> = [];
-    amounts.forEach((amount) =>
-      options.push({
-        label: `${amount} punishment${parseInt(amount, 10) !== 1 ? "s" : ""}`,
-        value: amount,
-      })
-    );
+    amounts.forEach((amount) => {
+      const punishment = Constants.PUNISHMENTS.at(
+        dbUser.currentPunishment + parseInt(amount, 10) - 1
+      );
+      if (punishment != null) {
+        options.push({
+          label: `${amount} punishment${parseInt(amount, 10) !== 1 ? "s" : ""} (${
+            getPunishmentDisplay(punishment).displayLog
+          })`,
+          value: amount,
+        });
+      }
+    });
 
     const amountSelect = [
       [

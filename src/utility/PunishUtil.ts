@@ -104,7 +104,7 @@ async function ban(
   await db.banRepo?.insertBan(targetMember.id, guild.id, length);
 }
 
-function getPunishmentDisplay(punishment: PunishmentLevel) {
+export function getPunishmentDisplay(punishment: PunishmentLevel) {
   let displayLog = "";
   let displayCurrent = "";
   let displayPastTense = "";
