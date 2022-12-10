@@ -10,6 +10,7 @@
     "module": "nodenext",
     "moduleResolution": "nodenext",
     "target": "es2022",
-    "outDir": "target"
+    "outDir": "target",
+    "sourceMap": true
   }
 }
