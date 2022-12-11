@@ -308,9 +308,11 @@ export async function escalate(
   }
 
   const messageOptions: MessageOptions = {};
-  messageOptions.content = `<@&${Constants.ROLES.STEWARDS}>, Escalated by ${boldify(
-    moderator.tag
-  )}`;
+  messageOptions.content = `${
+    (await ModerationService.getPermLevel(guild, moderator)) > 1
+      ? ""
+      : `<@&${Constants.ROLES.STEWARDS}>, `
+  }Escalated by ${boldify(moderator.tag)}`;
 
   const msgButtons = [
     [
