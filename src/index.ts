@@ -29,6 +29,19 @@ declare module "@sapphire/framework" {
 (async () => {
   Sentry.init({
     dsn: credentials.sentryDsn,
+    beforeSend(event) {
+      const newEvent = event;
+
+      let newMessage = event.message;
+      newMessage = newMessage?.replaceAll(
+        credentials.mongodbConnectionURL,
+        "[CONNECTION_URL]"
+      );
+      newMessage = newMessage?.replaceAll(credentials.token, "[TOKEN]");
+      newEvent.message = newMessage;
+
+      return newEvent;
+    },
   });
   const client = new SapphireClient({
     intents: Constants.INTENTS,
