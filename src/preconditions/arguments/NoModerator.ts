@@ -1,6 +1,6 @@
 import { Precondition } from "@sapphire/framework";
 import { CommandInteraction, GuildMember } from "discord.js";
-import { ModerationService } from "../../services/ModerationService.js";
+import { isModerator } from "../../services/ModerationService.js";
 
 export class NoModeratorPrecondition extends Precondition {
   public async chatInputRun(interaction: CommandInteraction) {
@@ -10,8 +10,7 @@ export class NoModeratorPrecondition extends Precondition {
     const target =
       interaction.options.getUser("user") ??
       (interaction.options.getMember("member") as GuildMember)?.user;
-    return target == null ||
-      !(await ModerationService.isModerator(interaction.guild, target))
+    return target == null || !(await isModerator(interaction.guild, target))
       ? this.ok()
       : this.error({ message: "You may not use this command on a moderator." });
   }

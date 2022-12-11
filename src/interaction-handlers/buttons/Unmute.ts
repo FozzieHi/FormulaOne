@@ -6,7 +6,7 @@ import {
 import { ButtonInteraction, Message, Snowflake, TextChannel } from "discord.js";
 import { Constants } from "../../utility/Constants.js";
 import { replyInteraction } from "../../utility/Sender.js";
-import { BotQueueService } from "../../services/BotQueueService.js";
+import { archiveLog } from "../../services/BotQueueService.js";
 
 export class UnmuteInteraction extends InteractionHandler {
   public constructor(context: PieceContext) {
@@ -24,7 +24,7 @@ export class UnmuteInteraction extends InteractionHandler {
     await replyInteraction(interaction, "Successfully unmuted member.", {
       color: Constants.UNMUTE_COLOR,
     });
-    await BotQueueService.archiveLog(
+    await archiveLog(
       interaction.guild,
       interaction.channel as TextChannel,
       memberId,

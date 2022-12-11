@@ -1,6 +1,6 @@
 import { Listener } from "@sapphire/framework";
 import { Message } from "discord.js";
-import { BotQueueService } from "../services/BotQueueService.js";
+import { checkMessage } from "../services/BotQueueService.js";
 
 export class MessageUpdateListener extends Listener {
   public constructor(context: Listener.Context) {
@@ -9,7 +9,7 @@ export class MessageUpdateListener extends Listener {
 
   public async run(oldMessage: Message, newMessage: Message) {
     if (oldMessage.content !== newMessage.content) {
-      await BotQueueService.checkMessage(newMessage);
+      await checkMessage(newMessage);
     }
   }
 }

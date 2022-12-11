@@ -14,7 +14,7 @@ import {
 } from "discord.js";
 import { replyInteraction, replyInteractionError } from "../../utility/Sender.js";
 import { Constants } from "../../utility/Constants.js";
-import { ModerationService } from "../../services/ModerationService.js";
+import { getPermLevel, isModerator } from "../../services/ModerationService.js";
 import { banish } from "../../utility/BanishUtil.js";
 import { getRuleChoices } from "../../utility/CommandUtil.js";
 
@@ -158,9 +158,8 @@ export class BanishCommand extends Command {
     }
 
     if (
-      (await ModerationService.isModerator(interaction.guild, targetMember.user)) ||
-      ((await ModerationService.getPermLevel(interaction.guild, moderator.user)) ===
-        0 &&
+      (await isModerator(interaction.guild, targetMember.user)) ||
+      ((await getPermLevel(interaction.guild, moderator.user)) === 0 &&
         targetMember.roles.cache.has(Constants.ROLES.HELPERS))
     ) {
       await replyInteractionError(
@@ -171,7 +170,7 @@ export class BanishCommand extends Command {
     }
 
     const roleOptions: Array<MessageSelectOptionData> = [];
-    if ((await ModerationService.getPermLevel(interaction.guild, moderator.user)) > 0) {
+    if ((await getPermLevel(interaction.guild, moderator.user)) > 0) {
       Constants.BANISH_ROLES.forEach((role) =>
         roleOptions.push({ label: role.name, value: role.id })
       );

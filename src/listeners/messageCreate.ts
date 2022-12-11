@@ -1,6 +1,6 @@
 import { Listener } from "@sapphire/framework";
 import { Message } from "discord.js";
-import { BotQueueService } from "../services/BotQueueService.js";
+import { checkMessage } from "../services/BotQueueService.js";
 
 export class MessageCreateListener extends Listener {
   public constructor(context: Listener.Context) {
@@ -8,6 +8,6 @@ export class MessageCreateListener extends Listener {
   }
 
   public async run(message: Message) {
-    await BotQueueService.checkMessage(message);
+    await checkMessage(message);
   }
 }

@@ -7,7 +7,7 @@ import {
 import { CommandInteraction, GuildMember } from "discord.js";
 import { getRuleChoices } from "../../utility/CommandUtil.js";
 import { Constants } from "../../utility/Constants.js";
-import { PunishUtil } from "../../utility/PunishUtil.js";
+import { punish } from "../../utility/PunishUtil.js";
 
 export class PunishCommand extends Command {
   public constructor(context: Command.Context) {
@@ -90,7 +90,7 @@ export class PunishCommand extends Command {
       return;
     }
 
-    await PunishUtil.punish(
+    await punish(
       interaction,
       interaction.member as GuildMember,
       targetMember,

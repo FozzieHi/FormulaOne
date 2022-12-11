@@ -1,7 +1,7 @@
 import { ApplicationCommandRegistry, Awaitable, Command } from "@sapphire/framework";
 import { ContextMenuInteraction, Message } from "discord.js";
 import { Constants, ModerationQueueButtons } from "../../utility/Constants.js";
-import { ModerationService, modQueue } from "../../services/ModerationService.js";
+import { isModerator, modQueue } from "../../services/ModerationService.js";
 import { replyInteraction, replyInteractionError } from "../../utility/Sender.js";
 import MutexManager from "../../managers/MutexManager.js";
 import ViolationService from "../../services/ViolationService.js";
@@ -36,7 +36,7 @@ export class ReportCommand extends Command {
         await replyInteractionError(interaction, "You may not report yourself.");
         return;
       }
-      if (await ModerationService.isModerator(interaction.guild, message.author)) {
+      if (await isModerator(interaction.guild, message.author)) {
         await replyInteractionError(
           interaction,
           "You may not use this command on a moderator."

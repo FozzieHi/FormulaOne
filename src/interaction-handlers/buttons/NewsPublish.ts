@@ -5,8 +5,8 @@ import {
 } from "@sapphire/framework";
 import { ButtonInteraction, GuildMember, Message, Snowflake } from "discord.js";
 import { replyInteraction, replyInteractionError } from "../../utility/Sender.js";
-import { ModerationService } from "../../services/ModerationService.js";
 import { Constants } from "../../utility/Constants.js";
+import { isModerator } from "../../services/ModerationService.js";
 
 export class NewsPublishInteraction extends InteractionHandler {
   public constructor(context: PieceContext) {
@@ -22,7 +22,7 @@ export class NewsPublishInteraction extends InteractionHandler {
 
     const message = interaction.message as Message;
     const member = interaction.member as GuildMember;
-    if (!(await ModerationService.isModerator(interaction.guild, interaction.user))) {
+    if (!(await isModerator(interaction.guild, interaction.user))) {
       if (!member.roles.cache.has(Constants.ROLES.F1)) {
         await replyInteractionError(
           interaction,

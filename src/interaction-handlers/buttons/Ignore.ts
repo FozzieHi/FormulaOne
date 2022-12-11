@@ -7,8 +7,8 @@ import { ButtonInteraction, Guild, Message, Snowflake, TextChannel } from "disco
 import { Constants } from "../../utility/Constants.js";
 import MutexManager from "../../managers/MutexManager.js";
 import { replyInteraction, replyInteractionError } from "../../utility/Sender.js";
-import { BotQueueService } from "../../services/BotQueueService.js";
 import TryVal from "../../utility/TryVal.js";
+import { archiveLog } from "../../services/BotQueueService.js";
 
 export class IgnoreInteraction extends InteractionHandler {
   public constructor(context: PieceContext) {
@@ -34,7 +34,7 @@ export class IgnoreInteraction extends InteractionHandler {
       if (logMessage == null) {
         return;
       }
-      const messageSent = await BotQueueService.archiveLog(
+      const messageSent = await archiveLog(
         interaction.guild as Guild,
         interaction.channel as TextChannel,
         userId,

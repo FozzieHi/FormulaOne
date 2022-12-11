@@ -17,24 +17,22 @@ import TryVal from "../utility/TryVal.js";
 import { isEven } from "../utility/NumberUtil.js";
 import { boldify } from "../utility/StringUtil.js";
 
-export class ModerationService {
-  public static async getPermLevel(guild: Guild, user: User) {
-    const member = (await TryVal(guild.members.fetch(user))) as GuildMember;
-    if (member == null) {
-      return 0;
-    }
-    const modRoles = Constants.MOD_ROLES.sort(
-      (a, b) => b.permissionLevel - a.permissionLevel
-    );
-    const permLevel =
-      modRoles.find((modRole) => member.roles.cache.has(modRole.id))?.permissionLevel ??
-      0;
-    return member.permissions.has("ADMINISTRATOR") && permLevel < 2 ? 2 : permLevel;
+export async function getPermLevel(guild: Guild, user: User) {
+  const member = (await TryVal(guild.members.fetch(user))) as GuildMember;
+  if (member == null) {
+    return 0;
   }
+  const modRoles = Constants.MOD_ROLES.sort(
+    (a, b) => b.permissionLevel - a.permissionLevel
+  );
+  const permLevel =
+    modRoles.find((modRole) => member.roles.cache.has(modRole.id))?.permissionLevel ??
+    0;
+  return member.permissions.has("ADMINISTRATOR") && permLevel < 2 ? 2 : permLevel;
+}
 
-  public static async isModerator(guild: Guild, user: User) {
-    return user.bot || (await this.getPermLevel(guild, user)) > 0;
-  }
+export async function isModerator(guild: Guild, user: User) {
+  return user.bot || (await getPermLevel(guild, user)) > 0;
 }
 
 function getModerationQueueButtons(
@@ -309,7 +307,7 @@ export async function escalate(
 
   const messageOptions: MessageOptions = {};
   messageOptions.content = `${
-    (await ModerationService.getPermLevel(guild, moderator)) > 1
+    (await getPermLevel(guild, moderator)) > 1
       ? ""
       : `<@&${Constants.ROLES.STEWARDS}>, `
   }Escalated by ${boldify(moderator.tag)}`;

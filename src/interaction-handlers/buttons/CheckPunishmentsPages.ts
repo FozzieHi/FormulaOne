@@ -9,7 +9,7 @@ import {
   MessageEmbedOptions,
   User,
 } from "discord.js";
-import { PunishmentUtil } from "../../utility/PunishmentUtil.js";
+import { getHistory } from "../../utility/PunishmentUtil.js";
 import { Embed } from "../../structures/Embed.js";
 import { getFields } from "../../utility/Sender.js";
 import TryVal from "../../utility/TryVal.js";
@@ -36,7 +36,7 @@ export class CheckPunishmentsPagesInteraction extends InteractionHandler {
     if (newPage < 1 || newPage > parsedData.maxPages) {
       return;
     }
-    const fieldsAndValues = await PunishmentUtil.getHistory(
+    const fieldsAndValues = await getHistory(
       user,
       interaction.guild,
       (newPage - 1) * 5

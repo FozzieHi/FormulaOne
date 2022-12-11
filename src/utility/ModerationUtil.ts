@@ -2,7 +2,7 @@ import { Guild, GuildTextBasedChannel, User } from "discord.js";
 import db from "../database/index.js";
 import { dm } from "./Sender.js";
 import { PushUpdate } from "../database/updates/PushUpdate.js";
-import { ModerationService, modLog } from "../services/ModerationService.js";
+import { getPermLevel, isModerator, modLog } from "../services/ModerationService.js";
 import { Constants } from "./Constants.js";
 
 export async function ban(
@@ -15,9 +15,9 @@ export async function ban(
 ): Promise<boolean> {
   if (
     reason == null ||
-    (await ModerationService.getPermLevel(guild, moderator)) <
+    (await getPermLevel(guild, moderator)) <
       (originChannel.id === Constants.CHANNELS.MOD_QUEUE ? 1 : 2) ||
-    (await ModerationService.isModerator(guild, targetUser))
+    (await isModerator(guild, targetUser))
   ) {
     return false;
   }

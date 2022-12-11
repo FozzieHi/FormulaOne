@@ -11,8 +11,8 @@ import {
 } from "discord.js";
 import { upperFirstChar } from "../../utility/StringUtil.js";
 import Try from "../../utility/Try.js";
-import { BotQueueService } from "../../services/BotQueueService.js";
 import { replyInteractionError } from "../../utility/Sender.js";
+import { archiveLog } from "../../services/BotQueueService.js";
 
 export class ShowReasonOptionInteraction extends InteractionHandler {
   public constructor(context: PieceContext) {
@@ -30,7 +30,7 @@ export class ShowReasonOptionInteraction extends InteractionHandler {
     }
     if (parsedData.action === "ban") {
       if (await Try(interaction.guild.bans.fetch(parsedData.targetUserId))) {
-        await BotQueueService.archiveLog(
+        await archiveLog(
           interaction.guild,
           interaction.channel as TextChannel,
           parsedData.targetUserId,

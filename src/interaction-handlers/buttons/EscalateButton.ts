@@ -17,7 +17,7 @@ import TryVal from "../../utility/TryVal.js";
 import { Constants, ModerationQueueButtons } from "../../utility/Constants.js";
 import MutexManager from "../../managers/MutexManager.js";
 import { replyInteraction, replyInteractionError } from "../../utility/Sender.js";
-import { BotQueueService } from "../../services/BotQueueService.js";
+import { archiveLog } from "../../services/BotQueueService.js";
 
 export class EscalateButton extends InteractionHandler {
   public constructor(context: PieceContext) {
@@ -63,7 +63,7 @@ export class EscalateButton extends InteractionHandler {
         await replyInteractionError(interaction, "Error escalating log.");
         return;
       }
-      const messageSent = await BotQueueService.archiveLog(
+      const messageSent = await archiveLog(
         interaction.guild as Guild,
         interaction.channel as TextChannel,
         parsedData.targetUserId,

@@ -1,12 +1,12 @@
 import { Command, Precondition } from "@sapphire/framework";
 import { CommandInteraction, Guild, GuildMember } from "discord.js";
 import { Constants } from "../../utility/Constants.js";
-import { ModerationService } from "../../services/ModerationService.js";
 import ContextMenuInteraction = Command.ContextMenuInteraction;
+import { getPermLevel } from "../../services/ModerationService.js";
 
 export class HelpersPrecondition extends Precondition {
   public async chatInputRun(interaction: CommandInteraction) {
-    return (await ModerationService.getPermLevel(
+    return (await getPermLevel(
       interaction.guild as Guild,
       (interaction.member as GuildMember).user
     )) > 0 ||
@@ -16,7 +16,7 @@ export class HelpersPrecondition extends Precondition {
   }
 
   public async contextMenuRun(interaction: ContextMenuInteraction) {
-    return (await ModerationService.getPermLevel(
+    return (await getPermLevel(
       interaction.guild as Guild,
       (interaction.member as GuildMember).user
     )) > 0 ||

@@ -15,7 +15,7 @@ import {
   updateInteraction,
 } from "./Sender.js";
 import db from "../database/index.js";
-import { ModerationService, modLog } from "../services/ModerationService.js";
+import { getPermLevel, isModerator, modLog } from "../services/ModerationService.js";
 import { PushUpdate } from "../database/updates/PushUpdate.js";
 import MutexManager from "../managers/MutexManager.js";
 import { boldify } from "./StringUtil.js";
@@ -34,8 +34,7 @@ export async function banish(
       return;
     }
 
-    const helper =
-      (await ModerationService.getPermLevel(interaction.guild, interaction.user)) === 0;
+    const helper = (await getPermLevel(interaction.guild, interaction.user)) === 0;
     if (helper && targetRoleId !== Constants.ROLES.BEGINNERS_QUESTIONS) {
       await replyInteractionError(
         interaction,
@@ -45,9 +44,8 @@ export async function banish(
     }
 
     if (
-      (await ModerationService.isModerator(interaction.guild, targetMember.user)) ||
-      ((await ModerationService.getPermLevel(interaction.guild, moderator.user)) ===
-        0 &&
+      (await isModerator(interaction.guild, targetMember.user)) ||
+      ((await getPermLevel(interaction.guild, moderator.user)) === 0 &&
         targetMember.roles.cache.has(Constants.ROLES.HELPERS))
     ) {
       await replyInteractionError(

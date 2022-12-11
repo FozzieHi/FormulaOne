@@ -13,11 +13,11 @@ import {
 import { setTimeout } from "timers/promises";
 import { banish } from "../../utility/BanishUtil.js";
 import { Constants } from "../../utility/Constants.js";
-import { PunishUtil } from "../../utility/PunishUtil.js";
-import { BotQueueService } from "../../services/BotQueueService.js";
+import { punish } from "../../utility/PunishUtil.js";
 import Try from "../../utility/Try.js";
 import TryVal from "../../utility/TryVal.js";
 import { replyInteractionError } from "../../utility/Sender.js";
+import { archiveLog } from "../../services/BotQueueService.js";
 
 export class RuleSelect extends InteractionHandler {
   public constructor(context: PieceContext) {
@@ -78,7 +78,7 @@ export class RuleSelect extends InteractionHandler {
       const reason = `Rule ${parsedData.ruleNumber + 1} - ${
         Constants.RULES[parsedData.ruleNumber]
       }`;
-      const messageSent: Message = (await PunishUtil.punish(
+      const messageSent: Message = (await punish(
         interaction,
         interaction.member as GuildMember,
         targetMember,
@@ -87,7 +87,7 @@ export class RuleSelect extends InteractionHandler {
         parsedData.amount as number,
         message
       )) as Message;
-      await BotQueueService.archiveLog(
+      await archiveLog(
         interaction.guild,
         interaction.channel as TextChannel,
         targetMember.id,

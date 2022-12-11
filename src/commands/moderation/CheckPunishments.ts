@@ -10,7 +10,7 @@ import {
   replyInteractionPublicFields,
 } from "../../utility/Sender.js";
 import { Constants } from "../../utility/Constants.js";
-import { PunishmentUtil } from "../../utility/PunishmentUtil.js";
+import { getHistory } from "../../utility/PunishmentUtil.js";
 import { getDBUser } from "../../utility/DatabaseUtil.js";
 import { boldify } from "../../utility/StringUtil.js";
 
@@ -60,7 +60,7 @@ export class CheckPunishmentsCommand extends Command {
       );
       return;
     }
-    const fieldsAndValues = await PunishmentUtil.getHistory(user, interaction.guild);
+    const fieldsAndValues = await getHistory(user, interaction.guild);
     const maxPages = Math.max(1, Math.ceil(dbUser.punishments.length / 5));
     const embedOptions: MessageEmbedOptions = {
       title: `${user.tag}'s Punishment History (1/${maxPages})`,

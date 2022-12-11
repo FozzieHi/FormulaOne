@@ -1,6 +1,6 @@
 import { Listener } from "@sapphire/framework";
 import { MessageReaction } from "discord.js";
-import { FilterService } from "../services/FilterService.js";
+import { checkEmotes } from "../services/FilterService.js";
 
 export class MessageReactionAddListener extends Listener {
   public constructor(context: Listener.Context) {
@@ -8,6 +8,6 @@ export class MessageReactionAddListener extends Listener {
   }
 
   public async run(reaction: MessageReaction) {
-    await FilterService.checkEmotes(reaction);
+    await checkEmotes(reaction);
   }
 }
