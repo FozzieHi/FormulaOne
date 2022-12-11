@@ -1,17 +1,19 @@
 import "@sapphire/plugin-logger/register";
 import {
   ApplicationCommandRegistries,
+  container,
   RegisterBehavior,
   SapphireClient,
-  container,
 } from "@sapphire/framework";
 import Sentry from "@sentry/node";
+import { RewriteFrames } from "@sentry/integrations";
 import credentials from "./credentials.json" assert { type: "json" };
 import db from "./database/index.js";
 import { Constants } from "./utility/Constants.js";
 import "./intervals/Protection.js";
 import "./intervals/MutexClear.js";
 import { handleError } from "./utility/Logger.js";
+import { rootDir } from "./root.js";
 
 declare module "@sapphire/framework" {
   interface Preconditions {
@@ -42,6 +44,11 @@ declare module "@sapphire/framework" {
 
       return newEvent;
     },
+    integrations: [
+      new RewriteFrames({
+        root: rootDir,
+      }),
+    ],
   });
   const client = new SapphireClient({
     intents: Constants.INTENTS,
