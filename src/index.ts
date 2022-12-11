@@ -34,9 +34,9 @@ declare module "@sapphire/framework" {
 
       let newMessage = event.message;
       newMessage = newMessage?.replaceAll(
-        credentials.mongodbConnectionURL,
+        credentials.mongodbConnectionURL, // eslint-disable-line
         "[CONNECTION_URL]"
-      ); // eslint-disable-line
+      );
       newMessage = newMessage?.replaceAll(credentials.token, "[TOKEN]"); // eslint-disable-line
       newEvent.message = newMessage;
 
