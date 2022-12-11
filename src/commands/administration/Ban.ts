@@ -14,7 +14,7 @@ import { Constants } from "../../utility/Constants.js";
 import { modLog } from "../../services/ModerationService.js";
 import { getRuleChoices } from "../../utility/CommandUtil.js";
 import MutexManager from "../../managers/MutexManager.js";
-import { ban } from "../../utility/ModerationUtil.js";
+import { ban } from "../../utility/BanUtil.js";
 import { boldify } from "../../utility/StringUtil.js";
 
 export class BanCommand extends Command {

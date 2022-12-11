@@ -14,7 +14,7 @@ import {
   TextChannel,
 } from "discord.js";
 import { banish } from "../../utility/BanishUtil.js";
-import { ban } from "../../utility/ModerationUtil.js";
+import { ban } from "../../utility/BanUtil.js";
 import { followUpInteraction, followUpInteractionError } from "../../utility/Sender.js";
 import MutexManager from "../../managers/MutexManager.js";
 import { Constants } from "../../utility/Constants.js";
