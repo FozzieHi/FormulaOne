@@ -1,4 +1,4 @@
-export default async (promise: Promise<unknown>) => {
+export default async <T>(promise: Promise<T>): Promise<boolean> => {
   try {
     await promise;
     return true;

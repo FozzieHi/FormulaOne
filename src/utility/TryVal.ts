@@ -1,4 +1,4 @@
-export default async (promise: Promise<unknown>): Promise<unknown> => {
+export default async <T>(promise: Promise<T>): Promise<T | null> => {
   try {
     return await promise;
   } catch (err) {
