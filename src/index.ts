@@ -28,7 +28,7 @@ declare module "@sapphire/framework" {
 
 (async () => {
   Sentry.init({
-    dsn: credentials.sentryDsn,
+    dsn: credentials.sentryDsn, // eslint-disable-line
     beforeSend(event) {
       const newEvent = event;
 
@@ -36,8 +36,8 @@ declare module "@sapphire/framework" {
       newMessage = newMessage?.replaceAll(
         credentials.mongodbConnectionURL,
         "[CONNECTION_URL]"
-      );
-      newMessage = newMessage?.replaceAll(credentials.token, "[TOKEN]");
+      ); // eslint-disable-line
+      newMessage = newMessage?.replaceAll(credentials.token, "[TOKEN]"); // eslint-disable-line
       newEvent.message = newMessage;
 
       return newEvent;
