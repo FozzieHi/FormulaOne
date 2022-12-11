@@ -94,7 +94,7 @@ export async function genericLog(
   fieldsAndValues: Array<string>,
   color: number
 ) {
-  const logChannel = guild.channels.cache.get(Constants.CHANNELS.LOGS);
+  const logChannel = await TryVal(guild.channels.fetch(Constants.CHANNELS.LOGS));
   if (logChannel == null) {
     container.logger.error("LOGS is null or undefined.");
     return;
@@ -157,7 +157,7 @@ export async function modLog(
   color: number,
   target?: User
 ) {
-  const logChannel = guild.channels.cache.get(Constants.CHANNELS.MOD_LOGS);
+  const logChannel = await TryVal(guild.channels.fetch(Constants.CHANNELS.MOD_LOGS));
   if (logChannel == null) {
     container.logger.error("MOD_LOGS is null or undefined.");
     return;
@@ -225,7 +225,7 @@ export async function modQueue(
   buttons: Array<ModerationQueueButtons>,
   mention = false
 ) {
-  const logChannel = guild.channels.cache.get(Constants.CHANNELS.MOD_QUEUE);
+  const logChannel = await TryVal(guild.channels.fetch(Constants.CHANNELS.MOD_QUEUE));
   if (logChannel == null) {
     container.logger.error("MOD_QUEUE is null or undefined.");
     return;
@@ -299,7 +299,9 @@ export async function escalate(
   embed: MessageEmbed,
   buttons: Array<ModerationQueueButtons>
 ): Promise<Message | null> {
-  const logChannel = guild.channels.cache.get(Constants.CHANNELS.STEWARDS_QUEUE);
+  const logChannel = await TryVal(
+    guild.channels.fetch(Constants.CHANNELS.STEWARDS_QUEUE)
+  );
   if (logChannel == null) {
     container.logger.error("STEWARDS_QUEUE is null or undefined.");
     return null;

@@ -4,6 +4,7 @@ import { checkInvites } from "./FilterService.js";
 import ViolationService from "./ViolationService.js";
 import { boldify } from "../utility/StringUtil.js";
 import { getPermLevel } from "./ModerationService.js";
+import TryVal from "../utility/TryVal.js";
 
 export async function checkMessage(message: Message) {
   if (
@@ -26,11 +27,11 @@ export async function archiveLog(
   message: Message,
   action: string
 ): Promise<Message | null> {
-  const modQueueChannel = guild.channels.cache.get(
-    Constants.CHANNELS.MOD_QUEUE
-  ) as TextChannel;
+  const modQueueChannel = (await TryVal(
+    guild.channels.fetch(Constants.CHANNELS.MOD_QUEUE)
+  )) as TextChannel;
   const messageEmbed = message.embeds.at(0);
-  if (messageEmbed == null) {
+  if (modQueueChannel == null || messageEmbed == null) {
     return null;
   }
   const archiveThread = modQueueChannel.threads.cache.get(

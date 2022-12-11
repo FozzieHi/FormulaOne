@@ -7,6 +7,7 @@ import {
 } from "../../utility/Sender.js";
 import { Constants } from "../../utility/Constants.js";
 import { genericLog } from "../../services/ModerationService.js";
+import TryVal from "../../utility/TryVal.js";
 
 export class EmojiCommand extends Command {
   public constructor(context: Command.Context) {
@@ -59,9 +60,9 @@ export class EmojiCommand extends Command {
       return;
     }
 
-    const emojiChannel = interaction.guild.channels.cache.get(
-      Constants.CHANNELS.EMOJIS
-    ) as TextBasedChannel;
+    const emojiChannel = (await TryVal(
+      interaction.guild.channels.fetch(Constants.CHANNELS.EMOJIS)
+    )) as TextBasedChannel;
     if (emojiChannel == null) {
       return;
     }

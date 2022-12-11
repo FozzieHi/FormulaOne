@@ -2,6 +2,7 @@ import { Guild, User } from "discord.js";
 import { getDBUser } from "./DatabaseUtil.js";
 import { isEven } from "./NumberUtil.js";
 import { boldify } from "./StringUtil.js";
+import TryVal from "./TryVal.js";
 
 export async function getHistory(
   user: User,
@@ -25,7 +26,8 @@ export async function getHistory(
       if (pun.messageContent != null) {
         vals.push("Content", pun.messageContent);
       }
-      const channel = guild.channels.cache.get(pun.channelId);
+      // eslint-disable-next-line no-await-in-loop
+      const channel = await TryVal(guild.channels.fetch(pun.channelId));
       if (channel != null) {
         vals.push("Channel", channel.toString());
       }

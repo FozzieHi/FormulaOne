@@ -3,6 +3,7 @@ import { CommandInteraction, MessageButton, TextBasedChannel } from "discord.js"
 import { replyInteractionError, replyInteractionPublic } from "../../utility/Sender.js";
 import { Constants } from "../../utility/Constants.js";
 import { boldify } from "../../utility/StringUtil.js";
+import TryVal from "../../utility/TryVal.js";
 
 export class NewsCommand extends Command {
   public constructor(context: Command.Context) {
@@ -44,9 +45,9 @@ export class NewsCommand extends Command {
       return;
     }
 
-    const newsChannel = interaction.guild.channels.cache.get(
-      Constants.CHANNELS.NEWS
-    ) as TextBasedChannel;
+    const newsChannel = (await TryVal(
+      interaction.guild.channels.fetch(Constants.CHANNELS.NEWS)
+    )) as TextBasedChannel;
     if (newsChannel == null) {
       return;
     }
