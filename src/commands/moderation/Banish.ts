@@ -17,6 +17,7 @@ import { Constants } from "../../utility/Constants.js";
 import { getPermLevel, isModerator } from "../../services/ModerationService.js";
 import { banish } from "../../utility/BanishUtil.js";
 import { getRuleChoices } from "../../utility/CommandUtil.js";
+import TryVal from "../../utility/TryVal.js";
 
 export class BanishCommand extends Command {
   public constructor(context: Command.Context) {
@@ -152,7 +153,9 @@ export class BanishCommand extends Command {
       return;
     }
     const moderator = interaction.member as GuildMember;
-    const targetMember = interaction.guild.members.cache.get(message.author.id);
+    const targetMember = (await TryVal(
+      interaction.guild.members.fetch(message.author.id)
+    )) as GuildMember;
     if (moderator == null || targetMember == null) {
       return;
     }

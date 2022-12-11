@@ -1,15 +1,17 @@
 /* eslint-disable no-await-in-loop */
 import { container } from "@sapphire/framework";
+import { Guild } from "discord.js";
 import db from "../database/index.js";
 import { Constants } from "../utility/Constants.js";
 import { modLog } from "../services/ModerationService.js";
 import ProtectionService from "../services/ProtectionService.js";
-import { Guild } from "../database/models/Guild.js";
+import { Guild as DBGuild } from "../database/models/Guild.js";
 import { handleError } from "../utility/Logger.js";
+import TryVal from "../utility/TryVal.js";
 
 setInterval(() => {
   (async function run() {
-    const guilds = (await db.guildRepo?.findMany()) as Array<Guild>;
+    const guilds = (await db.guildRepo?.findMany()) as Array<DBGuild>;
     if (guilds == null) {
       return;
     }
@@ -24,7 +26,9 @@ setInterval(() => {
             Date.now() - dbGuild.protectionActivatedAt > 1.2e6
           ) {
             // 20 minutes
-            const guild = container.client.guilds.cache.get(dbGuild.guildId);
+            const guild = (await TryVal(
+              container.client.guilds.fetch(dbGuild.guildId)
+            )) as Guild;
             if (guild != null) {
               if (guild.verificationLevel !== "HIGH") {
                 await guild.setVerificationLevel(

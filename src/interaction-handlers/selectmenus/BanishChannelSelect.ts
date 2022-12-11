@@ -3,8 +3,9 @@ import {
   InteractionHandlerTypes,
   PieceContext,
 } from "@sapphire/framework";
-import { Guild, MessageButton, SelectMenuInteraction } from "discord.js";
+import { Guild, GuildMember, MessageButton, SelectMenuInteraction } from "discord.js";
 import { updateInteraction } from "../../utility/Sender.js";
+import TryVal from "../../utility/TryVal.js";
 
 export class BanishChannelSelect extends InteractionHandler {
   public constructor(context: PieceContext) {
@@ -20,9 +21,9 @@ export class BanishChannelSelect extends InteractionHandler {
     if (parsedData.targetMemberId == null || parsedData.targetRoleId == null) {
       return;
     }
-    const member = (interaction.guild as Guild).members.cache.get(
-      parsedData.targetMemberId
-    );
+    const member = (await TryVal(
+      (interaction.guild as Guild).members.fetch(parsedData.targetMemberId)
+    )) as GuildMember;
     if (member == null) {
       return;
     }

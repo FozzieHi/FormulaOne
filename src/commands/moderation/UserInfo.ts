@@ -4,11 +4,12 @@ import {
   Command,
   CommandOptionsRunTypeEnum,
 } from "@sapphire/framework";
-import { CommandInteraction, MessageButton } from "discord.js";
+import { CommandInteraction, GuildMember, MessageButton } from "discord.js";
 import { replyInteractionPublicFields } from "../../utility/Sender.js";
 import { Constants } from "../../utility/Constants.js";
 import { getDBUser } from "../../utility/DatabaseUtil.js";
 import db from "../../database/index.js";
+import TryVal from "../../utility/TryVal.js";
 
 export class UserInfoCommand extends Command {
   public constructor(context: Command.Context) {
@@ -65,7 +66,9 @@ export class UserInfoCommand extends Command {
       month: "long",
       year: "numeric",
     };
-    const member = interaction.guild.members.cache.get(user.id);
+    const member = (await TryVal(
+      interaction.guild.members.fetch(user.id)
+    )) as GuildMember;
     if (member == null) {
       await replyInteractionPublicFields(
         interaction,

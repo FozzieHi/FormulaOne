@@ -1,4 +1,11 @@
-import { Guild, Message, MessageButton, TextChannel, User } from "discord.js";
+import {
+  Guild,
+  Message,
+  MessageButton,
+  TextChannel,
+  ThreadChannel,
+  User,
+} from "discord.js";
 import { Constants } from "../utility/Constants.js";
 import { checkInvites } from "./FilterService.js";
 import ViolationService from "./ViolationService.js";
@@ -34,9 +41,9 @@ export async function archiveLog(
   if (modQueueChannel == null || messageEmbed == null) {
     return null;
   }
-  const archiveThread = modQueueChannel.threads.cache.get(
-    Constants.CHANNELS.MOD_QUEUE_ARCHIVE
-  );
+  const archiveThread = (await TryVal(
+    modQueueChannel.threads.fetch(Constants.CHANNELS.MOD_QUEUE_ARCHIVE)
+  )) as ThreadChannel;
   if (archiveThread == null) {
     return null;
   }
