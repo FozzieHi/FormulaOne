@@ -5,6 +5,7 @@ import { Constants } from "../utility/Constants.js";
 import { modLog } from "../services/ModerationService.js";
 import ProtectionService from "../services/ProtectionService.js";
 import { Guild } from "../database/models/Guild.js";
+import { handleError } from "../utility/Logger.js";
 
 setInterval(() => {
   (async function run() {
@@ -47,5 +48,5 @@ setInterval(() => {
         }
       }
     });
-  })().catch((err) => container.logger.error(err));
+  })().catch((err) => handleError(err));
 }, Constants.INTERVALS.PROTECTION);
