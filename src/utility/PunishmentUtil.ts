@@ -1,7 +1,7 @@
 import { Guild, User } from "discord.js";
 import { getDBUser } from "./DatabaseUtil.js";
-import { StringUtil } from "./StringUtil.js";
-import { NumberUtil } from "./NumberUtil.js";
+import { isEven } from "./NumberUtil.js";
+import { boldify } from "./StringUtil.js";
 
 export class PunishmentUtil {
   public static async getHistory(
@@ -39,11 +39,11 @@ export class PunishmentUtil {
       fields.push(new Date(date).toUTCString());
       const vals = [];
       for (let i = 0; i < punData.length - 1; i += 1) {
-        if (NumberUtil.isEven(i)) {
+        if (isEven(i)) {
           const name = punData.at(i)?.toString();
           const value = punData.at(i + 1)?.toString();
           if (name != null && value != null) {
-            vals.push(`${StringUtil.boldify(`${name}:`)} ${value}`);
+            vals.push(`${boldify(`${name}:`)} ${value}`);
           }
         }
       }

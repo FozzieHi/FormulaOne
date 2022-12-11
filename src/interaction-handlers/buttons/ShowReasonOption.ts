@@ -9,7 +9,7 @@ import {
   TextChannel,
   TextInputComponent,
 } from "discord.js";
-import { StringUtil } from "../../utility/StringUtil.js";
+import { upperFirstChar } from "../../utility/StringUtil.js";
 import Try from "../../utility/Try.js";
 import { BotQueueService } from "../../services/BotQueueService.js";
 import { replyInteractionError } from "../../utility/Sender.js";
@@ -54,7 +54,7 @@ export class ShowReasonOptionInteraction extends InteractionHandler {
     ];
     await interaction.showModal({
       customId: `reasonoption-${parsedData.action}-${parsedData.targetUserId}-${parsedData.channelId}`,
-      title: `${StringUtil.upperFirstChar(parsedData.action)} Reason`,
+      title: `${upperFirstChar(parsedData.action)} Reason`,
       components: inputs.map((input) => ({
         type: "ACTION_ROW",
         components: input,

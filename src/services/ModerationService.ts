@@ -13,9 +13,9 @@ import {
 import { container } from "@sapphire/framework";
 import { Constants, ModerationQueueButtons } from "../utility/Constants.js";
 import { send } from "../utility/Sender.js";
-import { NumberUtil } from "../utility/NumberUtil.js";
 import TryVal from "../utility/TryVal.js";
-import { StringUtil } from "../utility/StringUtil.js";
+import { isEven } from "../utility/NumberUtil.js";
+import { boldify } from "../utility/StringUtil.js";
 
 export class ModerationService {
   public static async getPermLevel(guild: Guild, user: User) {
@@ -132,7 +132,7 @@ export async function genericLog(
   embedOptions.fields = [];
 
   for (let i = 0; i < fieldsAndValues.length - 1; i += 1) {
-    if (NumberUtil.isEven(i)) {
+    if (isEven(i)) {
       const name = fieldsAndValues.at(i)?.toString();
       const value = fieldsAndValues.at(i + 1)?.toString();
       if (name != null && value != null) {
@@ -197,7 +197,7 @@ export async function modLog(
   embedOptions.fields = [];
 
   for (let i = 0; i < fieldsAndValues.length - 1; i += 1) {
-    if (NumberUtil.isEven(i)) {
+    if (isEven(i)) {
       const name = fieldsAndValues.at(i)?.toString();
       const value = fieldsAndValues.at(i + 1)?.toString();
       if (name != null && value != null) {
@@ -272,7 +272,7 @@ export async function modQueue(
 
   embedOptions.fields = [];
   for (let i = 0; i < fieldsAndValues.length - 1; i += 1) {
-    if (NumberUtil.isEven(i)) {
+    if (isEven(i)) {
       const name = fieldsAndValues.at(i)?.toString();
       const value = fieldsAndValues.at(i + 1)?.toString();
       if (name != null && value != null) {
@@ -308,9 +308,9 @@ export async function escalate(
   }
 
   const messageOptions: MessageOptions = {};
-  messageOptions.content = `<@&${
-    Constants.ROLES.STEWARDS
-  }>, Escalated by ${StringUtil.boldify(moderator.tag)}`;
+  messageOptions.content = `<@&${Constants.ROLES.STEWARDS}>, Escalated by ${boldify(
+    moderator.tag
+  )}`;
 
   const msgButtons = [
     [

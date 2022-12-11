@@ -9,9 +9,9 @@ import db from "../../database/index.js";
 import { dm, replyInteractionPublic } from "../../utility/Sender.js";
 import { Constants } from "../../utility/Constants.js";
 import { modLog } from "../../services/ModerationService.js";
-import { StringUtil } from "../../utility/StringUtil.js";
 import { PushUpdate } from "../../database/updates/PushUpdate.js";
 import MutexManager from "../../managers/MutexManager.js";
+import { boldify } from "../../utility/StringUtil.js";
 
 export class KickCommand extends Command {
   public constructor(context: Command.Context) {
@@ -70,7 +70,7 @@ export class KickCommand extends Command {
       await targetMember.kick(`(${interaction.user.tag}) ${reason}`);
       await replyInteractionPublic(
         interaction,
-        `Successfully kicked ${StringUtil.boldify(targetMember.user.tag)}.`
+        `Successfully kicked ${boldify(targetMember.user.tag)}.`
       );
       await db.userRepo?.upsertUser(targetMember.id, interaction.guild.id, {
         $inc: { kicks: 1 },

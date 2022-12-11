@@ -5,7 +5,7 @@ import {
   CommandOptionsRunTypeEnum,
 } from "@sapphire/framework";
 import { CommandInteraction, GuildMember } from "discord.js";
-import { CommandUtil } from "../../utility/CommandUtil.js";
+import { getRuleChoices } from "../../utility/CommandUtil.js";
 import { Constants } from "../../utility/Constants.js";
 import { PunishUtil } from "../../utility/PunishUtil.js";
 
@@ -40,7 +40,7 @@ export class PunishCommand extends Command {
                 name: "reason",
                 description: "The reason for the punish",
                 type: "NUMBER",
-                choices: CommandUtil.getRuleChoices(),
+                choices: getRuleChoices(),
                 required: true,
               },
             ],

@@ -4,7 +4,7 @@ import { Constants, ModerationQueueButtons } from "../utility/Constants.js";
 import { ModerationService, modQueue } from "./ModerationService.js";
 import Try from "../utility/Try.js";
 import TryVal from "../utility/TryVal.js";
-import { StringUtil } from "../utility/StringUtil.js";
+import { removeClickableLinks } from "../utility/StringUtil.js";
 import ViolationService from "./ViolationService.js";
 import MutexManager from "../managers/MutexManager.js";
 
@@ -45,7 +45,7 @@ export class FilterService {
         "Channel",
         message.channel.toString(),
         "Content",
-        StringUtil.removeClickableLinks(message.content),
+        removeClickableLinks(message.content),
       ],
       Constants.KICK_COLOR,
       [

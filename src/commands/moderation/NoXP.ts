@@ -6,15 +6,15 @@ import {
 } from "@sapphire/framework";
 import { CommandInteraction, GuildMember } from "discord.js";
 import { Constants } from "../../utility/Constants.js";
-import { CommandUtil } from "../../utility/CommandUtil.js";
+import { getRuleChoices } from "../../utility/CommandUtil.js";
 import { modLog } from "../../services/ModerationService.js";
 import {
   dm,
   replyInteractionError,
   replyInteractionPublic,
 } from "../../utility/Sender.js";
-import { StringUtil } from "../../utility/StringUtil.js";
 import MutexManager from "../../managers/MutexManager.js";
+import { boldify } from "../../utility/StringUtil.js";
 
 export class NoXP extends Command {
   public constructor(context: Command.Context) {
@@ -47,7 +47,7 @@ export class NoXP extends Command {
                 name: "reason",
                 description: "The reason for the banish",
                 type: "NUMBER",
-                choices: CommandUtil.getRuleChoices(),
+                choices: getRuleChoices(),
                 required: true,
               },
             ],
@@ -109,7 +109,7 @@ export class NoXP extends Command {
         if (targetMember.roles.cache.has(Constants.ROLES.NOXP)) {
           await replyInteractionError(
             interaction,
-            `${StringUtil.boldify(targetMember.user.tag)} already has the NoXP role.`
+            `${boldify(targetMember.user.tag)} already has the NoXP role.`
           );
           return;
         }
@@ -122,7 +122,7 @@ export class NoXP extends Command {
         );
         await replyInteractionPublic(
           interaction,
-          `Successfully added NoXP to ${StringUtil.boldify(targetMember.user.tag)}.`
+          `Successfully added NoXP to ${boldify(targetMember.user.tag)}.`
         );
         await modLog(
           interaction.guild,
@@ -149,7 +149,7 @@ export class NoXP extends Command {
         if (!targetMember.roles.cache.has(Constants.ROLES.NOXP)) {
           await replyInteractionError(
             interaction,
-            `${StringUtil.boldify(targetMember.user.tag)} does not have the NoXP role.`
+            `${boldify(targetMember.user.tag)} does not have the NoXP role.`
           );
           return;
         }
@@ -162,7 +162,7 @@ export class NoXP extends Command {
         );
         await replyInteractionPublic(
           interaction,
-          `Successfully removed NoXP from ${StringUtil.boldify(targetMember.user.tag)}.`
+          `Successfully removed NoXP from ${boldify(targetMember.user.tag)}.`
         );
         await modLog(
           interaction.guild,

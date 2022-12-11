@@ -14,16 +14,16 @@ import {
   TextBasedChannel,
   User,
 } from "discord.js";
-import { StringUtil } from "./StringUtil.js";
 import { Embed } from "../structures/Embed.js";
 import { Constants } from "./Constants.js";
 import Try from "./Try.js";
-import { NumberUtil } from "./NumberUtil.js";
+import { isEven } from "./NumberUtil.js";
+import { boldify } from "./StringUtil.js";
 
 export function getFields(fieldsAndValues: Array<string>): Array<EmbedFieldData> {
   const fields = [];
   for (let i = 0; i < fieldsAndValues.length - 1; i += 1) {
-    if (NumberUtil.isEven(i)) {
+    if (isEven(i)) {
       const name = fieldsAndValues.at(i)?.toString();
       const value = fieldsAndValues.at(i + 1)?.toString();
       if (name != null && value != null) {
@@ -91,21 +91,16 @@ export async function replyMsg(
   message: Message,
   description: string
 ): Promise<Message> {
-  return send(
-    message.channel,
-    `${StringUtil.boldify(message.author.tag)}, ${description}`
-  );
+  return send(message.channel, `${boldify(message.author.tag)}, ${description}`);
 }
 
 export async function replyMsgError(
   message: Message,
   description: string
 ): Promise<Message> {
-  return send(
-    message.channel,
-    `${StringUtil.boldify(message.author.tag)}, ${description}`,
-    { color: Constants.ERROR_COLOR }
-  );
+  return send(message.channel, `${boldify(message.author.tag)}, ${description}`, {
+    color: Constants.ERROR_COLOR,
+  });
 }
 
 async function replyInteractionHandler(
@@ -146,7 +141,7 @@ export async function replyInteraction(
   return replyInteractionHandler(
     interaction,
     description != null
-      ? `${StringUtil.boldify(interaction.user.tag)}, ${description}`
+      ? `${boldify(interaction.user.tag)}, ${description}`
       : undefined,
     embedOptions,
     newMessageOptions
@@ -165,7 +160,7 @@ export async function replyInteractionPublic(
 ) {
   return replyInteractionHandler(
     interaction,
-    `${StringUtil.boldify(interaction.user.tag)}, ${description}`,
+    `${boldify(interaction.user.tag)}, ${description}`,
     embedOptions
   );
 }
@@ -200,7 +195,7 @@ export async function replyInteractionError(
   newEmbedOptions.color = Constants.ERROR_COLOR;
   return replyInteractionHandler(
     interaction,
-    `${StringUtil.boldify(interaction.user.tag)}, ${description}`,
+    `${boldify(interaction.user.tag)}, ${description}`,
     newEmbedOptions,
     { ephemeral: true }
   );
@@ -238,7 +233,7 @@ export async function updateInteraction(
   return updateInteractionHandler(
     interaction,
     description != null
-      ? `${StringUtil.boldify(interaction.user.tag)}, ${description}`
+      ? `${boldify(interaction.user.tag)}, ${description}`
       : undefined,
     embedOptions,
     messageOptions
@@ -271,7 +266,7 @@ export async function followUpInteraction(
   return followUpInteractionHandler(
     interaction,
     description != null
-      ? `${StringUtil.boldify(interaction.user.tag)}, ${description}`
+      ? `${boldify(interaction.user.tag)}, ${description}`
       : undefined,
     embedOptions,
     messageOptions
@@ -287,7 +282,7 @@ export async function followUpInteractionError(
   newEmbedOptions.color = Constants.ERROR_COLOR;
   return followUpInteractionHandler(
     interaction,
-    `${StringUtil.boldify(interaction.user.tag)}, ${description}`,
+    `${boldify(interaction.user.tag)}, ${description}`,
     newEmbedOptions,
     { ephemeral: true }
   );

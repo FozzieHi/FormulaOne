@@ -2,7 +2,7 @@ import { ApplicationCommandRegistry, Awaitable, Command } from "@sapphire/framew
 import { CommandInteraction, MessageButton, TextBasedChannel } from "discord.js";
 import { replyInteractionError, replyInteractionPublic } from "../../utility/Sender.js";
 import { Constants } from "../../utility/Constants.js";
-import { StringUtil } from "../../utility/StringUtil.js";
+import { boldify } from "../../utility/StringUtil.js";
 
 export class NewsCommand extends Command {
   public constructor(context: Command.Context) {
@@ -61,7 +61,7 @@ export class NewsCommand extends Command {
       ],
     ];
     await newsChannel.send({
-      content: `${url} sent by ${StringUtil.boldify(interaction.user.tag)}`,
+      content: `${url} sent by ${boldify(interaction.user.tag)}`,
       components: buttons.map((button) => ({
         type: "ACTION_ROW",
         components: button,

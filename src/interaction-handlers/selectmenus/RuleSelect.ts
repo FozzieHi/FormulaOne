@@ -11,7 +11,7 @@ import {
   TextChannel,
 } from "discord.js";
 import { setTimeout } from "timers/promises";
-import { BanishUtil } from "../../utility/BanishUtil.js";
+import { banish } from "../../utility/BanishUtil.js";
 import { Constants } from "../../utility/Constants.js";
 import { PunishUtil } from "../../utility/PunishUtil.js";
 import { BotQueueService } from "../../services/BotQueueService.js";
@@ -44,7 +44,7 @@ export class RuleSelect extends InteractionHandler {
       const reason = `Rule ${parsedData.ruleNumber + 1} - ${
         Constants.RULES[parsedData.ruleNumber]
       }`;
-      await BanishUtil.banish(
+      await banish(
         interaction,
         interaction.member as GuildMember,
         targetMember,

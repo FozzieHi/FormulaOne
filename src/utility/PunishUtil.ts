@@ -18,14 +18,14 @@ import {
 } from "./Sender.js";
 import db from "../database/index.js";
 import { modLog } from "../services/ModerationService.js";
-import { StringUtil } from "./StringUtil.js";
 import { PushUpdate } from "../database/updates/PushUpdate.js";
 import { getDBGuild, getDBUser } from "./DatabaseUtil.js";
-import { NumberUtil } from "./NumberUtil.js";
+import { millisecondsToUnits } from "./NumberUtil.js";
 import { PopUpdate } from "../database/updates/PopUpdate.js";
 import MutexManager from "../managers/MutexManager.js";
 import { Punishment } from "../database/models/User.js";
 import { Pun } from "../database/models/Pun.js";
+import { boldify } from "./StringUtil.js";
 
 async function increasePunishment(
   memberId: Snowflake,
@@ -115,7 +115,7 @@ export function getPunishmentDisplay(punishment: PunishmentLevel) {
     punishment.type === PunishmentType.MUTE ||
     punishment.type === PunishmentType.BAN
   ) {
-    const timeUnits = NumberUtil.millisecondsToUnits(punishment.length as number);
+    const timeUnits = millisecondsToUnits(punishment.length as number);
     if (timeUnits.hours < 24) {
       const hourLength = timeUnits.hours;
       displayLog = `${hourLength} hour ${punishment.type}`;
@@ -160,7 +160,7 @@ export class PunishUtil {
         if (currentPun > Constants.PUNISHMENTS.length - 1) {
           await replyInteractionError(
             interaction,
-            `${StringUtil.boldify(targetMember.user.tag)} has exceeded ${
+            `${boldify(targetMember.user.tag)} has exceeded ${
               Constants.PUNISHMENTS.length
             } punishments in the last 30 days, escalate their punishment manually.`
           );
@@ -236,7 +236,7 @@ export class PunishUtil {
         }
         messageSent = await send(
           interaction.channel,
-          `Successfully ${punishmentDisplay.displayPastTense} ${StringUtil.boldify(
+          `Successfully ${punishmentDisplay.displayPastTense} ${boldify(
             targetMember.user.tag
           )}${
             punishment.length != null ? ` for ${punishmentDisplay.displayCurrent}` : ""
@@ -327,7 +327,7 @@ export class PunishUtil {
 
         await replyInteractionPublic(
           interaction,
-          `Successfully unpunished ${StringUtil.boldify(targetMember.user.tag)}.`
+          `Successfully unpunished ${boldify(targetMember.user.tag)}.`
         );
       }
     });

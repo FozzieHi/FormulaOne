@@ -11,10 +11,10 @@ import {
 } from "discord.js";
 import { getDBUser } from "../../utility/DatabaseUtil.js";
 import { replyInteractionError } from "../../utility/Sender.js";
-import { StringUtil } from "../../utility/StringUtil.js";
 import TryVal from "../../utility/TryVal.js";
 import { getPunishmentDisplay } from "../../utility/PunishUtil.js";
 import { Constants } from "../../utility/Constants.js";
+import { boldify } from "../../utility/StringUtil.js";
 
 export class ShowAmountSelect extends InteractionHandler {
   public constructor(context: PieceContext) {
@@ -44,7 +44,7 @@ export class ShowAmountSelect extends InteractionHandler {
     if (dbUser.currentPunishment > 4) {
       await replyInteractionError(
         interaction,
-        `${StringUtil.boldify(
+        `${boldify(
           targetMember.user.tag
         )} has exceeded 5 punishments in the last 30 days, escalate their punishment manually.`
       );

@@ -15,8 +15,8 @@ import {
 import { replyInteraction, replyInteractionError } from "../../utility/Sender.js";
 import { Constants } from "../../utility/Constants.js";
 import { ModerationService } from "../../services/ModerationService.js";
-import { BanishUtil } from "../../utility/BanishUtil.js";
-import { CommandUtil } from "../../utility/CommandUtil.js";
+import { banish } from "../../utility/BanishUtil.js";
+import { getRuleChoices } from "../../utility/CommandUtil.js";
 
 export class BanishCommand extends Command {
   public constructor(context: Command.Context) {
@@ -55,7 +55,7 @@ export class BanishCommand extends Command {
                 name: "reason",
                 description: "The reason for the banish",
                 type: "NUMBER",
-                choices: CommandUtil.getRuleChoices(),
+                choices: getRuleChoices(),
                 required: true,
               },
               {
@@ -135,7 +135,7 @@ export class BanishCommand extends Command {
       return;
     }
 
-    await BanishUtil.banish(
+    await banish(
       interaction,
       interaction.member as GuildMember,
       member,

@@ -1,9 +1,9 @@
 import { Guild, Message, MessageButton, TextChannel, User } from "discord.js";
 import { Constants } from "../utility/Constants.js";
-import { StringUtil } from "../utility/StringUtil.js";
 import { FilterService } from "./FilterService.js";
 import ViolationService from "./ViolationService.js";
 import { ModerationService } from "./ModerationService.js";
+import { boldify } from "../utility/StringUtil.js";
 
 export class BotQueueService {
   public static async checkMessage(message: Message) {
@@ -54,7 +54,7 @@ export class BotQueueService {
     const messageSent = await archiveThread.send({
       content: `${
         channel.id === Constants.CHANNELS.STEWARDS_QUEUE ? "Escalation result - " : ""
-      }${action}${moderator != null ? ` by ${StringUtil.boldify(moderator.tag)}` : ""}`,
+      }${action}${moderator != null ? ` by ${boldify(moderator.tag)}` : ""}`,
       embeds: [messageEmbed],
       components: buttons.map((button) => ({
         type: "ACTION_ROW",

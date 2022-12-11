@@ -1,5 +1,6 @@
 # Packages
 node_modules/
+target/
 
 # Authentication
 credentials.json
@@ -8,4 +9,5 @@ credentials.json
 .vscode/
 logs/
 .idea/
+.eslintcache
 *.md

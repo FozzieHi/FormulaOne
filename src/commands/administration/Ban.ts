@@ -12,10 +12,10 @@ import {
 } from "../../utility/Sender.js";
 import { Constants } from "../../utility/Constants.js";
 import { modLog } from "../../services/ModerationService.js";
-import { StringUtil } from "../../utility/StringUtil.js";
-import { CommandUtil } from "../../utility/CommandUtil.js";
+import { getRuleChoices } from "../../utility/CommandUtil.js";
 import MutexManager from "../../managers/MutexManager.js";
-import { ModerationUtil } from "../../utility/ModerationUtil.js";
+import { ban } from "../../utility/ModerationUtil.js";
+import { boldify } from "../../utility/StringUtil.js";
 
 export class BanCommand extends Command {
   public constructor(context: Command.Context) {
@@ -49,7 +49,7 @@ export class BanCommand extends Command {
                 name: "reason",
                 description: "The reason for the ban",
                 type: "NUMBER",
-                choices: CommandUtil.getRuleChoices(),
+                choices: getRuleChoices(),
                 required: true,
               },
             ],
@@ -100,7 +100,7 @@ export class BanCommand extends Command {
         }
         reason = `Rule ${ruleNumber + 1} - ${Constants.RULES[ruleNumber]}`;
 
-        const result = await ModerationUtil.ban(
+        const result = await ban(
           interaction.guild,
           targetUser,
           interaction.user,
@@ -113,7 +113,7 @@ export class BanCommand extends Command {
         }
         await replyInteractionPublic(
           interaction,
-          `Successfully banned ${StringUtil.boldify(targetUser.tag)}.`
+          `Successfully banned ${boldify(targetUser.tag)}.`
         );
       } else if (subcommand === "remove") {
         reason = interaction.options.getString("reason");
@@ -132,7 +132,7 @@ export class BanCommand extends Command {
         );
         await replyInteractionPublic(
           interaction,
-          `Successfully unbanned ${StringUtil.boldify(targetUser.tag)}.`
+          `Successfully unbanned ${boldify(targetUser.tag)}.`
         );
         await modLog(
           interaction.guild,

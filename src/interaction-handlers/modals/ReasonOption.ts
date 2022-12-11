@@ -13,8 +13,8 @@ import {
   Snowflake,
   TextChannel,
 } from "discord.js";
-import { BanishUtil } from "../../utility/BanishUtil.js";
-import { ModerationUtil } from "../../utility/ModerationUtil.js";
+import { banish } from "../../utility/BanishUtil.js";
+import { ban } from "../../utility/ModerationUtil.js";
 import { BotQueueService } from "../../services/BotQueueService.js";
 import { followUpInteraction, followUpInteractionError } from "../../utility/Sender.js";
 import MutexManager from "../../managers/MutexManager.js";
@@ -42,7 +42,7 @@ export class ReasonOption extends InteractionHandler {
       if (targetMember == null) {
         return;
       }
-      await BanishUtil.banish(
+      await banish(
         interaction,
         interaction.member as GuildMember,
         targetMember,
@@ -72,7 +72,7 @@ export class ReasonOption extends InteractionHandler {
         if (logMessage == null) {
           return;
         }
-        const result = await ModerationUtil.ban(
+        const result = await ban(
           interaction.guild as Guild,
           targetUser,
           interaction.user,

@@ -10,9 +10,9 @@ import {
   replyInteractionPublicFields,
 } from "../../utility/Sender.js";
 import { Constants } from "../../utility/Constants.js";
-import { StringUtil } from "../../utility/StringUtil.js";
 import { PunishmentUtil } from "../../utility/PunishmentUtil.js";
 import { getDBUser } from "../../utility/DatabaseUtil.js";
+import { boldify } from "../../utility/StringUtil.js";
 
 export class CheckPunishmentsCommand extends Command {
   public constructor(context: Command.Context) {
@@ -55,7 +55,7 @@ export class CheckPunishmentsCommand extends Command {
     if (dbUser?.punishments === undefined || dbUser.punishments.length === 0) {
       await replyInteractionPublic(
         interaction,
-        `${StringUtil.boldify(user.tag)} has a clean slate.`,
+        `${boldify(user.tag)} has a clean slate.`,
         { color: Constants.UNBAN_COLOR }
       );
       return;
