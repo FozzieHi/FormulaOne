@@ -11,6 +11,8 @@
     "moduleResolution": "nodenext",
     "target": "es2022",
     "outDir": "target",
-    "sourceMap": true
+    "sourceMap": true,
+    "inlineSources": true,
+    "sourceRoot": "/"
   }
 }
