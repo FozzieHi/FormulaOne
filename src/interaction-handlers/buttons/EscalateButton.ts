@@ -10,7 +10,6 @@ import {
   Message,
   MessageEmbed,
   TextChannel,
-  User,
 } from "discord.js";
 import { escalate } from "../../services/ModerationService.js";
 import TryVal from "../../utility/TryVal.js";
@@ -49,7 +48,7 @@ export class EscalateButton extends InteractionHandler {
       const escalationSent = await escalate(
         interaction.guild as Guild,
         interaction.user,
-        targetUser as User,
+        targetUser,
         parsedData.targetChannelId,
         parsedData.targetMessageId,
         embed,

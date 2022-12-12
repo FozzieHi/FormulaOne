@@ -89,7 +89,7 @@ export class ReasonOption extends InteractionHandler {
           interaction.channel as TextChannel,
           targetUser.id,
           interaction.user,
-          logMessage as Message,
+          logMessage,
           "Banned"
         );
         await followUpInteraction(interaction, "Successfully banned user.", {

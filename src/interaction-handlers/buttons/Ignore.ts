@@ -39,7 +39,7 @@ export class IgnoreInteraction extends InteractionHandler {
         interaction.channel as TextChannel,
         userId,
         interaction.user,
-        logMessage as Message,
+        logMessage,
         "Ignored"
       );
       if (messageSent) {
