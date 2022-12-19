@@ -13,7 +13,6 @@ import { Constants } from "./utility/Constants.js";
 import "./intervals/Protection.js";
 import "./intervals/MutexClear.js";
 import { handleError } from "./utility/Logger.js";
-import rootDir from "./root.js";
 
 declare module "@sapphire/framework" {
   interface Preconditions {
@@ -46,7 +45,7 @@ declare module "@sapphire/framework" {
     },
     integrations: [
       new RewriteFrames({
-        root: rootDir,
+        root: process.cwd(),
       }),
     ],
   });
