@@ -18,7 +18,7 @@ import MutexManager from "../../managers/MutexManager.js";
 import { replyInteraction, replyInteractionError } from "../../utility/Sender.js";
 import { archiveLog } from "../../services/BotQueueService.js";
 
-export class EscalateButton extends InteractionHandler {
+export class Escalate extends InteractionHandler {
   public constructor(context: PieceContext) {
     super(context, {
       interactionHandlerType: InteractionHandlerTypes.Button,
@@ -35,6 +35,9 @@ export class EscalateButton extends InteractionHandler {
           (interaction.message as Message).id
         )
       );
+      if (logMessage == null) {
+        return;
+      }
       const embed = interaction.message.embeds.at(0) as MessageEmbed;
       if (embed == null) {
         return;
@@ -67,7 +70,7 @@ export class EscalateButton extends InteractionHandler {
         interaction.channel as TextChannel,
         parsedData.targetUserId,
         interaction.user,
-        logMessage as Message,
+        logMessage,
         "Escalated"
       );
       if (messageSent) {
