@@ -1,9 +1,7 @@
-export class Random {
-  static nextInt(min: number, max: number): number {
-    return Math.floor(Math.random() * (max - min)) + min;
-  }
+function nextInt(min: number, max: number): number {
+  return Math.floor(Math.random() * (max - min)) + min;
+}
 
-  static arrayElement(array: Array<number>): number | undefined {
-    return array.at(this.nextInt(0, array.length));
-  }
+export function randomArrayElement(array: Array<number>): number | undefined {
+  return array.at(nextInt(0, array.length));
 }
