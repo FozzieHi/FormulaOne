@@ -8,8 +8,8 @@
     "prepare": "husky install",
     "prettier:write": "prettier --cache --write .",
     "prettier:check": "prettier --cache --check .",
-    "eslint:write": "eslint . --cache --fix",
-    "eslint:check": "eslint . --cache",
+    "eslint:write": "eslint . --fix",
+    "eslint:check": "eslint .",
     "build": "tsc",
     "start": "node target/index.js"
   },
