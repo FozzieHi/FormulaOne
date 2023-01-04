@@ -7,12 +7,15 @@ import {
 } from "@sapphire/framework";
 import Sentry from "@sentry/node";
 import { RewriteFrames } from "@sentry/integrations";
+// eslint-disable-next-line
+// @ts-ignore
 import credentials from "./credentials.json" assert { type: "json" };
 import db from "./database/index.js";
 import { Constants } from "./utility/Constants.js";
 import "./intervals/Protection.js";
 import "./intervals/MutexClear.js";
 import { handleError } from "./utility/Logger.js";
+import { getReleaseHash } from "./utility/ReleaseUtil.js";
 
 declare module "@sapphire/framework" {
   interface Preconditions {
@@ -30,6 +33,7 @@ declare module "@sapphire/framework" {
 (async () => {
   Sentry.init({
     dsn: credentials.sentryDsn, // eslint-disable-line
+    release: await getReleaseHash(),
     beforeSend(event) {
       const newEvent = event;
 
