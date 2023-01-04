@@ -3,10 +3,11 @@ import {
   InteractionHandlerTypes,
   PieceContext,
 } from "@sapphire/framework";
-import { ButtonInteraction, Message, Snowflake, TextChannel } from "discord.js";
+import { ButtonInteraction, Guild, Message, Snowflake, TextChannel } from "discord.js";
 import { Constants } from "../../utility/Constants.js";
 import { replyInteraction } from "../../utility/Sender.js";
 import { archiveLog } from "../../services/BotQueueService.js";
+import MutexManager from "../../managers/MutexManager.js";
 
 export class UnmuteInteraction extends InteractionHandler {
   public constructor(context: PieceContext) {
@@ -20,18 +21,20 @@ export class UnmuteInteraction extends InteractionHandler {
       return;
     }
     const member = await interaction.guild.members.fetch(memberId);
-    await member.roles.remove(Constants.ROLES.MUTED);
-    await replyInteraction(interaction, "Successfully unmuted member.", {
-      color: Constants.UNMUTE_COLOR,
+    await MutexManager.getUserMutex(member.id).runExclusive(async () => {
+      await member.roles.remove(Constants.ROLES.MUTED);
+      await replyInteraction(interaction, "Successfully unmuted member.", {
+        color: Constants.UNMUTE_COLOR,
+      });
+      await archiveLog(
+        interaction.guild as Guild,
+        interaction.channel as TextChannel,
+        memberId,
+        interaction.user,
+        interaction.message as Message,
+        "Unmuted"
+      );
     });
-    await archiveLog(
-      interaction.guild,
-      interaction.channel as TextChannel,
-      memberId,
-      interaction.user,
-      interaction.message as Message,
-      "Unmuted"
-    );
   }
 
   public parse(interaction: ButtonInteraction) {

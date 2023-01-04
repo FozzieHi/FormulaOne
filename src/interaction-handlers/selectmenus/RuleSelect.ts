@@ -18,6 +18,7 @@ import Try from "../../utility/Try.js";
 import TryVal from "../../utility/TryVal.js";
 import { replyInteractionError } from "../../utility/Sender.js";
 import { archiveLog } from "../../services/BotQueueService.js";
+import MutexManager from "../../managers/MutexManager.js";
 
 export class RuleSelect extends InteractionHandler {
   public constructor(context: PieceContext) {
@@ -54,49 +55,53 @@ export class RuleSelect extends InteractionHandler {
         reason
       );
     } else if (parsedData.commandName === "punish") {
-      const logMessage = (await TryVal(
-        (interaction.channel as TextChannel).messages.fetch(
-          parsedData.logMessageId as Snowflake
-        )
-      )) as Message;
-      if (logMessage == null) {
-        return;
-      }
-      const targetMember = (await TryVal(
-        interaction.guild.members.fetch(parsedData.targetMemberId)
-      )) as GuildMember;
-      if (targetMember == null) {
-        await replyInteractionError(interaction, "Member not found.");
-        return;
-      }
-      const channel = (await interaction.guild.channels.fetch(
-        parsedData.channelId as Snowflake
-      )) as TextChannel;
-      const message = (await TryVal(
-        channel.messages.fetch(parsedData.messageId as Snowflake)
-      )) as Message;
-      const reason = `Rule ${parsedData.ruleNumber + 1} - ${
-        Constants.RULES[parsedData.ruleNumber]
-      }`;
-      const messageSent: Message = (await punish(
-        interaction,
-        interaction.member as GuildMember,
-        targetMember,
-        "add",
-        reason,
-        parsedData.amount as number,
-        message
-      )) as Message;
-      await archiveLog(
-        interaction.guild,
-        interaction.channel as TextChannel,
-        targetMember.id,
-        interaction.user,
-        logMessage,
-        "Punished"
+      await MutexManager.getUserMutex(parsedData.targetMemberId).runExclusive(
+        async () => {
+          const logMessage = (await TryVal(
+            (interaction.channel as TextChannel).messages.fetch(
+              parsedData.logMessageId as Snowflake
+            )
+          )) as Message;
+          if (interaction.guild == null || logMessage == null) {
+            return;
+          }
+          const targetMember = (await TryVal(
+            interaction.guild.members.fetch(parsedData.targetMemberId)
+          )) as GuildMember;
+          if (targetMember == null) {
+            await replyInteractionError(interaction, "Member not found.");
+            return;
+          }
+          const channel = (await interaction.guild.channels.fetch(
+            parsedData.channelId as Snowflake
+          )) as TextChannel;
+          const message = (await TryVal(
+            channel.messages.fetch(parsedData.messageId as Snowflake)
+          )) as Message;
+          const reason = `Rule ${parsedData.ruleNumber + 1} - ${
+            Constants.RULES[parsedData.ruleNumber]
+          }`;
+          const messageSent: Message = (await punish(
+            interaction,
+            interaction.member as GuildMember,
+            targetMember,
+            "add",
+            reason,
+            parsedData.amount as number,
+            message
+          )) as Message;
+          await archiveLog(
+            interaction.guild,
+            interaction.channel as TextChannel,
+            targetMember.id,
+            interaction.user,
+            logMessage,
+            "Punished"
+          );
+          await setTimeout(10000, "result");
+          await Try(messageSent.delete());
+        }
       );
-      await setTimeout(10000, "result");
-      await Try(messageSent.delete());
     }
   }
 

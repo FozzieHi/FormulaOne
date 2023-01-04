@@ -5,6 +5,7 @@ import {
 } from "@sapphire/framework";
 import {
   ButtonInteraction,
+  Guild,
   Message,
   TextChannel,
   TextInputComponent,
@@ -13,6 +14,7 @@ import { upperFirstChar } from "../../utility/StringUtil.js";
 import Try from "../../utility/Try.js";
 import { replyInteractionError } from "../../utility/Sender.js";
 import { archiveLog } from "../../services/BotQueueService.js";
+import MutexManager from "../../managers/MutexManager.js";
 
 export class ShowReasonOptionInteraction extends InteractionHandler {
   public constructor(context: PieceContext) {
@@ -28,19 +30,24 @@ export class ShowReasonOptionInteraction extends InteractionHandler {
     if (interaction.guild == null) {
       return;
     }
-    if (parsedData.action === "ban") {
-      if (await Try(interaction.guild.bans.fetch(parsedData.targetUserId))) {
-        await archiveLog(
-          interaction.guild,
-          interaction.channel as TextChannel,
-          parsedData.targetUserId,
-          null,
-          interaction.message as Message,
-          "Already banned"
-        );
-        await replyInteractionError(interaction, "Member is already banned.");
-        return;
-      }
+    if (
+      parsedData.action === "ban" &&
+      (await Try(interaction.guild.bans.fetch(parsedData.targetUserId)))
+    ) {
+      await MutexManager.getUserMutex(parsedData.targetUserId).runExclusive(
+        async () => {
+          await archiveLog(
+            interaction.guild as Guild,
+            interaction.channel as TextChannel,
+            parsedData.targetUserId,
+            null,
+            interaction.message as Message,
+            "Already banned"
+          );
+          await replyInteractionError(interaction, "Member is already banned.");
+        }
+      );
+      return;
     }
     const inputs = [
       [
