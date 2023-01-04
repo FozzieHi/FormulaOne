@@ -37,6 +37,7 @@ jobs:
           npm run prettier:check
           npm run eslint:check
   release:
+    needs: lint
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -71,4 +72,4 @@ jobs:
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
         with:
           environment: production
-          sourcemaps: "./release"
+          sourcemaps: "./target"
