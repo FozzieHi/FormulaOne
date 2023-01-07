@@ -15,6 +15,7 @@ import {
 } from "../../utility/Sender.js";
 import MutexManager from "../../managers/MutexManager.js";
 import { boldify } from "../../utility/StringUtil.js";
+import TryVal from "../../utility/TryVal.js";
 
 export class NoXP extends Command {
   public constructor(context: Command.Context) {
@@ -91,7 +92,7 @@ export class NoXP extends Command {
       if (interaction.guild == null || interaction.channel == null) {
         return;
       }
-      const role = await interaction.guild.roles.fetch(Constants.ROLES.NOXP);
+      const role = await TryVal(interaction.guild.roles.fetch(Constants.ROLES.NOXP));
       if (role == null) {
         return;
       }

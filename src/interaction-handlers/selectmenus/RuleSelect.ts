@@ -72,8 +72,8 @@ export class RuleSelect extends InteractionHandler {
             await replyInteractionError(interaction, "Member not found.");
             return;
           }
-          const channel = (await interaction.guild.channels.fetch(
-            parsedData.channelId as Snowflake
+          const channel = (await TryVal(
+            interaction.guild.channels.fetch(parsedData.channelId as Snowflake)
           )) as TextChannel;
           const message = (await TryVal(
             channel.messages.fetch(parsedData.messageId as Snowflake)

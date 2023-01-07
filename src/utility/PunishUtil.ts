@@ -26,6 +26,7 @@ import MutexManager from "../managers/MutexManager.js";
 import { Punishment } from "../database/models/User.js";
 import { Pun } from "../database/models/Pun.js";
 import { boldify } from "./StringUtil.js";
+import TryVal from "./TryVal.js";
 
 async function increasePunishment(
   memberId: Snowflake,
@@ -66,7 +67,7 @@ async function mute(
   if (dbGuild == null) {
     return;
   }
-  const role = await guild.roles.fetch(Constants.ROLES.MUTED);
+  const role = await TryVal(guild.roles.fetch(Constants.ROLES.MUTED));
   if (await db.muteRepo?.anyMute(targetMember.id, guild.id)) {
     await db.muteRepo?.deleteMute(targetMember.id, guild.id);
   }
@@ -283,7 +284,7 @@ export async function punish(
         targetMember.user
       );
     } else if (action === "remove") {
-      const role = await interaction.guild.roles.fetch(Constants.ROLES.MUTED);
+      const role = await TryVal(interaction.guild.roles.fetch(Constants.ROLES.MUTED));
       if (role == null) {
         return;
       }

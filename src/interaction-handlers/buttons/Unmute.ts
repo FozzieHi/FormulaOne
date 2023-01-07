@@ -3,11 +3,19 @@ import {
   InteractionHandlerTypes,
   PieceContext,
 } from "@sapphire/framework";
-import { ButtonInteraction, Guild, Message, Snowflake, TextChannel } from "discord.js";
+import {
+  ButtonInteraction,
+  Guild,
+  GuildMember,
+  Message,
+  Snowflake,
+  TextChannel,
+} from "discord.js";
 import { Constants } from "../../utility/Constants.js";
 import { replyInteraction } from "../../utility/Sender.js";
 import { archiveLog } from "../../services/BotQueueService.js";
 import MutexManager from "../../managers/MutexManager.js";
+import TryVal from "../../utility/TryVal.js";
 
 export class UnmuteInteraction extends InteractionHandler {
   public constructor(context: PieceContext) {
@@ -20,7 +28,9 @@ export class UnmuteInteraction extends InteractionHandler {
     if (interaction.guild == null) {
       return;
     }
-    const member = await interaction.guild.members.fetch(memberId);
+    const member = (await TryVal(
+      interaction.guild.members.fetch(memberId)
+    )) as GuildMember;
     await MutexManager.getUserMutex(member.id).runExclusive(async () => {
       await member.roles.remove(Constants.ROLES.MUTED);
       await replyInteraction(interaction, "Successfully unmuted member.", {

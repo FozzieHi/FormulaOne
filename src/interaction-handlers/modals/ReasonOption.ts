@@ -53,12 +53,14 @@ export class ReasonOption extends InteractionHandler {
       );
     } else if (parsedData.commandName === "ban") {
       await interaction.deferReply({ ephemeral: true });
-      const targetUser = await container.client.users.fetch(parsedData.targetMemberId);
+      const targetUser = await TryVal(
+        container.client.users.fetch(parsedData.targetMemberId)
+      );
       if (targetUser == null) {
         return;
       }
-      const channel = (await interaction.guild.channels.fetch(
-        parsedData.channelId as Snowflake
+      const channel = (await TryVal(
+        interaction.guild.channels.fetch(parsedData.channelId as Snowflake)
       )) as GuildTextBasedChannel;
       if (channel == null) {
         return;
