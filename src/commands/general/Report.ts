@@ -21,7 +21,7 @@ export class ReportCommand extends Command {
       },
       {
         guildIds: Constants.GUILD_IDS,
-        idHints: ["1062499083165651066"],
+        idHints: ["1062507633812197386"],
       }
     );
   }

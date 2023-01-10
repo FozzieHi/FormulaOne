@@ -109,7 +109,7 @@ export class BanishCommand extends Command {
       },
       {
         guildIds: Constants.GUILD_IDS,
-        idHints: ["1062499081622134926"],
+        idHints: ["1062507523728478269"],
       }
     );
   }
