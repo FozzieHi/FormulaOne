@@ -5,7 +5,7 @@ import {
 } from "@sapphire/framework";
 import {
   ButtonInteraction,
-  SelectMenuBuilder,
+  StringSelectMenuBuilder,
   SelectMenuComponentOptionData,
   TextInputStyle,
   ComponentType,
@@ -34,9 +34,9 @@ export class AddRemoveOption extends InteractionHandler {
           value: i.toString(),
         });
       });
-      const optionSelect: Array<Array<SelectMenuBuilder>> = [
+      const optionSelect: Array<Array<StringSelectMenuBuilder>> = [
         [
-          new SelectMenuBuilder({
+          new StringSelectMenuBuilder({
             customId: `ruleselect-${parsedData.commandName}-${parsedData.targetMemberId}-${parsedData.targetRoleId}`,
             placeholder: "Select rule",
             options: ruleOptions,

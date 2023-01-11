@@ -5,7 +5,7 @@ import {
 } from "@sapphire/framework";
 import {
   ComponentType,
-  SelectMenuBuilder,
+  StringSelectMenuBuilder,
   SelectMenuComponentOptionData,
   SelectMenuInteraction,
 } from "discord.js";
@@ -34,9 +34,9 @@ export class AmountSelect extends InteractionHandler {
         value: i.toString(),
       });
     });
-    const ruleSelect: Array<Array<SelectMenuBuilder>> = [
+    const ruleSelect: Array<Array<StringSelectMenuBuilder>> = [
       [
-        new SelectMenuBuilder({
+        new StringSelectMenuBuilder({
           customId: `ruleselect-punish-${parsedData.targetMemberId}-${parsedData.channelId}-${parsedData.messageId}-${parsedData.logMessageId}-${parsedData.amount}`,
           placeholder: "Select rule",
           options: ruleOptions,

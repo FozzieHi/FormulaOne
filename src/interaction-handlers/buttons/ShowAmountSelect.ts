@@ -7,7 +7,7 @@ import {
   ButtonInteraction,
   ComponentType,
   GuildMember,
-  SelectMenuBuilder,
+  StringSelectMenuBuilder,
   SelectMenuComponentOptionData,
 } from "discord.js";
 import { getDBUser } from "../../utility/DatabaseUtil.js";
@@ -73,7 +73,7 @@ export class ShowAmountSelect extends InteractionHandler {
 
     const amountSelect = [
       [
-        new SelectMenuBuilder({
+        new StringSelectMenuBuilder({
           customId: `amountselect-${parsedData.targetMemberId}-${parsedData.channelId}-${parsedData.messageId}-${interaction.message.id}`,
           placeholder: "Select amount",
           options,

@@ -221,7 +221,7 @@ export async function punish(
       }
 
       if (
-        interaction.isSelectMenu() &&
+        interaction.isStringSelectMenu() &&
         (interaction.channel.id === Constants.CHANNELS.MOD_QUEUE ||
           interaction.channel.id === Constants.CHANNELS.STEWARDS_QUEUE)
       ) {

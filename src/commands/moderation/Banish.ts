@@ -12,7 +12,7 @@ import {
   ComponentType,
   ContextMenuCommandInteraction,
   GuildMember,
-  SelectMenuBuilder,
+  StringSelectMenuBuilder,
   SelectMenuComponentOptionData,
 } from "discord.js";
 import { replyInteraction, replyInteractionError } from "../../utility/Sender.js";
@@ -186,9 +186,9 @@ export class BanishCommand extends Command {
         value: Constants.ROLES.BEGINNERS_QUESTIONS,
       });
     }
-    const optionSelect: Array<Array<SelectMenuBuilder>> = [
+    const optionSelect: Array<Array<StringSelectMenuBuilder>> = [
       [
-        new SelectMenuBuilder({
+        new StringSelectMenuBuilder({
           customId: `banishchannelselect-${targetMember.id}`,
           placeholder: "Select banish channel",
           options: roleOptions,
