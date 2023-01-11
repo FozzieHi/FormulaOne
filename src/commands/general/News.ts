@@ -1,5 +1,12 @@
 import { ApplicationCommandRegistry, Awaitable, Command } from "@sapphire/framework";
-import { CommandInteraction, MessageButton, TextBasedChannel } from "discord.js";
+import {
+  ButtonBuilder,
+  TextBasedChannel,
+  ApplicationCommandOptionType,
+  ChatInputCommandInteraction,
+  ButtonStyle,
+  ComponentType,
+} from "discord.js";
 import { replyInteractionError, replyInteractionPublic } from "../../utility/Sender.js";
 import { Constants } from "../../utility/Constants.js";
 import { boldify } from "../../utility/StringUtil.js";
@@ -23,7 +30,7 @@ export class NewsCommand extends Command {
           {
             name: "url",
             description: "The URL to send",
-            type: "STRING",
+            type: ApplicationCommandOptionType.String,
             required: true,
           },
         ],
@@ -35,7 +42,7 @@ export class NewsCommand extends Command {
     );
   }
 
-  public async chatInputRun(interaction: CommandInteraction) {
+  public async chatInputRun(interaction: ChatInputCommandInteraction) {
     const url = interaction.options.getString("url");
     if (interaction.guild == null || url == null) {
       return;
@@ -52,19 +59,19 @@ export class NewsCommand extends Command {
       return;
     }
 
-    const buttons: Array<Array<MessageButton>> = [
+    const buttons: Array<Array<ButtonBuilder>> = [
       [
-        new MessageButton({
+        new ButtonBuilder({
           customId: `publish-${interaction.user.id}`,
           label: "Publish",
-          style: "SECONDARY",
+          style: ButtonStyle.Secondary,
         }),
       ],
     ];
     await newsChannel.send({
       content: `${url} sent by ${boldify(interaction.user.tag)}`,
       components: buttons.map((button) => ({
-        type: "ACTION_ROW",
+        type: ComponentType.ActionRow,
         components: button,
       })),
     });

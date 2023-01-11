@@ -1,14 +1,16 @@
 import {
+  ButtonStyle,
   Guild,
   GuildMember,
   GuildTextBasedChannel,
   Message,
-  MessageButton,
-  MessageEmbed,
-  MessageEmbedOptions,
-  MessageOptions,
+  ButtonBuilder,
+  APIEmbed,
+  BaseMessageOptions,
+  PermissionsBitField,
   Snowflake,
   User,
+  ComponentType,
 } from "discord.js";
 import { container } from "@sapphire/framework";
 import { Constants, ModerationQueueButtons } from "../utility/Constants.js";
@@ -28,7 +30,10 @@ export async function getPermLevel(guild: Guild, user: User) {
   const permLevel =
     modRoles.find((modRole) => member.roles.cache.has(modRole.id))?.permissionLevel ??
     0;
-  return member.permissions.has("ADMINISTRATOR") && permLevel < 2 ? 2 : permLevel;
+  return member.permissions.has(PermissionsBitField.Flags.Administrator) &&
+    permLevel < 2
+    ? 2
+    : permLevel;
 }
 
 export async function isModerator(guild: Guild, user: User) {
@@ -41,46 +46,46 @@ function getModerationQueueButtons(
   targetChannelId: Snowflake,
   targetMessageId: Snowflake
 ) {
-  const returnButtons: Array<MessageButton> = [];
+  const returnButtons: Array<ButtonBuilder> = [];
   buttons.forEach((button) => {
     if (button === "PUNISH") {
       returnButtons.push(
-        new MessageButton({
+        new ButtonBuilder({
           customId: `showamountselect-${targetUserId}-${targetChannelId}-${targetMessageId}`,
           label: "Punish",
-          style: "DANGER",
+          style: ButtonStyle.Danger,
         })
       );
     } else if (button === "ESCALATE") {
       returnButtons.push(
-        new MessageButton({
+        new ButtonBuilder({
           customId: `escalate-${targetUserId}-${targetChannelId}-${targetChannelId}`,
           label: "Escalate",
-          style: "PRIMARY",
+          style: ButtonStyle.Primary,
         })
       );
     } else if (button === "BAN") {
       returnButtons.push(
-        new MessageButton({
+        new ButtonBuilder({
           customId: `showreasonoption-ban-${targetUserId}-${targetChannelId}`,
           label: "Ban",
-          style: "DANGER",
+          style: ButtonStyle.Danger,
         })
       );
     } else if (button === "UNMUTE") {
       returnButtons.push(
-        new MessageButton({
+        new ButtonBuilder({
           customId: `unmute-${targetUserId}`,
           label: "Unmute",
-          style: "SUCCESS",
+          style: ButtonStyle.Success,
         })
       );
     } else if (button === "IGNORE") {
       returnButtons.push(
-        new MessageButton({
+        new ButtonBuilder({
           customId: `ignore-${targetUserId}`,
           label: "Ignore",
-          style: "SECONDARY",
+          style: ButtonStyle.Secondary,
         })
       );
     }
@@ -100,30 +105,30 @@ export async function genericLog(
     return;
   }
 
-  const messageOptions: MessageOptions = {};
-  const embedOptions: MessageEmbedOptions = {
+  const messageOptions: BaseMessageOptions = {};
+  const embedOptions: APIEmbed = {
     author: {
       name: user.tag,
-      iconURL: user.displayAvatarURL(),
+      icon_url: user.displayAvatarURL(),
     },
     footer: {
       text: `User ID: ${user.id}`,
     },
     color,
-    timestamp: new Date(),
+    timestamp: new Date().toISOString(),
   };
 
   const buttons = [
     [
-      new MessageButton({
+      new ButtonBuilder({
         customId: `userid-${user.id}`,
         label: `User ID`,
-        style: "SECONDARY",
+        style: ButtonStyle.Secondary,
       }),
     ],
   ];
   messageOptions.components = buttons.map((b) => ({
-    type: "ACTION_ROW",
+    type: ComponentType.ActionRow,
     components: b,
   }));
 
@@ -163,31 +168,31 @@ export async function modLog(
     return;
   }
 
-  const messageOptions: MessageOptions = {};
-  const embedOptions: MessageEmbedOptions = {
+  const messageOptions: BaseMessageOptions = {};
+  const embedOptions: APIEmbed = {
     color,
-    timestamp: new Date(),
+    timestamp: new Date().toISOString(),
   };
 
   if (moderator != null) {
     embedOptions.author = {
       name: moderator.tag,
-      iconURL: moderator.displayAvatarURL(),
+      icon_url: moderator.displayAvatarURL(),
     };
   }
 
   if (target != null) {
     const buttons = [
       [
-        new MessageButton({
+        new ButtonBuilder({
           customId: `userid-${target.id}`,
           label: `User ID`,
-          style: "SECONDARY",
+          style: ButtonStyle.Secondary,
         }),
       ],
     ];
     messageOptions.components = buttons.map((b) => ({
-      type: "ACTION_ROW",
+      type: ComponentType.ActionRow,
       components: b,
     }));
   }
@@ -231,29 +236,29 @@ export async function modQueue(
     return;
   }
 
-  const messageOptions: MessageOptions = {};
+  const messageOptions: BaseMessageOptions = {};
   if (mention) {
     messageOptions.content = `<@&${Constants.ROLES.MODS}>`;
   }
-  const embedOptions: MessageEmbedOptions = {
+  const embedOptions: APIEmbed = {
     footer: {
       text: `User ID: ${target.id} - Message ID: ${targetMessageId}`,
     },
     color,
-    timestamp: new Date(),
+    timestamp: new Date().toISOString(),
   };
 
   embedOptions.author = {
     name: target.tag,
-    iconURL: target.displayAvatarURL(),
+    icon_url: target.displayAvatarURL(),
   };
 
   const msgButtons = [
     [
-      new MessageButton({
+      new ButtonBuilder({
         customId: `userid-${target.id}`,
         label: `User ID`,
-        style: "SECONDARY",
+        style: ButtonStyle.Secondary,
       }),
     ],
   ];
@@ -264,7 +269,7 @@ export async function modQueue(
     targetMessageId
   ).forEach((button) => msgButtons.at(0)?.push(button));
   messageOptions.components = msgButtons.map((b) => ({
-    type: "ACTION_ROW",
+    type: ComponentType.ActionRow,
     components: b,
   }));
 
@@ -296,7 +301,7 @@ export async function escalate(
   target: User,
   targetChannelId: Snowflake,
   targetMessageId: Snowflake,
-  embed: MessageEmbed,
+  embed: APIEmbed,
   buttons: Array<ModerationQueueButtons>
 ): Promise<Message | null> {
   const logChannel = await TryVal(
@@ -307,7 +312,7 @@ export async function escalate(
     return null;
   }
 
-  const messageOptions: MessageOptions = {};
+  const messageOptions: BaseMessageOptions = {};
   messageOptions.content = `${
     (await getPermLevel(guild, moderator)) > 1
       ? ""
@@ -316,10 +321,10 @@ export async function escalate(
 
   const msgButtons = [
     [
-      new MessageButton({
+      new ButtonBuilder({
         customId: `userid-${target.id}`,
         label: `User ID`,
-        style: "SECONDARY",
+        style: ButtonStyle.Secondary,
       }),
     ],
   ];
@@ -330,7 +335,7 @@ export async function escalate(
     targetMessageId
   ).forEach((button) => msgButtons.at(0)?.push(button));
   messageOptions.components = msgButtons.map((b) => ({
-    type: "ACTION_ROW",
+    type: ComponentType.ActionRow,
     components: b,
   }));
   messageOptions.embeds = [embed];

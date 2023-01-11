@@ -4,7 +4,14 @@ import {
   Command,
   CommandOptionsRunTypeEnum,
 } from "@sapphire/framework";
-import { CommandInteraction, MessageButton, MessageEmbedOptions } from "discord.js";
+import {
+  ButtonBuilder,
+  ApplicationCommandOptionType,
+  ButtonStyle,
+  ComponentType,
+  ChatInputCommandInteraction,
+  APIEmbed,
+} from "discord.js";
 import {
   replyInteractionPublic,
   replyInteractionPublicFields,
@@ -33,7 +40,7 @@ export class CheckPunishmentsCommand extends Command {
           {
             name: "user",
             description: "The user to lookup",
-            type: "USER",
+            type: ApplicationCommandOptionType.User,
             required: true,
           },
         ],
@@ -45,7 +52,7 @@ export class CheckPunishmentsCommand extends Command {
     );
   }
 
-  public async chatInputRun(interaction: CommandInteraction) {
+  public async chatInputRun(interaction: ChatInputCommandInteraction) {
     const user = interaction.options.getUser("user");
     if (user == null || interaction.channel == null || interaction.guild == null) {
       return;
@@ -62,7 +69,7 @@ export class CheckPunishmentsCommand extends Command {
     }
     const fieldsAndValues = await getHistory(user, interaction.guild);
     const maxPages = Math.max(1, Math.ceil(dbUser.punishments.length / 5));
-    const embedOptions: MessageEmbedOptions = {
+    const embedOptions: APIEmbed = {
       title: `${user.tag}'s Punishment History (1/${maxPages})`,
       footer: {
         text: `${user.tag} has ${dbUser.currentPunishment} punishment${
@@ -71,18 +78,18 @@ export class CheckPunishmentsCommand extends Command {
       },
     };
 
-    const buttons: Array<Array<MessageButton>> = [
+    const buttons: Array<Array<ButtonBuilder>> = [
       [
-        new MessageButton({
+        new ButtonBuilder({
           customId: `ppage-1-${maxPages}-${dbUser.currentPunishment}-${user.id}`,
           emoji: "⬅",
-          style: "SECONDARY",
+          style: ButtonStyle.Secondary,
           disabled: true,
         }),
-        new MessageButton({
+        new ButtonBuilder({
           customId: `npage-1-${maxPages}-${dbUser.currentPunishment}-${user.id}`,
           emoji: "➡",
-          style: "SECONDARY",
+          style: ButtonStyle.Secondary,
           disabled: dbUser.punishments.length <= 5,
         }),
       ],
@@ -90,7 +97,7 @@ export class CheckPunishmentsCommand extends Command {
 
     await replyInteractionPublicFields(interaction, fieldsAndValues, embedOptions, {
       components: buttons.map((button) => ({
-        type: "ACTION_ROW",
+        type: ComponentType.ActionRow,
         components: button,
       })),
     });

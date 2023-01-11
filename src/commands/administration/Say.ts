@@ -4,7 +4,12 @@ import {
   Command,
   CommandOptionsRunTypeEnum,
 } from "@sapphire/framework";
-import { CommandInteraction, TextBasedChannel } from "discord.js";
+import {
+  ApplicationCommandOptionType,
+  ChatInputCommandInteraction,
+  ChannelType,
+  TextBasedChannel,
+} from "discord.js";
 import { replyInteractionPublic, send } from "../../utility/Sender.js";
 import { Constants } from "../../utility/Constants.js";
 
@@ -27,14 +32,14 @@ export class SayCommand extends Command {
           {
             name: "channel",
             description: "The channel to send the message to",
-            type: "CHANNEL",
-            channelTypes: ["GUILD_TEXT"],
+            type: ApplicationCommandOptionType.Channel,
+            channelTypes: [ChannelType.GuildText],
             required: true,
           },
           {
             name: "message",
             description: "The message to send",
-            type: "STRING",
+            type: ApplicationCommandOptionType.String,
             required: true,
           },
         ],
@@ -46,10 +51,10 @@ export class SayCommand extends Command {
     );
   }
 
-  public async chatInputRun(interaction: CommandInteraction) {
+  public async chatInputRun(interaction: ChatInputCommandInteraction) {
     const channel = interaction.options.getChannel("channel") as TextBasedChannel;
     const message = interaction.options.getString("message");
-    if (channel == null || message == null || !channel.isText()) {
+    if (channel == null || message == null || channel.type !== ChannelType.GuildText) {
       return;
     }
 

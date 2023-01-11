@@ -3,7 +3,14 @@ import {
   InteractionHandlerTypes,
   PieceContext,
 } from "@sapphire/framework";
-import { Guild, GuildMember, MessageButton, SelectMenuInteraction } from "discord.js";
+import {
+  Guild,
+  GuildMember,
+  ButtonBuilder,
+  SelectMenuInteraction,
+  ComponentType,
+  ButtonStyle,
+} from "discord.js";
 import { updateInteraction } from "../../utility/Sender.js";
 import TryVal from "../../utility/TryVal.js";
 
@@ -28,18 +35,18 @@ export class BanishChannelSelect extends InteractionHandler {
       return;
     }
 
-    const buttons: Array<Array<MessageButton>> = [
+    const buttons: Array<Array<ButtonBuilder>> = [
       [
-        new MessageButton({
+        new ButtonBuilder({
           customId: `addremoveoption-add-banish-${parsedData.targetMemberId}-${parsedData.targetRoleId}`,
           label: "Add",
-          style: "SUCCESS",
+          style: ButtonStyle.Success,
           disabled: member.roles.cache.has(parsedData.targetRoleId),
         }),
-        new MessageButton({
+        new ButtonBuilder({
           customId: `addremoveoption-remove-banish-${parsedData.targetMemberId}-${parsedData.targetRoleId}`,
           label: "Remove",
-          style: "DANGER",
+          style: ButtonStyle.Danger,
           disabled: !member.roles.cache.has(parsedData.targetRoleId),
         }),
       ],
@@ -48,7 +55,7 @@ export class BanishChannelSelect extends InteractionHandler {
     await updateInteraction(interaction, undefined, null, {
       content: "Please select an action.",
       components: buttons.map((button) => ({
-        type: "ACTION_ROW",
+        type: ComponentType.ActionRow,
         components: button,
       })),
     });

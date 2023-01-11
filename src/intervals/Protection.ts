@@ -1,6 +1,6 @@
 /* eslint-disable no-await-in-loop */
 import { container } from "@sapphire/framework";
-import { Guild } from "discord.js";
+import { Guild, GuildVerificationLevel } from "discord.js";
 import db from "../database/index.js";
 import { Constants } from "../utility/Constants.js";
 import { modLog } from "../services/ModerationService.js";
@@ -30,9 +30,9 @@ setInterval(() => {
               container.client.guilds.fetch(dbGuild.guildId)
             )) as Guild;
             if (guild != null) {
-              if (guild.verificationLevel !== "HIGH") {
+              if (guild.verificationLevel !== GuildVerificationLevel.High) {
                 await guild.setVerificationLevel(
-                  "HIGH",
+                  GuildVerificationLevel.High,
                   `Protection deactivated at ${now}`
                 );
                 await modLog(

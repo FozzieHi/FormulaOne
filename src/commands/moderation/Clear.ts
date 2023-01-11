@@ -4,7 +4,11 @@ import {
   Command,
   CommandOptionsRunTypeEnum,
 } from "@sapphire/framework";
-import { CommandInteraction, GuildTextBasedChannel } from "discord.js";
+import {
+  ApplicationCommandOptionType,
+  ChatInputCommandInteraction,
+  GuildTextBasedChannel,
+} from "discord.js";
 import { replyInteractionError, replyInteractionPublic } from "../../utility/Sender.js";
 import { Constants } from "../../utility/Constants.js";
 import { modLog } from "../../services/ModerationService.js";
@@ -13,7 +17,7 @@ import MutexManager from "../../managers/MutexManager.js";
 export class ClearCommand extends Command {
   public constructor(context: Command.Context) {
     super(context, {
-      requiredClientPermissions: ["MANAGE_MESSAGES"],
+      requiredClientPermissions: ["ManageMessages"],
       runIn: CommandOptionsRunTypeEnum.GuildText,
       preconditions: ["Marshals"],
     });
@@ -30,7 +34,7 @@ export class ClearCommand extends Command {
           {
             name: "amount",
             description: "The amount of messages to delete",
-            type: "INTEGER",
+            type: ApplicationCommandOptionType.Integer,
             required: true,
             minValue: 1,
             maxValue: 200,
@@ -44,7 +48,7 @@ export class ClearCommand extends Command {
     );
   }
 
-  public async chatInputRun(interaction: CommandInteraction) {
+  public async chatInputRun(interaction: ChatInputCommandInteraction) {
     await MutexManager.getGuildMutex().runExclusive(async () => {
       const amount = interaction.options.getInteger("amount");
       if (

@@ -5,9 +5,11 @@ import {
 } from "@sapphire/framework";
 import {
   ButtonInteraction,
-  MessageButton,
-  MessageEmbedOptions,
+  ButtonBuilder,
+  APIEmbed,
   User,
+  ButtonStyle,
+  ComponentType,
 } from "discord.js";
 import { getHistory } from "../../utility/PunishmentUtil.js";
 import { Embed } from "../../structures/Embed.js";
@@ -45,7 +47,7 @@ export class CheckPunishmentsPagesInteraction extends InteractionHandler {
     if (embed == null) {
       return;
     }
-    const embedOptions: MessageEmbedOptions = {
+    const embedOptions: APIEmbed = {
       title: `${user.tag}'s Punishment History (${newPage}/${parsedData.maxPages})`,
       color: embed.color ?? undefined,
       fields: getFields(fieldsAndValues),
@@ -56,18 +58,18 @@ export class CheckPunishmentsPagesInteraction extends InteractionHandler {
       },
     };
 
-    const buttons: Array<Array<MessageButton>> = [
+    const buttons: Array<Array<ButtonBuilder>> = [
       [
-        new MessageButton({
+        new ButtonBuilder({
           customId: `ppage-${newPage}-${parsedData.maxPages}-${parsedData.currentPun}-${user.id}`,
           emoji: "⬅",
-          style: "SECONDARY",
+          style: ButtonStyle.Secondary,
           disabled: newPage === 1,
         }),
-        new MessageButton({
+        new ButtonBuilder({
           customId: `npage-${newPage}-${parsedData.maxPages}-${parsedData.currentPun}-${user.id}`,
           emoji: "➡",
-          style: "SECONDARY",
+          style: ButtonStyle.Secondary,
           disabled: newPage === parsedData.maxPages,
         }),
       ],
@@ -76,7 +78,7 @@ export class CheckPunishmentsPagesInteraction extends InteractionHandler {
     await interaction.update({
       embeds: [new Embed(embedOptions)],
       components: buttons.map((button) => ({
-        type: "ACTION_ROW",
+        type: ComponentType.ActionRow,
         components: button,
       })),
     });

@@ -1,9 +1,9 @@
 import { Precondition } from "@sapphire/framework";
-import { CommandInteraction, Guild, GuildMember } from "discord.js";
+import { ChatInputCommandInteraction, Guild, GuildMember } from "discord.js";
 import { getPermLevel } from "../../services/ModerationService.js";
 
 export class StewardsPrecondition extends Precondition {
-  public async chatInputRun(interaction: CommandInteraction) {
+  public async chatInputRun(interaction: ChatInputCommandInteraction) {
     return (await getPermLevel(
       interaction.guild as Guild,
       (interaction.member as GuildMember).user

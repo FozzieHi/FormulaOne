@@ -7,7 +7,6 @@ import {
   ButtonInteraction,
   Guild,
   GuildMember,
-  Message,
   Snowflake,
   TextChannel,
 } from "discord.js";
@@ -41,7 +40,7 @@ export class UnmuteInteraction extends InteractionHandler {
         interaction.channel as TextChannel,
         memberId,
         interaction.user,
-        interaction.message as Message,
+        interaction.message,
         "Unmuted"
       );
     });

@@ -1,5 +1,9 @@
 import { ApplicationCommandRegistry, Awaitable, Command } from "@sapphire/framework";
-import { ContextMenuInteraction, Message } from "discord.js";
+import {
+  ApplicationCommandType,
+  ContextMenuCommandInteraction,
+  Message,
+} from "discord.js";
 import { Constants, ModerationQueueButtons } from "../../utility/Constants.js";
 import { isModerator, modQueue } from "../../services/ModerationService.js";
 import { replyInteraction, replyInteractionError } from "../../utility/Sender.js";
@@ -17,7 +21,7 @@ export class ReportCommand extends Command {
     registry.registerContextMenuCommand(
       {
         name: "Report",
-        type: "MESSAGE",
+        type: ApplicationCommandType.Message,
       },
       {
         guildIds: Constants.GUILD_IDS,
@@ -26,7 +30,7 @@ export class ReportCommand extends Command {
     );
   }
 
-  public async contextMenuRun(interaction: ContextMenuInteraction) {
+  public async contextMenuRun(interaction: ContextMenuCommandInteraction) {
     const message = interaction.options.getMessage("message") as Message;
     await MutexManager.getUserPublicMutex(message.author.id).runExclusive(async () => {
       if (interaction.guild == null || interaction.channel == null || message == null) {

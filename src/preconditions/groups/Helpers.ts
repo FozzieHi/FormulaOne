@@ -1,11 +1,11 @@
 import { Command, Precondition } from "@sapphire/framework";
-import { CommandInteraction, Guild, GuildMember } from "discord.js";
+import { ChatInputCommandInteraction, Guild, GuildMember } from "discord.js";
 import { Constants } from "../../utility/Constants.js";
-import ContextMenuInteraction = Command.ContextMenuInteraction;
+import ContextMenuCommandInteraction = Command.ContextMenuCommandInteraction;
 import { getPermLevel } from "../../services/ModerationService.js";
 
 export class HelpersPrecondition extends Precondition {
-  public async chatInputRun(interaction: CommandInteraction) {
+  public async chatInputRun(interaction: ChatInputCommandInteraction) {
     return (await getPermLevel(
       interaction.guild as Guild,
       (interaction.member as GuildMember).user
@@ -15,7 +15,7 @@ export class HelpersPrecondition extends Precondition {
       : this.error({ message: "You must be a Helper in order to use this command." });
   }
 
-  public async contextMenuRun(interaction: ContextMenuInteraction) {
+  public async contextMenuRun(interaction: ContextMenuCommandInteraction) {
     return (await getPermLevel(
       interaction.guild as Guild,
       (interaction.member as GuildMember).user

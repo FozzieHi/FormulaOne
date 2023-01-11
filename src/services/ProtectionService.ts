@@ -1,4 +1,4 @@
-import { Guild } from "discord.js";
+import { Guild, GuildVerificationLevel } from "discord.js";
 import { Mutex } from "async-mutex";
 import { modLog } from "./ModerationService.js";
 import { Constants } from "../utility/Constants.js";
@@ -26,17 +26,17 @@ export default new (class ProtectionService {
         if (this.joinStats.joinedSince === 15) {
           const dbGuild = await getDBGuild(guild.id);
           if (
-            guild.verificationLevel === "VERY_HIGH" &&
+            guild.verificationLevel === GuildVerificationLevel.VeryHigh &&
             dbGuild?.protectionActivatedAt === 0
           ) {
             return;
           }
           if (
-            guild.verificationLevel !== "VERY_HIGH" &&
+            guild.verificationLevel !== GuildVerificationLevel.VeryHigh &&
             dbGuild?.protectionActivatedAt === 0
           ) {
             await guild.setVerificationLevel(
-              "VERY_HIGH",
+              GuildVerificationLevel.VeryHigh,
               `Protection activated at ${now}`
             );
             await modLog(

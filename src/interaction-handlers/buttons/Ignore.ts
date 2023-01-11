@@ -3,7 +3,7 @@ import {
   InteractionHandlerTypes,
   PieceContext,
 } from "@sapphire/framework";
-import { ButtonInteraction, Guild, Message, Snowflake, TextChannel } from "discord.js";
+import { ButtonInteraction, Guild, Snowflake, TextChannel } from "discord.js";
 import { Constants } from "../../utility/Constants.js";
 import MutexManager from "../../managers/MutexManager.js";
 import { replyInteraction, replyInteractionError } from "../../utility/Sender.js";
@@ -27,9 +27,7 @@ export class IgnoreInteraction extends InteractionHandler {
     }
     await MutexManager.getUserMutex(userId).runExclusive(async () => {
       const logMessage = await TryVal(
-        (interaction.channel as TextChannel).messages.fetch(
-          (interaction.message as Message).id
-        )
+        (interaction.channel as TextChannel).messages.fetch(interaction.message.id)
       );
       if (logMessage == null) {
         return;

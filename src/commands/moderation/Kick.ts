@@ -4,7 +4,11 @@ import {
   Command,
   CommandOptionsRunTypeEnum,
 } from "@sapphire/framework";
-import { CommandInteraction, GuildMember } from "discord.js";
+import {
+  ApplicationCommandOptionType,
+  ChatInputCommandInteraction,
+  GuildMember,
+} from "discord.js";
 import db from "../../database/index.js";
 import { dm, replyInteractionPublic } from "../../utility/Sender.js";
 import { Constants } from "../../utility/Constants.js";
@@ -16,7 +20,7 @@ import { boldify } from "../../utility/StringUtil.js";
 export class KickCommand extends Command {
   public constructor(context: Command.Context) {
     super(context, {
-      requiredClientPermissions: ["KICK_MEMBERS"],
+      requiredClientPermissions: ["KickMembers"],
       runIn: CommandOptionsRunTypeEnum.GuildText,
       preconditions: ["Marshals", "MemberValidation", "NoModerator"],
     });
@@ -33,13 +37,13 @@ export class KickCommand extends Command {
           {
             name: "member",
             description: "The member to kick",
-            type: "USER",
+            type: ApplicationCommandOptionType.User,
             required: true,
           },
           {
             name: "reason",
             description: "The reason for the kick",
-            type: "STRING",
+            type: ApplicationCommandOptionType.String,
             required: true,
           },
         ],
@@ -51,7 +55,7 @@ export class KickCommand extends Command {
     );
   }
 
-  public async chatInputRun(interaction: CommandInteraction) {
+  public async chatInputRun(interaction: ChatInputCommandInteraction) {
     const targetMember = interaction.options.getMember("member") as GuildMember;
     const reason = interaction.options.getString("reason");
     if (targetMember == null) {
