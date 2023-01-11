@@ -4,7 +4,11 @@ import {
   Command,
   CommandOptionsRunTypeEnum,
 } from "@sapphire/framework";
-import { CommandInteraction, GuildMember } from "discord.js";
+import {
+  ApplicationCommandOptionType,
+  ChatInputCommandInteraction,
+  GuildMember,
+} from "discord.js";
 import { Constants } from "../../utility/Constants.js";
 import { getRuleChoices } from "../../utility/CommandUtil.js";
 import { modLog } from "../../services/ModerationService.js";
@@ -36,18 +40,18 @@ export class NoXP extends Command {
           {
             name: "add",
             description: "Add the NoXP role to a member",
-            type: "SUB_COMMAND",
+            type: ApplicationCommandOptionType.Subcommand,
             options: [
               {
                 name: "member",
                 description: "The member to banish",
-                type: "USER",
+                type: ApplicationCommandOptionType.User,
                 required: true,
               },
               {
                 name: "reason",
                 description: "The reason for the banish",
-                type: "NUMBER",
+                type: ApplicationCommandOptionType.Number,
                 choices: getRuleChoices(),
                 required: true,
               },
@@ -56,18 +60,18 @@ export class NoXP extends Command {
           {
             name: "remove",
             description: "Remove the NoXP role from a member",
-            type: "SUB_COMMAND",
+            type: ApplicationCommandOptionType.Subcommand,
             options: [
               {
                 name: "member",
                 description: "The member to unbanish",
-                type: "USER",
+                type: ApplicationCommandOptionType.User,
                 required: true,
               },
               {
                 name: "reason",
                 description: "The reason for the unbanish",
-                type: "STRING",
+                type: ApplicationCommandOptionType.String,
                 required: true,
               },
             ],
@@ -81,7 +85,7 @@ export class NoXP extends Command {
     );
   }
 
-  public async chatInputRun(interaction: CommandInteraction) {
+  public async chatInputRun(interaction: ChatInputCommandInteraction) {
     const subcommand = interaction.options.getSubcommand();
     const targetMember = interaction.options.getMember("member") as GuildMember;
     if (targetMember == null) {

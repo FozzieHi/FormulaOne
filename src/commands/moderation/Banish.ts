@@ -6,11 +6,14 @@ import {
 } from "@sapphire/framework";
 import {
   ApplicationCommandOptionChoiceData,
-  CommandInteraction,
-  ContextMenuInteraction,
+  ApplicationCommandOptionType,
+  ApplicationCommandType,
+  ChatInputCommandInteraction,
+  ComponentType,
+  ContextMenuCommandInteraction,
   GuildMember,
-  MessageSelectMenu,
-  MessageSelectOptionData,
+  SelectMenuBuilder,
+  SelectMenuComponentOptionData,
 } from "discord.js";
 import { replyInteraction, replyInteractionError } from "../../utility/Sender.js";
 import { Constants } from "../../utility/Constants.js";
@@ -31,7 +34,7 @@ export class BanishCommand extends Command {
   public override registerApplicationCommands(
     registry: ApplicationCommandRegistry
   ): Awaitable<void> {
-    const roleChoices: Array<ApplicationCommandOptionChoiceData> = [];
+    const roleChoices: Array<ApplicationCommandOptionChoiceData<string>> = [];
     Constants.BANISH_ROLES.forEach((role) =>
       roleChoices.push({ name: role.name, value: role.id })
     );
@@ -44,25 +47,25 @@ export class BanishCommand extends Command {
           {
             name: "add",
             description: "Add a banished role to a member",
-            type: "SUB_COMMAND",
+            type: ApplicationCommandOptionType.Subcommand,
             options: [
               {
                 name: "member",
                 description: "The member to banish",
-                type: "USER",
+                type: ApplicationCommandOptionType.User,
                 required: true,
               },
               {
                 name: "reason",
                 description: "The reason for the banish",
-                type: "NUMBER",
+                type: ApplicationCommandOptionType.Number,
                 choices: getRuleChoices(),
                 required: true,
               },
               {
                 name: "channel",
                 description: "The channel to banish the member from",
-                type: "STRING",
+                type: ApplicationCommandOptionType.String,
                 choices: roleChoices,
                 required: true,
               },
@@ -71,24 +74,24 @@ export class BanishCommand extends Command {
           {
             name: "remove",
             description: "Remove a banished role from a member",
-            type: "SUB_COMMAND",
+            type: ApplicationCommandOptionType.Subcommand,
             options: [
               {
                 name: "member",
                 description: "The member to unbanish",
-                type: "USER",
+                type: ApplicationCommandOptionType.User,
                 required: true,
               },
               {
                 name: "reason",
                 description: "The reason for the unbanish",
-                type: "STRING",
+                type: ApplicationCommandOptionType.String,
                 required: true,
               },
               {
                 name: "channel",
                 description: "The channel to unbanish the member from",
-                type: "STRING",
+                type: ApplicationCommandOptionType.String,
                 choices: roleChoices,
                 required: true,
               },
@@ -105,7 +108,7 @@ export class BanishCommand extends Command {
     registry.registerContextMenuCommand(
       {
         name: "Banish",
-        type: "MESSAGE",
+        type: ApplicationCommandType.Message,
       },
       {
         guildIds: Constants.GUILD_IDS,
@@ -114,7 +117,7 @@ export class BanishCommand extends Command {
     );
   }
 
-  public async chatInputRun(interaction: CommandInteraction) {
+  public async chatInputRun(interaction: ChatInputCommandInteraction) {
     const subcommand = interaction.options.getSubcommand();
     const member = interaction.options.getMember("member") as GuildMember;
     let reason;
@@ -147,7 +150,7 @@ export class BanishCommand extends Command {
     );
   }
 
-  public async contextMenuRun(interaction: ContextMenuInteraction) {
+  public async contextMenuRun(interaction: ContextMenuCommandInteraction) {
     const message = interaction.options.getMessage("message");
     if (interaction.guild == null || message == null) {
       return;
@@ -172,7 +175,7 @@ export class BanishCommand extends Command {
       return;
     }
 
-    const roleOptions: Array<MessageSelectOptionData> = [];
+    const roleOptions: Array<SelectMenuComponentOptionData> = [];
     if ((await getPermLevel(interaction.guild, moderator.user)) > 0) {
       Constants.BANISH_ROLES.forEach((role) =>
         roleOptions.push({ label: role.name, value: role.id })
@@ -183,9 +186,9 @@ export class BanishCommand extends Command {
         value: Constants.ROLES.BEGINNERS_QUESTIONS,
       });
     }
-    const optionSelect: Array<Array<MessageSelectMenu>> = [
+    const optionSelect: Array<Array<SelectMenuBuilder>> = [
       [
-        new MessageSelectMenu({
+        new SelectMenuBuilder({
           customId: `banishchannelselect-${targetMember.id}`,
           placeholder: "Select banish channel",
           options: roleOptions,
@@ -196,7 +199,7 @@ export class BanishCommand extends Command {
     await replyInteraction(interaction, undefined, null, {
       content: "Please select a channel.",
       components: optionSelect.map((selectmenu) => ({
-        type: "ACTION_ROW",
+        type: ComponentType.ActionRow,
         components: selectmenu,
       })),
     });

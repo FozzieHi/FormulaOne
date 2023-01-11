@@ -1,18 +1,18 @@
 import {
   ButtonInteraction,
   CommandInteraction,
-  ContextMenuInteraction,
-  EmbedFieldData,
   InteractionReplyOptions,
   InteractionUpdateOptions,
   Message,
   MessageComponentInteraction,
-  MessageEmbedOptions,
-  MessageOptions,
+  APIEmbed,
+  APIEmbedField,
+  BaseMessageOptions,
   ModalSubmitInteraction,
   SelectMenuInteraction,
   TextBasedChannel,
   User,
+  ContextMenuCommandInteraction,
 } from "discord.js";
 import { Embed } from "../structures/Embed.js";
 import { Constants } from "./Constants.js";
@@ -20,7 +20,7 @@ import Try from "./Try.js";
 import { isEven } from "./NumberUtil.js";
 import { boldify } from "./StringUtil.js";
 
-export function getFields(fieldsAndValues: Array<string>): Array<EmbedFieldData> {
+export function getFields(fieldsAndValues: Array<string>): Array<APIEmbedField> {
   const fields = [];
   for (let i = 0; i < fieldsAndValues.length - 1; i += 1) {
     if (isEven(i)) {
@@ -40,18 +40,18 @@ export function getFields(fieldsAndValues: Array<string>): Array<EmbedFieldData>
 export async function send(
   channel: TextBasedChannel | User,
   description: string | undefined,
-  embedOptions: MessageEmbedOptions | null = {},
-  messageOptions: MessageOptions = {}
+  embedOptions: APIEmbed | null = {},
+  messageOptions: BaseMessageOptions = {}
 ): Promise<Message> {
   const newEmbedOptions = embedOptions;
-  const newMessageOptions = messageOptions;
+  const newBaseMessageOptions = messageOptions;
   if (newEmbedOptions != null && description != null) {
     newEmbedOptions.description = description;
   }
   if (newEmbedOptions != null) {
-    newMessageOptions.embeds = [new Embed(newEmbedOptions)];
+    newBaseMessageOptions.embeds = [new Embed(newEmbedOptions)];
   }
-  return channel.send(newMessageOptions);
+  return channel.send(newBaseMessageOptions);
 }
 
 export async function sendError(channel: TextBasedChannel | User, description: string) {
@@ -61,7 +61,7 @@ export async function sendError(channel: TextBasedChannel | User, description: s
 export async function sendFields(
   channel: TextBasedChannel | User,
   fieldsAndValues: Array<string>,
-  embedOptions: MessageEmbedOptions = {}
+  embedOptions: APIEmbed = {}
 ): Promise<Message> {
   const newEmbedOptions = embedOptions;
   newEmbedOptions.fields = getFields(fieldsAndValues);
@@ -107,44 +107,44 @@ async function replyInteractionHandler(
   interaction:
     | CommandInteraction
     | ButtonInteraction
-    | ContextMenuInteraction
+    | ContextMenuCommandInteraction
     | SelectMenuInteraction
     | ModalSubmitInteraction,
   description: string | undefined,
-  embedOptions: MessageEmbedOptions | null = {},
+  embedOptions: APIEmbed | null = {},
   messageOptions: InteractionReplyOptions = {}
 ) {
   const newEmbedOptions = embedOptions;
-  const newMessageOptions = messageOptions;
+  const newBaseMessageOptions = messageOptions;
   if (newEmbedOptions != null && description != null) {
     newEmbedOptions.description = description;
   }
   if (newEmbedOptions != null) {
-    newMessageOptions.embeds = [new Embed(newEmbedOptions)];
+    newBaseMessageOptions.embeds = [new Embed(newEmbedOptions)];
   }
-  return interaction.reply(newMessageOptions);
+  return interaction.reply(newBaseMessageOptions);
 }
 
 export async function replyInteraction(
   interaction:
     | CommandInteraction
     | ButtonInteraction
-    | ContextMenuInteraction
+    | ContextMenuCommandInteraction
     | SelectMenuInteraction
     | ModalSubmitInteraction,
   description: string | undefined,
-  embedOptions: MessageEmbedOptions | null = {},
+  embedOptions: APIEmbed | null = {},
   messageOptions: InteractionReplyOptions = {}
 ) {
-  const newMessageOptions = messageOptions;
-  newMessageOptions.ephemeral = true;
+  const newBaseMessageOptions = messageOptions;
+  newBaseMessageOptions.ephemeral = true;
   return replyInteractionHandler(
     interaction,
     description != null
       ? `${boldify(interaction.user.tag)}, ${description}`
       : undefined,
     embedOptions,
-    newMessageOptions
+    newBaseMessageOptions
   );
 }
 
@@ -152,11 +152,11 @@ export async function replyInteractionPublic(
   interaction:
     | CommandInteraction
     | ButtonInteraction
-    | ContextMenuInteraction
+    | ContextMenuCommandInteraction
     | SelectMenuInteraction
     | ModalSubmitInteraction,
   description: string,
-  embedOptions: MessageEmbedOptions = {}
+  embedOptions: APIEmbed = {}
 ) {
   return replyInteractionHandler(
     interaction,
@@ -168,7 +168,7 @@ export async function replyInteractionPublic(
 export async function replyInteractionPublicFields(
   interaction: CommandInteraction | ButtonInteraction,
   fieldsAndValues: Array<string>,
-  embedOptions: MessageEmbedOptions = {},
+  embedOptions: APIEmbed = {},
   messageOptions: InteractionReplyOptions = {}
 ) {
   const newEmbedOptions = embedOptions;
@@ -185,11 +185,11 @@ export async function replyInteractionError(
   interaction:
     | CommandInteraction
     | ButtonInteraction
-    | ContextMenuInteraction
+    | ContextMenuCommandInteraction
     | SelectMenuInteraction
     | ModalSubmitInteraction,
   description: string,
-  embedOptions: MessageEmbedOptions = {}
+  embedOptions: APIEmbed = {}
 ) {
   const newEmbedOptions = embedOptions;
   newEmbedOptions.color = Constants.ERROR_COLOR;
@@ -202,32 +202,26 @@ export async function replyInteractionError(
 }
 
 async function updateInteractionHandler(
-  interaction:
-    | SelectMenuInteraction
-    | ModalSubmitInteraction
-    | MessageComponentInteraction,
+  interaction: SelectMenuInteraction | MessageComponentInteraction,
   description: string | undefined,
-  embedOptions: MessageEmbedOptions | null = {},
+  embedOptions: APIEmbed | null = {},
   messageOptions: InteractionUpdateOptions = {}
 ) {
   const newEmbedOptions = embedOptions;
-  const newMessageOptions = messageOptions;
+  const newBaseMessageOptions = messageOptions;
   if (newEmbedOptions != null && description != null) {
     newEmbedOptions.description = description;
   }
   if (newEmbedOptions != null) {
-    newMessageOptions.embeds = [new Embed(newEmbedOptions)];
+    newBaseMessageOptions.embeds = [new Embed(newEmbedOptions)];
   }
-  return interaction.update(newMessageOptions);
+  return interaction.update(newBaseMessageOptions);
 }
 
 export async function updateInteraction(
-  interaction:
-    | SelectMenuInteraction
-    | ModalSubmitInteraction
-    | MessageComponentInteraction,
+  interaction: SelectMenuInteraction | MessageComponentInteraction,
   description: string | undefined,
-  embedOptions: MessageEmbedOptions | null = {},
+  embedOptions: APIEmbed | null = {},
   messageOptions: InteractionUpdateOptions = {}
 ) {
   return updateInteractionHandler(
@@ -243,24 +237,24 @@ export async function updateInteraction(
 async function followUpInteractionHandler(
   interaction: ModalSubmitInteraction,
   description: string | undefined,
-  embedOptions: MessageEmbedOptions | null = {},
+  embedOptions: APIEmbed | null = {},
   messageOptions: InteractionReplyOptions = {}
 ) {
   const newEmbedOptions = embedOptions;
-  const newMessageOptions = messageOptions;
+  const newBaseMessageOptions = messageOptions;
   if (newEmbedOptions != null && description != null) {
     newEmbedOptions.description = description;
   }
   if (newEmbedOptions != null) {
-    newMessageOptions.embeds = [new Embed(newEmbedOptions)];
+    newBaseMessageOptions.embeds = [new Embed(newEmbedOptions)];
   }
-  return interaction.followUp(newMessageOptions);
+  return interaction.followUp(newBaseMessageOptions);
 }
 
 export async function followUpInteraction(
   interaction: ModalSubmitInteraction,
   description: string | undefined,
-  embedOptions: MessageEmbedOptions | null = {},
+  embedOptions: APIEmbed | null = {},
   messageOptions: InteractionReplyOptions = {}
 ) {
   return followUpInteractionHandler(
@@ -276,7 +270,7 @@ export async function followUpInteraction(
 export async function followUpInteractionError(
   interaction: ModalSubmitInteraction,
   description: string,
-  embedOptions: MessageEmbedOptions = {}
+  embedOptions: APIEmbed = {}
 ) {
   const newEmbedOptions = embedOptions;
   newEmbedOptions.color = Constants.ERROR_COLOR;

@@ -1,12 +1,16 @@
 import { ApplicationCommandRegistry, Awaitable, Command } from "@sapphire/framework";
-import { CommandInteraction, GuildMember } from "discord.js";
+import {
+  ApplicationCommandOptionType,
+  ChatInputCommandInteraction,
+  GuildMember,
+} from "discord.js";
 import { replyInteractionError, replyInteractionPublic } from "../../utility/Sender.js";
 import { Constants } from "../../utility/Constants.js";
 
 export class FlairCommand extends Command {
   public constructor(context: Command.Context) {
     super(context, {
-      requiredClientPermissions: ["MANAGE_NICKNAMES"],
+      requiredClientPermissions: ["ManageNicknames"],
     });
   }
 
@@ -21,12 +25,12 @@ export class FlairCommand extends Command {
           {
             name: "set",
             description: "Set a new flair.",
-            type: "SUB_COMMAND",
+            type: ApplicationCommandOptionType.Subcommand,
             options: [
               {
                 name: "flair",
                 description: "The flair to set",
-                type: "STRING",
+                type: ApplicationCommandOptionType.String,
                 required: true,
               },
             ],
@@ -34,7 +38,7 @@ export class FlairCommand extends Command {
           {
             name: "remove",
             description: "Remove your flair.",
-            type: "SUB_COMMAND",
+            type: ApplicationCommandOptionType.Subcommand,
           },
         ],
       },
@@ -45,7 +49,7 @@ export class FlairCommand extends Command {
     );
   }
 
-  public async chatInputRun(interaction: CommandInteraction) {
+  public async chatInputRun(interaction: ChatInputCommandInteraction) {
     const subcommand = interaction.options.getSubcommand();
     if (subcommand === "set") {
       const flair = interaction.options.getString("flair");

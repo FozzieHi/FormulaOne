@@ -4,7 +4,14 @@ import {
   Command,
   CommandOptionsRunTypeEnum,
 } from "@sapphire/framework";
-import { CommandInteraction, GuildMember, MessageButton } from "discord.js";
+import {
+  GuildMember,
+  ButtonBuilder,
+  ApplicationCommandOptionType,
+  ButtonStyle,
+  ComponentType,
+  ChatInputCommandInteraction,
+} from "discord.js";
 import { replyInteractionPublicFields } from "../../utility/Sender.js";
 import { Constants } from "../../utility/Constants.js";
 import { getDBUser } from "../../utility/DatabaseUtil.js";
@@ -30,7 +37,7 @@ export class UserInfoCommand extends Command {
           {
             name: "user",
             description: "The user to lookup",
-            type: "USER",
+            type: ApplicationCommandOptionType.User,
             required: true,
           },
         ],
@@ -42,7 +49,7 @@ export class UserInfoCommand extends Command {
     );
   }
 
-  public async chatInputRun(interaction: CommandInteraction) {
+  public async chatInputRun(interaction: ChatInputCommandInteraction) {
     const user = interaction.options.getUser("user");
     if (user == null || interaction.channel == null || interaction.guild == null) {
       return;
@@ -55,10 +62,10 @@ export class UserInfoCommand extends Command {
 
     const buttons = [
       [
-        new MessageButton()
+        new ButtonBuilder()
           .setCustomId(`userid-${user.id}`)
           .setLabel("User ID")
-          .setStyle("SECONDARY"),
+          .setStyle(ButtonStyle.Secondary),
       ],
     ];
     const dateOptions: Intl.DateTimeFormatOptions = {
@@ -81,10 +88,15 @@ export class UserInfoCommand extends Command {
           (await db.muteRepo?.anyMute(user.id, interaction.guild.id)) ? "Yes" : "No",
         ],
         {
-          author: { name: user.tag, iconURL: user.displayAvatarURL() },
+          author: { name: user.tag, icon_url: user.displayAvatarURL() },
           footer: { text: `User ID: ${user.id}` },
         },
-        { components: buttons.map((b) => ({ type: "ACTION_ROW", components: b })) }
+        {
+          components: buttons.map((b) => ({
+            type: ComponentType.ActionRow,
+            components: b,
+          })),
+        }
       );
     } else {
       const roles = member.roles.cache.map((role) => role.toString());
@@ -109,10 +121,15 @@ export class UserInfoCommand extends Command {
             : "No",
         ],
         {
-          author: { name: user.tag, iconURL: user.displayAvatarURL() },
+          author: { name: user.tag, icon_url: user.displayAvatarURL() },
           footer: { text: `User ID: ${user.id}` },
         },
-        { components: buttons.map((b) => ({ type: "ACTION_ROW", components: b })) }
+        {
+          components: buttons.map((b) => ({
+            type: ComponentType.ActionRow,
+            components: b,
+          })),
+        }
       );
     }
   }

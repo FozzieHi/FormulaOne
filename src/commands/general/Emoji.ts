@@ -1,5 +1,9 @@
 import { ApplicationCommandRegistry, Awaitable, Command } from "@sapphire/framework";
-import { CommandInteraction, TextBasedChannel } from "discord.js";
+import {
+  ApplicationCommandOptionType,
+  ChatInputCommandInteraction,
+  TextBasedChannel,
+} from "discord.js";
 import {
   replyInteractionError,
   replyInteractionPublic,
@@ -12,7 +16,7 @@ import TryVal from "../../utility/TryVal.js";
 export class EmojiCommand extends Command {
   public constructor(context: Command.Context) {
     super(context, {
-      requiredClientPermissions: ["ADD_REACTIONS"],
+      requiredClientPermissions: ["AddReactions"],
       preconditions: ["F3"],
     });
   }
@@ -28,13 +32,13 @@ export class EmojiCommand extends Command {
           {
             name: "name",
             description: "The proposed emoji name",
-            type: "STRING",
+            type: ApplicationCommandOptionType.String,
             required: true,
           },
           {
             name: "attachment",
             description: "The proposed emoji image or video",
-            type: "ATTACHMENT",
+            type: ApplicationCommandOptionType.Attachment,
             required: true,
           },
         ],
@@ -46,7 +50,7 @@ export class EmojiCommand extends Command {
     );
   }
 
-  public async chatInputRun(interaction: CommandInteraction) {
+  public async chatInputRun(interaction: ChatInputCommandInteraction) {
     const name = interaction.options.getString("name")?.replaceAll(":", "");
     const attachment = interaction.options.getAttachment("attachment");
     if (interaction.guild == null || name == null || attachment == null) {
@@ -67,7 +71,7 @@ export class EmojiCommand extends Command {
       return;
     }
     const options = {
-      timestamp: new Date(),
+      timestamp: new Date().toISOString(),
       author: {
         name: interaction.user.tag,
         icon_url: interaction.user.displayAvatarURL(),

@@ -4,7 +4,11 @@ import {
   Command,
   CommandOptionsRunTypeEnum,
 } from "@sapphire/framework";
-import { CommandInteraction, GuildTextBasedChannel } from "discord.js";
+import {
+  ApplicationCommandOptionType,
+  ChatInputCommandInteraction,
+  GuildTextBasedChannel,
+} from "discord.js";
 import {
   dm,
   replyInteractionError,
@@ -20,7 +24,7 @@ import { boldify } from "../../utility/StringUtil.js";
 export class BanCommand extends Command {
   public constructor(context: Command.Context) {
     super(context, {
-      requiredClientPermissions: ["BAN_MEMBERS"],
+      requiredClientPermissions: ["BanMembers"],
       runIn: CommandOptionsRunTypeEnum.GuildText,
       preconditions: ["Stewards", "BannedUser", "NoModerator"],
     });
@@ -37,18 +41,18 @@ export class BanCommand extends Command {
           {
             name: "add",
             description: "Ban a user",
-            type: "SUB_COMMAND",
+            type: ApplicationCommandOptionType.Subcommand,
             options: [
               {
                 name: "user",
                 description: "The user to ban",
-                type: "USER",
+                type: ApplicationCommandOptionType.User,
                 required: true,
               },
               {
                 name: "reason",
                 description: "The reason for the ban",
-                type: "NUMBER",
+                type: ApplicationCommandOptionType.Number,
                 choices: getRuleChoices(),
                 required: true,
               },
@@ -57,18 +61,18 @@ export class BanCommand extends Command {
           {
             name: "remove",
             description: "Unban a user",
-            type: "SUB_COMMAND",
+            type: ApplicationCommandOptionType.Subcommand,
             options: [
               {
                 name: "user",
                 description: "The user to unban",
-                type: "USER",
+                type: ApplicationCommandOptionType.User,
                 required: true,
               },
               {
                 name: "reason",
                 description: "The reason for the unban",
-                type: "STRING",
+                type: ApplicationCommandOptionType.String,
                 required: true,
               },
             ],
@@ -82,7 +86,7 @@ export class BanCommand extends Command {
     );
   }
 
-  public async chatInputRun(interaction: CommandInteraction) {
+  public async chatInputRun(interaction: ChatInputCommandInteraction) {
     const subcommand = interaction.options.getSubcommand();
     const targetUser = interaction.options.getUser("user");
     if (targetUser == null) {

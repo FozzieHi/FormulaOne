@@ -4,7 +4,11 @@ import {
   Command,
   CommandOptionsRunTypeEnum,
 } from "@sapphire/framework";
-import { CommandInteraction, TextChannel } from "discord.js";
+import {
+  ApplicationCommandOptionType,
+  ChannelType,
+  ChatInputCommandInteraction,
+} from "discord.js";
 import db from "../../database/index.js";
 import { replyInteractionError, replyInteractionPublic } from "../../utility/Sender.js";
 import { Constants } from "../../utility/Constants.js";
@@ -17,7 +21,7 @@ import MutexManager from "../../managers/MutexManager.js";
 export class FilterCommand extends Command {
   public constructor(context: Command.Context) {
     super(context, {
-      requiredClientPermissions: ["MANAGE_CHANNELS"],
+      requiredClientPermissions: ["ManageChannels"],
       runIn: CommandOptionsRunTypeEnum.GuildText,
       preconditions: ["Marshals"],
     });
@@ -34,12 +38,12 @@ export class FilterCommand extends Command {
           {
             name: "add",
             description: "Add the filter to the current channel.",
-            type: "SUB_COMMAND",
+            type: ApplicationCommandOptionType.Subcommand,
           },
           {
             name: "remove",
             description: "Remove the filter from the current channel.",
-            type: "SUB_COMMAND",
+            type: ApplicationCommandOptionType.Subcommand,
           },
         ],
       },
@@ -50,18 +54,18 @@ export class FilterCommand extends Command {
     );
   }
 
-  public async chatInputRun(interaction: CommandInteraction) {
+  public async chatInputRun(interaction: ChatInputCommandInteraction) {
     const subcommand = interaction.options.getSubcommand();
     await MutexManager.getGuildMutex().runExclusive(async () => {
       if (
         interaction.guild == null ||
         interaction.channel == null ||
-        !interaction.channel.isText()
+        interaction.channel.type !== ChannelType.GuildText
       ) {
         return;
       }
       const enabledText = "One word filter is enabled | ";
-      const channelDescription = (interaction.channel as TextChannel).topic;
+      const channelDescription = interaction.channel.topic;
 
       const dbGuild = await getDBGuild(interaction.guild.id);
       if (subcommand === "add") {
@@ -95,7 +99,7 @@ export class FilterCommand extends Command {
           Constants.WARN_COLOR
         );
         if (channelDescription != null) {
-          await (interaction.channel as TextChannel).setTopic(
+          await interaction.channel.setTopic(
             channelDescription.replace(enabledText, "")
           );
         }
@@ -130,9 +134,7 @@ export class FilterCommand extends Command {
           Constants.UNMUTE_COLOR
         );
         if (channelDescription != null) {
-          await (interaction.channel as TextChannel).setTopic(
-            enabledText + channelDescription
-          );
+          await interaction.channel.setTopic(enabledText + channelDescription);
         }
       }
     });

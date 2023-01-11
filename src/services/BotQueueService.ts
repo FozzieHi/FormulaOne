@@ -1,10 +1,12 @@
 import {
   Guild,
   Message,
-  MessageButton,
+  ButtonBuilder,
   TextChannel,
   ThreadChannel,
   User,
+  ButtonStyle,
+  ComponentType,
 } from "discord.js";
 import { Constants } from "../utility/Constants.js";
 import { checkInvites } from "./FilterService.js";
@@ -37,8 +39,8 @@ export async function archiveLog(
   const modQueueChannel = (await TryVal(
     guild.channels.fetch(Constants.CHANNELS.MOD_QUEUE)
   )) as TextChannel;
-  const messageEmbed = message.embeds.at(0);
-  if (modQueueChannel == null || messageEmbed == null) {
+  const EmbedBuilder = message.embeds.at(0);
+  if (modQueueChannel == null || EmbedBuilder == null) {
     return null;
   }
   const archiveThread = (await TryVal(
@@ -50,10 +52,10 @@ export async function archiveLog(
 
   const buttons = [
     [
-      new MessageButton({
+      new ButtonBuilder({
         customId: `userid-${targetUserId}`,
         label: `User ID`,
-        style: "SECONDARY",
+        style: ButtonStyle.Secondary,
       }),
     ],
   ];
@@ -62,9 +64,9 @@ export async function archiveLog(
     content: `${
       channel.id === Constants.CHANNELS.STEWARDS_QUEUE ? "Escalation result - " : ""
     }${action}${moderator != null ? ` by ${boldify(moderator.tag)}` : ""}`,
-    embeds: [messageEmbed],
+    embeds: [EmbedBuilder],
     components: buttons.map((button) => ({
-      type: "ACTION_ROW",
+      type: ComponentType.ActionRow,
       components: button,
     })),
   });

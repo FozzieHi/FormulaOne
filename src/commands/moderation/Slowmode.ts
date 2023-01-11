@@ -4,7 +4,11 @@ import {
   Command,
   CommandOptionsRunTypeEnum,
 } from "@sapphire/framework";
-import { CommandInteraction, TextChannel } from "discord.js";
+import {
+  ApplicationCommandOptionType,
+  ChatInputCommandInteraction,
+  TextChannel,
+} from "discord.js";
 import { replyInteractionError, replyInteractionPublic } from "../../utility/Sender.js";
 import { Constants } from "../../utility/Constants.js";
 import { modLog } from "../../services/ModerationService.js";
@@ -13,7 +17,7 @@ import MutexManager from "../../managers/MutexManager.js";
 export class SlowmodeCommand extends Command {
   public constructor(context: Command.Context) {
     super(context, {
-      requiredClientPermissions: ["MANAGE_CHANNELS"],
+      requiredClientPermissions: ["ManageChannels"],
       runIn: CommandOptionsRunTypeEnum.GuildText,
       preconditions: ["Marshals"],
     });
@@ -30,12 +34,12 @@ export class SlowmodeCommand extends Command {
           {
             name: "set",
             description: "Set a new slowmode duration.",
-            type: "SUB_COMMAND",
+            type: ApplicationCommandOptionType.Subcommand,
             options: [
               {
                 name: "seconds",
                 description: "The new slowmode duration in seconds",
-                type: "INTEGER",
+                type: ApplicationCommandOptionType.Integer,
                 required: true,
                 minValue: 1,
                 maxValue: 21600,
@@ -45,7 +49,7 @@ export class SlowmodeCommand extends Command {
           {
             name: "remove",
             description: "Remove the channel's slowmode.",
-            type: "SUB_COMMAND",
+            type: ApplicationCommandOptionType.Subcommand,
           },
         ],
       },
@@ -56,7 +60,7 @@ export class SlowmodeCommand extends Command {
     );
   }
 
-  public async chatInputRun(interaction: CommandInteraction) {
+  public async chatInputRun(interaction: ChatInputCommandInteraction) {
     const subcommand = interaction.options.getSubcommand();
     await MutexManager.getGuildMutex().runExclusive(async () => {
       if (interaction.guild == null || interaction.channel == null) {

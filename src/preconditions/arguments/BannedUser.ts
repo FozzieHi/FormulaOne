@@ -1,9 +1,9 @@
 import { Precondition } from "@sapphire/framework";
-import { CommandInteraction, User } from "discord.js";
+import { ChatInputCommandInteraction, User } from "discord.js";
 import Try from "../../utility/Try.js";
 
 export class BannedUserPrecondition extends Precondition {
-  public async chatInputRun(interaction: CommandInteraction) {
+  public async chatInputRun(interaction: ChatInputCommandInteraction) {
     const subcommand = interaction.options.getSubcommand();
     if (subcommand !== "remove") {
       return this.ok();

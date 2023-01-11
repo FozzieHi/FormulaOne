@@ -5,9 +5,10 @@ import {
 } from "@sapphire/framework";
 import {
   ButtonInteraction,
+  ComponentType,
   GuildMember,
-  MessageSelectMenu,
-  MessageSelectOptionData,
+  SelectMenuBuilder,
+  SelectMenuComponentOptionData,
 } from "discord.js";
 import { getDBUser } from "../../utility/DatabaseUtil.js";
 import { replyInteractionError } from "../../utility/Sender.js";
@@ -55,7 +56,7 @@ export class ShowAmountSelect extends InteractionHandler {
     for (let i = 1; i <= 5 - dbUser.currentPunishment; i += 1) {
       amounts.push(i.toString());
     }
-    const options: Array<MessageSelectOptionData> = [];
+    const options: Array<SelectMenuComponentOptionData> = [];
     amounts.forEach((amount) => {
       const punishment = Constants.PUNISHMENTS.at(
         dbUser.currentPunishment + parseInt(amount, 10) - 1
@@ -72,7 +73,7 @@ export class ShowAmountSelect extends InteractionHandler {
 
     const amountSelect = [
       [
-        new MessageSelectMenu({
+        new SelectMenuBuilder({
           customId: `amountselect-${parsedData.targetMemberId}-${parsedData.channelId}-${parsedData.messageId}-${interaction.message.id}`,
           placeholder: "Select amount",
           options,
@@ -82,7 +83,7 @@ export class ShowAmountSelect extends InteractionHandler {
     await interaction.reply({
       content: "Please select a punishment amount.",
       components: amountSelect.map((selectmenu) => ({
-        type: "ACTION_ROW",
+        type: ComponentType.ActionRow,
         components: selectmenu,
       })),
       ephemeral: true,

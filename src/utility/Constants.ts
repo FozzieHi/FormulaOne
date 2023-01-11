@@ -1,4 +1,10 @@
-import { Intents, PartialTypes, PresenceData, Snowflake } from "discord.js";
+import {
+  ActivityType,
+  GatewayIntentBits,
+  Partials,
+  PresenceData,
+  Snowflake,
+} from "discord.js";
 import RE2 from "re2";
 
 export enum PunishmentType {
@@ -158,21 +164,25 @@ export class Constants {
     DOWN: "303230394008993793",
   };
 
-  static readonly INTENTS: Intents = new Intents([
-    Intents.FLAGS.GUILDS,
-    Intents.FLAGS.GUILD_BANS,
-    Intents.FLAGS.GUILD_MEMBERS,
-    Intents.FLAGS.GUILD_MESSAGES,
-    Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
-  ]);
+  static readonly INTENTS: Array<GatewayIntentBits> = [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildBans,
+    GatewayIntentBits.GuildMembers,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.GuildMessageReactions,
+  ];
 
-  static readonly PARTIALS: Array<PartialTypes> = ["MESSAGE", "CHANNEL", "REACTION"];
+  static readonly PARTIALS: Array<Partials> = [
+    Partials.Message,
+    Partials.Channel,
+    Partials.Reaction,
+  ];
 
   static readonly PRESENCE: PresenceData = {
     activities: [
       {
         name: "slash commands",
-        type: "WATCHING",
+        type: ActivityType.Watching,
       },
     ],
   };

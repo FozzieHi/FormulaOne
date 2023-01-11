@@ -5,9 +5,11 @@ import {
 } from "@sapphire/framework";
 import {
   ButtonInteraction,
-  MessageSelectMenu,
-  MessageSelectOptionData,
-  TextInputComponent,
+  SelectMenuBuilder,
+  SelectMenuComponentOptionData,
+  TextInputStyle,
+  ComponentType,
+  TextInputBuilder,
 } from "discord.js";
 import { Constants } from "../../utility/Constants.js";
 import { updateInteraction } from "../../utility/Sender.js";
@@ -24,7 +26,7 @@ export class AddRemoveOption extends InteractionHandler {
     parsedData: InteractionHandler.ParseResult<this>
   ) {
     if (parsedData.action === "add") {
-      const ruleOptions: Array<MessageSelectOptionData> = [];
+      const ruleOptions: Array<SelectMenuComponentOptionData> = [];
       Constants.RULES.forEach((rule, i) => {
         ruleOptions.push({
           label: `Rule ${i + 1}`,
@@ -32,9 +34,9 @@ export class AddRemoveOption extends InteractionHandler {
           value: i.toString(),
         });
       });
-      const optionSelect: Array<Array<MessageSelectMenu>> = [
+      const optionSelect: Array<Array<SelectMenuBuilder>> = [
         [
-          new MessageSelectMenu({
+          new SelectMenuBuilder({
             customId: `ruleselect-${parsedData.commandName}-${parsedData.targetMemberId}-${parsedData.targetRoleId}`,
             placeholder: "Select rule",
             options: ruleOptions,
@@ -45,17 +47,17 @@ export class AddRemoveOption extends InteractionHandler {
       await updateInteraction(interaction, undefined, null, {
         content: "Please select a rule.",
         components: optionSelect.map((selectmenu) => ({
-          type: "ACTION_ROW",
+          type: ComponentType.ActionRow,
           components: selectmenu,
         })),
       });
     } else if (parsedData.action === "remove") {
       const inputs = [
         [
-          new TextInputComponent({
+          new TextInputBuilder({
             customId: "reason",
             label: "Please provide a reason",
-            style: "SHORT",
+            style: TextInputStyle.Short,
             required: true,
           }),
         ],
@@ -64,7 +66,7 @@ export class AddRemoveOption extends InteractionHandler {
         customId: `reasonoption-${parsedData.commandName}-${parsedData.targetMemberId}-${parsedData.targetRoleId}-${parsedData.action}`,
         title: "Reason",
         components: inputs.map((input) => ({
-          type: "ACTION_ROW",
+          type: ComponentType.ActionRow,
           components: input,
         })),
       });

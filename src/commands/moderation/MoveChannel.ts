@@ -5,7 +5,9 @@ import {
   CommandOptionsRunTypeEnum,
 } from "@sapphire/framework";
 import {
-  CommandInteraction,
+  ApplicationCommandOptionType,
+  ChannelType,
+  ChatInputCommandInteraction,
   GuildBasedChannel,
   GuildTextBasedChannel,
 } from "discord.js";
@@ -31,15 +33,15 @@ export class MoveChannelCommand extends Command {
           {
             name: "to",
             description: "The channel to move to",
-            type: "CHANNEL",
-            channelTypes: ["GUILD_TEXT"],
+            type: ApplicationCommandOptionType.Channel,
+            channelTypes: [ChannelType.GuildText],
             required: true,
           },
           {
             name: "from",
             description: "The channel to move from",
-            type: "CHANNEL",
-            channelTypes: ["GUILD_TEXT"],
+            type: ApplicationCommandOptionType.Channel,
+            channelTypes: [ChannelType.GuildText],
             required: true,
           },
         ],
@@ -51,14 +53,14 @@ export class MoveChannelCommand extends Command {
     );
   }
 
-  public async chatInputRun(interaction: CommandInteraction) {
+  public async chatInputRun(interaction: ChatInputCommandInteraction) {
     const toChannel = interaction.options.getChannel("to") as GuildBasedChannel;
     const fromChannel = interaction.options.getChannel("from") as GuildBasedChannel;
     if (
       toChannel == null ||
       fromChannel == null ||
-      !toChannel.isText() ||
-      !fromChannel.isText()
+      toChannel.type !== ChannelType.GuildText ||
+      fromChannel.type !== ChannelType.GuildText
     ) {
       return;
     }

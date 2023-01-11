@@ -4,13 +4,7 @@ import {
   InteractionHandlerTypes,
   PieceContext,
 } from "@sapphire/framework";
-import {
-  ButtonInteraction,
-  Guild,
-  Message,
-  MessageEmbed,
-  TextChannel,
-} from "discord.js";
+import { ButtonInteraction, Guild, TextChannel, APIEmbed } from "discord.js";
 import { escalate } from "../../services/ModerationService.js";
 import TryVal from "../../utility/TryVal.js";
 import { Constants, ModerationQueueButtons } from "../../utility/Constants.js";
@@ -31,14 +25,12 @@ export class Escalate extends InteractionHandler {
   ) {
     await MutexManager.getUserMutex(parsedData.targetUserId).runExclusive(async () => {
       const logMessage = await TryVal(
-        (interaction.channel as TextChannel).messages.fetch(
-          (interaction.message as Message).id
-        )
+        (interaction.channel as TextChannel).messages.fetch(interaction.message.id)
       );
       if (logMessage == null) {
         return;
       }
-      const embed = interaction.message.embeds.at(0) as MessageEmbed;
+      const embed = interaction.message.embeds.at(0) as APIEmbed;
       if (embed == null) {
         return;
       }

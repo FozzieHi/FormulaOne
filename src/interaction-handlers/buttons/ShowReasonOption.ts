@@ -5,10 +5,11 @@ import {
 } from "@sapphire/framework";
 import {
   ButtonInteraction,
+  ComponentType,
   Guild,
-  Message,
   TextChannel,
-  TextInputComponent,
+  TextInputBuilder,
+  TextInputStyle,
 } from "discord.js";
 import { upperFirstChar } from "../../utility/StringUtil.js";
 import Try from "../../utility/Try.js";
@@ -41,7 +42,7 @@ export class ShowReasonOptionInteraction extends InteractionHandler {
             interaction.channel as TextChannel,
             parsedData.targetUserId,
             null,
-            interaction.message as Message,
+            interaction.message,
             "Already banned"
           );
           await replyInteractionError(interaction, "Member is already banned.");
@@ -51,10 +52,10 @@ export class ShowReasonOptionInteraction extends InteractionHandler {
     }
     const inputs = [
       [
-        new TextInputComponent({
+        new TextInputBuilder({
           customId: "reason",
           label: "Please provide a reason",
-          style: "SHORT",
+          style: TextInputStyle.Short,
           required: true,
         }),
       ],
@@ -63,7 +64,7 @@ export class ShowReasonOptionInteraction extends InteractionHandler {
       customId: `reasonoption-${parsedData.action}-${parsedData.targetUserId}-${parsedData.channelId}`,
       title: `${upperFirstChar(parsedData.action)} Reason`,
       components: inputs.map((input) => ({
-        type: "ACTION_ROW",
+        type: ComponentType.ActionRow,
         components: input,
       })),
     });

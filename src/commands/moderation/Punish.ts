@@ -4,7 +4,11 @@ import {
   Command,
   CommandOptionsRunTypeEnum,
 } from "@sapphire/framework";
-import { CommandInteraction, GuildMember } from "discord.js";
+import {
+  ApplicationCommandOptionType,
+  ChatInputCommandInteraction,
+  GuildMember,
+} from "discord.js";
 import { getRuleChoices } from "../../utility/CommandUtil.js";
 import { Constants } from "../../utility/Constants.js";
 import { punish } from "../../utility/PunishUtil.js";
@@ -28,18 +32,18 @@ export class PunishCommand extends Command {
           {
             name: "add",
             description: "Add a punishment to a member",
-            type: "SUB_COMMAND",
+            type: ApplicationCommandOptionType.Subcommand,
             options: [
               {
                 name: "member",
                 description: "The member to punish",
-                type: "USER",
+                type: ApplicationCommandOptionType.User,
                 required: true,
               },
               {
                 name: "reason",
                 description: "The reason for the punish",
-                type: "NUMBER",
+                type: ApplicationCommandOptionType.Number,
                 choices: getRuleChoices(),
                 required: true,
               },
@@ -48,18 +52,18 @@ export class PunishCommand extends Command {
           {
             name: "remove",
             description: "Remove a punishment from a member",
-            type: "SUB_COMMAND",
+            type: ApplicationCommandOptionType.Subcommand,
             options: [
               {
                 name: "member",
                 description: "The member to unpunish",
-                type: "USER",
+                type: ApplicationCommandOptionType.User,
                 required: true,
               },
               {
                 name: "reason",
                 description: "The reason for the unpunish",
-                type: "STRING",
+                type: ApplicationCommandOptionType.String,
                 required: true,
               },
             ],
@@ -73,7 +77,7 @@ export class PunishCommand extends Command {
     );
   }
 
-  public async chatInputRun(interaction: CommandInteraction) {
+  public async chatInputRun(interaction: ChatInputCommandInteraction) {
     const subcommand = interaction.options.getSubcommand();
     const targetMember = interaction.options.getMember("member") as GuildMember;
     let reason;

@@ -4,8 +4,9 @@ import {
   PieceContext,
 } from "@sapphire/framework";
 import {
-  MessageSelectMenu,
-  MessageSelectOptionData,
+  ComponentType,
+  SelectMenuBuilder,
+  SelectMenuComponentOptionData,
   SelectMenuInteraction,
 } from "discord.js";
 import { Constants } from "../../utility/Constants.js";
@@ -25,7 +26,7 @@ export class AmountSelect extends InteractionHandler {
     if (parsedData.amount == null) {
       return;
     }
-    const ruleOptions: Array<MessageSelectOptionData> = [];
+    const ruleOptions: Array<SelectMenuComponentOptionData> = [];
     Constants.RULES.forEach((rule, i) => {
       ruleOptions.push({
         label: `Rule ${i + 1}`,
@@ -33,9 +34,9 @@ export class AmountSelect extends InteractionHandler {
         value: i.toString(),
       });
     });
-    const ruleSelect: Array<Array<MessageSelectMenu>> = [
+    const ruleSelect: Array<Array<SelectMenuBuilder>> = [
       [
-        new MessageSelectMenu({
+        new SelectMenuBuilder({
           customId: `ruleselect-punish-${parsedData.targetMemberId}-${parsedData.channelId}-${parsedData.messageId}-${parsedData.logMessageId}-${parsedData.amount}`,
           placeholder: "Select rule",
           options: ruleOptions,
@@ -46,7 +47,7 @@ export class AmountSelect extends InteractionHandler {
     await updateInteraction(interaction, undefined, null, {
       content: "Please select a rule.",
       components: ruleSelect.map((selectmenu) => ({
-        type: "ACTION_ROW",
+        type: ComponentType.ActionRow,
         components: selectmenu,
       })),
     });

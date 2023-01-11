@@ -1,9 +1,9 @@
 import { Precondition } from "@sapphire/framework";
-import { CommandInteraction, GuildMember } from "discord.js";
+import { ChatInputCommandInteraction, GuildMember } from "discord.js";
 import { isModerator } from "../../services/ModerationService.js";
 
 export class NoModeratorPrecondition extends Precondition {
-  public async chatInputRun(interaction: CommandInteraction) {
+  public async chatInputRun(interaction: ChatInputCommandInteraction) {
     if (interaction.guild == null) {
       return this.error({ message: "Guild is null or undefined." });
     }
