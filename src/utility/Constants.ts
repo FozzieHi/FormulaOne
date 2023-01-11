@@ -170,6 +170,7 @@ export class Constants {
     GatewayIntentBits.GuildMembers,
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.GuildMessageReactions,
+    GatewayIntentBits.MessageContent,
   ];
 
   static readonly PARTIALS: Array<Partials> = [
