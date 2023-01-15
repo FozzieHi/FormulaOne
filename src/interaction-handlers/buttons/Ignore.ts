@@ -9,6 +9,7 @@ import MutexManager from "../../managers/MutexManager.js";
 import { replyInteraction, replyInteractionError } from "../../utility/Sender.js";
 import TryVal from "../../utility/TryVal.js";
 import { archiveLog } from "../../services/BotQueueService.js";
+import { debugLog } from "../../utility/Logger.js";
 
 export class IgnoreInteraction extends InteractionHandler {
   public constructor(context: PieceContext) {
@@ -25,7 +26,9 @@ export class IgnoreInteraction extends InteractionHandler {
     ) {
       return;
     }
+    debugLog(`User report - out of mutex - ${userId} - ${interaction.message.id}`);
     await MutexManager.getUserMutex(userId).runExclusive(async () => {
+      debugLog(`User report - in mutex - ${userId} - ${interaction.message.id}`);
       const logMessage = await TryVal(
         (interaction.channel as TextChannel).messages.fetch(interaction.message.id)
       );
