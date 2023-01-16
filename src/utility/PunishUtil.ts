@@ -22,7 +22,6 @@ import { PushUpdate } from "../database/updates/PushUpdate.js";
 import { getDBGuild, getDBUser } from "./DatabaseUtil.js";
 import { millisecondsToUnits } from "./NumberUtil.js";
 import { PopUpdate } from "../database/updates/PopUpdate.js";
-import MutexManager from "../managers/MutexManager.js";
 import { Punishment } from "../database/models/User.js";
 import { Pun } from "../database/models/Pun.js";
 import { boldify } from "./StringUtil.js";
@@ -145,192 +144,187 @@ export async function punish(
   message?: Message
 ): Promise<Message | null> {
   let messageSent;
-  await MutexManager.getUserMutex(targetMember.id).runExclusive(async () => {
-    if (interaction.guild == null || interaction.channel == null) {
-      return;
+  if (interaction.guild == null || interaction.channel == null) {
+    return null;
+  }
+
+  const dbUser = await getDBUser(targetMember.id, interaction.guild.id);
+  if (dbUser == null) {
+    return null;
+  }
+  const currentPun = dbUser.currentPunishment;
+
+  if (action === "add") {
+    if (currentPun > Constants.PUNISHMENTS.length - 1) {
+      await replyInteractionError(
+        interaction,
+        `${boldify(targetMember.user.tag)} has exceeded ${
+          Constants.PUNISHMENTS.length
+        } punishments in the last 30 days, escalate their punishment manually.`
+      );
     }
 
-    const dbUser = await getDBUser(targetMember.id, interaction.guild.id);
-    if (dbUser == null) {
-      return;
+    const maxEscalations = Math.min(currentPun + amount, Constants.PUNISHMENTS.length);
+    const escalations = maxEscalations - currentPun;
+
+    const punishment = Constants.PUNISHMENTS.at(maxEscalations - 1);
+    if (punishment == null) {
+      return null;
     }
-    const currentPun = dbUser.currentPunishment;
+    const punishmentDisplay = getPunishmentDisplay(punishment);
 
-    if (action === "add") {
-      if (currentPun > Constants.PUNISHMENTS.length - 1) {
-        await replyInteractionError(
-          interaction,
-          `${boldify(targetMember.user.tag)} has exceeded ${
-            Constants.PUNISHMENTS.length
-          } punishments in the last 30 days, escalate their punishment manually.`
-        );
-      }
+    await dm(
+      targetMember.user,
+      `A moderator has ${punishmentDisplay.displayPastTense} you${
+        punishment.length != null ? ` for ${punishmentDisplay.displayCurrent}` : ""
+      } for the reason: ${reason}.`,
+      interaction.channel
+    );
 
-      const maxEscalations = Math.min(
-        currentPun + amount,
-        Constants.PUNISHMENTS.length
-      );
-      const escalations = maxEscalations - currentPun;
-
-      const punishment = Constants.PUNISHMENTS.at(maxEscalations - 1);
-      if (punishment == null) {
-        return;
-      }
-      const punishmentDisplay = getPunishmentDisplay(punishment);
-
-      await dm(
-        targetMember.user,
-        `A moderator has ${punishmentDisplay.displayPastTense} you${
-          punishment.length != null ? ` for ${punishmentDisplay.displayCurrent}` : ""
-        } for the reason: ${reason}.`,
-        interaction.channel
-      );
-
-      let color = Constants.WARN_COLOR;
-      if (punishment.type === PunishmentType.WARN) {
-        await db.userRepo?.upsertUser(targetMember.id, interaction.guild.id, {
-          $inc: { warnings: 1 },
-        });
-        color = Constants.WARN_COLOR;
-      } else if (punishment.type === PunishmentType.MUTE) {
-        await mute(
-          moderator,
-          targetMember,
-          interaction.guild,
-          reason,
-          punishmentDisplay.displayLog,
-          punishment.length as number
-        );
-        await db.userRepo?.upsertUser(targetMember.id, interaction.guild.id, {
-          $inc: { mutes: 1 },
-        });
-        color = Constants.MUTE_COLOR;
-      } else if (punishment.type === PunishmentType.BAN) {
-        await ban(
-          moderator,
-          targetMember,
-          interaction.guild,
-          reason,
-          punishmentDisplay.displayLog,
-          punishment.length as number
-        );
-        await db.userRepo?.upsertUser(targetMember.id, interaction.guild.id, {
-          $inc: { bans: 1 },
-        });
-        color = Constants.BAN_COLOR;
-      }
-
-      if (
-        interaction.isStringSelectMenu() &&
-        (interaction.channel.id === Constants.CHANNELS.MOD_QUEUE ||
-          interaction.channel.id === Constants.CHANNELS.STEWARDS_QUEUE)
-      ) {
-        await updateInteraction(
-          interaction,
-          `Successfully punished member.`,
-          {},
-          { content: null, components: [] }
-        );
-      } else {
-        await replyInteraction(interaction, `Successfully punished member.`);
-      }
-      messageSent = await send(
-        interaction.channel,
-        `Successfully ${punishmentDisplay.displayPastTense} ${boldify(
-          targetMember.user.tag
-        )}${
-          punishment.length != null ? ` for ${punishmentDisplay.displayCurrent}` : ""
-        } for the reason ${reason}.\n\nThey have ${currentPun} punishments in the last 30 days.`
-      );
-
-      const punishData: Punishment = {
-        date: Date.now(),
-        escalation: `${currentPun + escalations} (${punishmentDisplay.displayLog})${
-          escalations > 1 ? ` (${escalations} punishments)` : ""
-        }`,
+    let color = Constants.WARN_COLOR;
+    if (punishment.type === PunishmentType.WARN) {
+      await db.userRepo?.upsertUser(targetMember.id, interaction.guild.id, {
+        $inc: { warnings: 1 },
+      });
+      color = Constants.WARN_COLOR;
+    } else if (punishment.type === PunishmentType.MUTE) {
+      await mute(
+        moderator,
+        targetMember,
+        interaction.guild,
         reason,
-        mod: moderator.user.tag,
-        channelId: message?.channel.id ?? interaction.channel.id,
-      };
-      if (message != null) {
-        punishData.messageContent = message.content;
-      }
-      await db.userRepo?.upsertUser(
-        targetMember.id,
-        interaction.guild.id,
-        new PushUpdate("punishments", punishData)
+        punishmentDisplay.displayLog,
+        punishment.length as number
       );
-      await increasePunishment(targetMember.id, interaction.guild.id, escalations);
-      const modLogFieldAndValues = [
+      await db.userRepo?.upsertUser(targetMember.id, interaction.guild.id, {
+        $inc: { mutes: 1 },
+      });
+      color = Constants.MUTE_COLOR;
+    } else if (punishment.type === PunishmentType.BAN) {
+      await ban(
+        moderator,
+        targetMember,
+        interaction.guild,
+        reason,
+        punishmentDisplay.displayLog,
+        punishment.length as number
+      );
+      await db.userRepo?.upsertUser(targetMember.id, interaction.guild.id, {
+        $inc: { bans: 1 },
+      });
+      color = Constants.BAN_COLOR;
+    }
+
+    if (
+      interaction.isStringSelectMenu() &&
+      (interaction.channel.id === Constants.CHANNELS.MOD_QUEUE ||
+        interaction.channel.id === Constants.CHANNELS.STEWARDS_QUEUE)
+    ) {
+      await updateInteraction(
+        interaction,
+        `Successfully punished member.`,
+        {},
+        { content: null, components: [] }
+      );
+    } else {
+      await replyInteraction(interaction, `Successfully punished member.`);
+    }
+    messageSent = await send(
+      interaction.channel,
+      `Successfully ${punishmentDisplay.displayPastTense} ${boldify(
+        targetMember.user.tag
+      )}${
+        punishment.length != null ? ` for ${punishmentDisplay.displayCurrent}` : ""
+      } for the reason ${reason}.\n\nThey have ${currentPun} punishments in the last 30 days.`
+    );
+
+    const punishData: Punishment = {
+      date: Date.now(),
+      escalation: `${currentPun + escalations} (${punishmentDisplay.displayLog})${
+        escalations > 1 ? ` (${escalations} punishments)` : ""
+      }`,
+      reason,
+      mod: moderator.user.tag,
+      channelId: message?.channel.id ?? interaction.channel.id,
+    };
+    if (message != null) {
+      punishData.messageContent = message.content;
+    }
+    await db.userRepo?.upsertUser(
+      targetMember.id,
+      interaction.guild.id,
+      new PushUpdate("punishments", punishData)
+    );
+    await increasePunishment(targetMember.id, interaction.guild.id, escalations);
+    const modLogFieldAndValues = [
+      "Action",
+      `${punishmentDisplay.displayLog}${
+        escalations > 1 ? ` (${escalations} punishments)` : ""
+      }`,
+      "Member",
+      `${targetMember.user.tag} (${targetMember.id})`,
+      "Reason",
+      reason,
+      "Channel",
+      message?.channel.toString() ?? interaction.channel.toString(),
+    ];
+    if (message != null) {
+      modLogFieldAndValues.push("Content", message.content);
+    }
+    await modLog(
+      interaction.guild,
+      moderator.user,
+      modLogFieldAndValues,
+      color,
+      targetMember.user
+    );
+  } else if (action === "remove") {
+    const role = await TryVal(interaction.guild.roles.fetch(Constants.ROLES.MUTED));
+    if (role == null) {
+      return null;
+    }
+    if (db.muteRepo?.anyMute(targetMember.id, interaction.guild.id)) {
+      await targetMember.roles.remove(role);
+      await targetMember.disableCommunicationUntil(
+        null,
+        `Unpunished by ${moderator.user.tag}`
+      );
+      await db.muteRepo?.deleteMute(targetMember.id, interaction.guild.id);
+    }
+
+    if (currentPun === 0) {
+      await replyInteractionError(interaction, "Member has no active punishments.");
+      return null;
+    }
+
+    await decreasePunishment(targetMember.id, interaction.guild.id);
+    await modLog(
+      interaction.guild,
+      moderator.user,
+      [
         "Action",
-        `${punishmentDisplay.displayLog}${
-          escalations > 1 ? ` (${escalations} punishments)` : ""
-        }`,
+        "Unpunish",
         "Member",
         `${targetMember.user.tag} (${targetMember.id})`,
         "Reason",
         reason,
         "Channel",
-        message?.channel.toString() ?? interaction.channel.toString(),
-      ];
-      if (message != null) {
-        modLogFieldAndValues.push("Content", message.content);
-      }
-      await modLog(
-        interaction.guild,
-        moderator.user,
-        modLogFieldAndValues,
-        color,
-        targetMember.user
-      );
-    } else if (action === "remove") {
-      const role = await TryVal(interaction.guild.roles.fetch(Constants.ROLES.MUTED));
-      if (role == null) {
-        return;
-      }
-      if (db.muteRepo?.anyMute(targetMember.id, interaction.guild.id)) {
-        await targetMember.roles.remove(role);
-        await targetMember.disableCommunicationUntil(
-          null,
-          `Unpunished by ${moderator.user.tag}`
-        );
-        await db.muteRepo?.deleteMute(targetMember.id, interaction.guild.id);
-      }
+        interaction.channel.toString(),
+      ],
+      Constants.UNMUTE_COLOR,
+      targetMember.user
+    );
+    await db.userRepo?.upsertUser(
+      targetMember.id,
+      interaction.guild.id,
+      new PopUpdate("punishments", 1)
+    );
 
-      if (currentPun === 0) {
-        await replyInteractionError(interaction, "Member has no active punishments.");
-        return;
-      }
-
-      await decreasePunishment(targetMember.id, interaction.guild.id);
-      await modLog(
-        interaction.guild,
-        moderator.user,
-        [
-          "Action",
-          "Unpunish",
-          "Member",
-          `${targetMember.user.tag} (${targetMember.id})`,
-          "Reason",
-          reason,
-          "Channel",
-          interaction.channel.toString(),
-        ],
-        Constants.UNMUTE_COLOR,
-        targetMember.user
-      );
-      await db.userRepo?.upsertUser(
-        targetMember.id,
-        interaction.guild.id,
-        new PopUpdate("punishments", 1)
-      );
-
-      await replyInteractionPublic(
-        interaction,
-        `Successfully unpunished ${boldify(targetMember.user.tag)}.`
-      );
-    }
-  });
+    await replyInteractionPublic(
+      interaction,
+      `Successfully unpunished ${boldify(targetMember.user.tag)}.`
+    );
+  }
   if (messageSent != null) {
     return messageSent;
   }

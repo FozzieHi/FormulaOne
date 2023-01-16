@@ -12,6 +12,7 @@ import {
 import { getRuleChoices } from "../../utility/CommandUtil.js";
 import { Constants } from "../../utility/Constants.js";
 import { punish } from "../../utility/PunishUtil.js";
+import MutexManager from "../../managers/MutexManager.js";
 
 export class PunishCommand extends Command {
   public constructor(context: Command.Context) {
@@ -80,7 +81,7 @@ export class PunishCommand extends Command {
   public async chatInputRun(interaction: ChatInputCommandInteraction) {
     const subcommand = interaction.options.getSubcommand();
     const targetMember = interaction.options.getMember("member") as GuildMember;
-    let reason;
+    let reason: string | null;
     if (subcommand === "add") {
       const ruleNumber = interaction.options.getNumber("reason");
       if (ruleNumber == null) {
@@ -90,17 +91,18 @@ export class PunishCommand extends Command {
     } else if (subcommand === "remove") {
       reason = interaction.options.getString("reason");
     }
-    if (reason == null) {
-      return;
-    }
-
-    await punish(
-      interaction,
-      interaction.member as GuildMember,
-      targetMember,
-      subcommand,
-      reason,
-      1
-    );
+    await MutexManager.getUserMutex(targetMember.id).runExclusive(async () => {
+      if (reason == null) {
+        return;
+      }
+      await punish(
+        interaction,
+        interaction.member as GuildMember,
+        targetMember,
+        subcommand,
+        reason,
+        1
+      );
+    });
   }
 }
