@@ -43,7 +43,6 @@ export async function checkDiscussionEmotes(
       const downvoteUsers = await message.reactions.cache
         .find((msgReaction) => msgReaction.emoji.id === Constants.EMOTES.DOWN)
         ?.users.fetch();
-
       if (upvoteUsers == null || downvoteUsers == null) {
         return;
       }
