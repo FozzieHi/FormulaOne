@@ -56,12 +56,8 @@ export async function checkInvites(message: Message): Promise<boolean> {
   return true;
 }
 
-export async function checkEmotes(reaction: MessageReaction) {
-  const messageUser = reaction.message.author as User;
-  if (messageUser == null) {
-    return;
-  }
-  await MutexManager.getUserPublicMutex(messageUser.id).runExclusive(async () => {
+export async function checkEmotes(message: Message, reaction: MessageReaction) {
+  await MutexManager.getUserPublicMutex(message.author.id).runExclusive(async () => {
     if (
       ViolationService.reports.some(
         (report) =>
@@ -71,9 +67,6 @@ export async function checkEmotes(reaction: MessageReaction) {
     ) {
       return;
     }
-    const message = reaction.message.partial
-      ? await reaction.message.fetch()
-      : reaction.message;
     if (
       await isModerator(
         reaction.message.guild as Guild,
@@ -92,21 +85,32 @@ export async function checkEmotes(reaction: MessageReaction) {
           Constants.EMOTE_SCORES.find((val) => val.id === user.id)?.score ?? 0.05;
       });
       if (score >= 0.25) {
+        const fieldsAndValues = [
+          "Action",
+          `Emote Report [Jump to message](${message.url})`,
+          "Score",
+          `${score.toString()} >= 0.25`,
+          "Channel",
+          message.channel.toString(),
+        ];
+        if (message.content.length > 0) {
+          fieldsAndValues.push("Content");
+          fieldsAndValues.push(message.content);
+        }
+        const attachmentVals = [...message.attachments.values()];
+        for (let i = 0; i < message.attachments.size; i += 1) {
+          const attachment = attachmentVals.at(i);
+          if (attachment != null) {
+            fieldsAndValues.push(`Attachment ${i + 1}`);
+            fieldsAndValues.push(`[View](${attachment.proxyURL})`);
+          }
+        }
         await modQueue(
           message.guild as Guild,
           message.author,
           message.channel.id,
           message.id,
-          [
-            "Action",
-            `Emote Report [Jump to message](${message.url})`,
-            "Score",
-            score.toString(),
-            "Channel",
-            message.channel.toString(),
-            "Content",
-            message.content,
-          ],
+          fieldsAndValues,
           Constants.WARN_COLOR,
           [
             ModerationQueueButtons.PUNISH,
