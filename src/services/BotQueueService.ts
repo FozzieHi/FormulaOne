@@ -15,7 +15,7 @@ import { boldify } from "../utility/StringUtil.js";
 import { getPermLevel } from "./ModerationService.js";
 import TryVal from "../utility/TryVal.js";
 
-export async function checkMessage(message: Message) {
+export async function filterCheckMessage(message: Message) {
   if (
     message.guild == null ||
     (await getPermLevel(message.guild, message.author)) > 0
