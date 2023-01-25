@@ -83,7 +83,7 @@ export async function checkDiscussionEmotes(
             ModerationQueueButtons.ESCALATE,
             ModerationQueueButtons.IGNORE,
           ],
-          false
+          true
         );
         ViolationService.reports.push({
           channelId: message.channel.id,
