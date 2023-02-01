@@ -18,7 +18,7 @@
   "dependencies": {
     "@sapphire/framework": "^4.0.2",
     "@sapphire/plugin-logger": "^3.0.1",
-    "@sentry/integrations": "^7.34.0",
+    "@sentry/integrations": "^7.35.0",
     "@sentry/node": "^7.34.0",
     "@sentry/tracing": "^7.34.0",
     "@tsconfig/node18": "^1.0.1",
