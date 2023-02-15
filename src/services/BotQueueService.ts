@@ -12,14 +12,11 @@ import { Constants } from "../utility/Constants.js";
 import { checkInvites } from "./FilterService.js";
 import ViolationService from "./ViolationService.js";
 import { boldify } from "../utility/StringUtil.js";
-import { getPermLevel } from "./ModerationService.js";
+import { isModerator } from "./ModerationService.js";
 import TryVal from "../utility/TryVal.js";
 
 export async function filterCheckMessage(message: Message) {
-  if (
-    message.guild == null ||
-    (await getPermLevel(message.guild, message.author)) > 0
-  ) {
+  if (message.guild == null || (await isModerator(message.guild, message.author))) {
     return;
   }
   const result = await checkInvites(message);
