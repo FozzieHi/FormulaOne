@@ -12,6 +12,13 @@ export function upperFirstChar(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
+export function maxLength(str: string) {
+  if (str.length > 200) {
+    return `${str.substring(0, 200)}...`;
+  }
+  return str;
+}
+
 export function removeClickableLinks(str: string) {
   const pattern = Constants.GLOBAL_REGEXES.URL;
   const urls = str.match(pattern);

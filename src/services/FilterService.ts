@@ -4,7 +4,7 @@ import { Constants, ModerationQueueButtons } from "../utility/Constants.js";
 import { isModerator, modQueue } from "./ModerationService.js";
 import Try from "../utility/Try.js";
 import TryVal from "../utility/TryVal.js";
-import { removeClickableLinks } from "../utility/StringUtil.js";
+import { maxLength, removeClickableLinks } from "../utility/StringUtil.js";
 import ViolationService from "./ViolationService.js";
 import MutexManager from "../managers/MutexManager.js";
 
@@ -95,7 +95,7 @@ export async function checkEmotes(message: Message, reaction: MessageReaction) {
         ];
         if (message.content.length > 0) {
           fieldsAndValues.push("Content");
-          fieldsAndValues.push(message.content);
+          fieldsAndValues.push(maxLength(message.content));
         }
         const attachmentVals = [...message.attachments.values()];
         for (let i = 0; i < message.attachments.size; i += 1) {
