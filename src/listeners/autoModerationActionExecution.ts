@@ -65,7 +65,7 @@ export class AutoModerationActionExecutionListener extends Listener {
     }
     if (action.matchedKeyword != null) {
       fieldsAndValues.push("Keyword");
-      fieldsAndValues.push(`\`${action.matchedKeyword}\``);
+      fieldsAndValues.push(`\`${action.matchedKeyword.replaceAll("`", "\\`")}\``);
     }
     await modQueue(
       action.guild,
