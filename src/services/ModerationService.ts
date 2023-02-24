@@ -44,14 +44,15 @@ function getModerationQueueButtons(
   buttons: Array<ModerationQueueButtons>,
   targetUserId: Snowflake,
   targetChannelId: Snowflake,
-  targetMessageId: Snowflake
+  targetMessageId: Snowflake | null
 ) {
   const returnButtons: Array<ButtonBuilder> = [];
   buttons.forEach((button) => {
     if (button === "PUNISH") {
       returnButtons.push(
         new ButtonBuilder({
-          customId: `showamountselect-${targetUserId}-${targetChannelId}-${targetMessageId}`,
+          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+          customId: `showamountselect-${targetUserId}-${targetChannelId}$-${targetMessageId}`,
           label: "Punish",
           style: ButtonStyle.Danger,
         })
@@ -224,7 +225,7 @@ export async function modQueue(
   guild: Guild,
   target: User,
   targetChannelId: Snowflake,
-  targetMessageId: Snowflake,
+  targetMessageId: Snowflake | null,
   fieldsAndValues: Array<string>,
   color: number,
   buttons: Array<ModerationQueueButtons>,
@@ -242,7 +243,9 @@ export async function modQueue(
   }
   const embedOptions: APIEmbed = {
     footer: {
-      text: `User ID: ${target.id} - Message ID: ${targetMessageId}`,
+      text: `User ID: ${target.id}${
+        targetMessageId != null ? ` - Message ID: ${targetMessageId}` : ""
+      }`,
     },
     color,
     timestamp: new Date().toISOString(),

@@ -24,7 +24,7 @@ import { millisecondsToUnits } from "./NumberUtil.js";
 import { PopUpdate } from "../database/updates/PopUpdate.js";
 import { Punishment } from "../database/models/User.js";
 import { Pun } from "../database/models/Pun.js";
-import { boldify } from "./StringUtil.js";
+import { boldify, maxLength } from "./StringUtil.js";
 import TryVal from "./TryVal.js";
 
 async function increasePunishment(
@@ -269,7 +269,7 @@ export async function punish(
       message?.channel.toString() ?? interaction.channel.toString(),
     ];
     if (message != null) {
-      modLogFieldAndValues.push("Content", message.content);
+      modLogFieldAndValues.push("Content", maxLength(message.content));
     }
     await modLog(
       interaction.guild,

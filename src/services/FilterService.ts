@@ -1,4 +1,11 @@
-import { Guild, Invite, Message, MessageReaction, User } from "discord.js";
+import {
+  Guild,
+  GuildTextBasedChannel,
+  Invite,
+  Message,
+  MessageReaction,
+  User,
+} from "discord.js";
 import { container } from "@sapphire/framework";
 import { Constants, ModerationQueueButtons } from "../utility/Constants.js";
 import { isModerator, modQueue } from "./ModerationService.js";
@@ -10,7 +17,7 @@ import MutexManager from "../managers/MutexManager.js";
 
 export async function checkInvites(message: Message): Promise<boolean> {
   const inviteMatch = Constants.REGEXES.INVITES.match(message.content);
-  if (inviteMatch == null || message.guild == null) {
+  if (inviteMatch == null || message.guild == null || message.channel == null) {
     return false;
   }
   const inviteCode = inviteMatch.at(2);
@@ -25,8 +32,10 @@ export async function checkInvites(message: Message): Promise<boolean> {
     return false;
   }
   await Try(message.delete());
-  const messages = await message.channel.messages.fetch({ limit: 2 });
-  const aboveMessage = messages.last()?.url;
+  const messages = await TryVal(
+    (message.channel as GuildTextBasedChannel).messages.fetch({ limit: 2 })
+  );
+  const aboveMessage = messages?.last()?.url;
   await modQueue(
     message.guild,
     message.author,
@@ -44,7 +53,7 @@ export async function checkInvites(message: Message): Promise<boolean> {
       "Channel",
       message.channel.toString(),
       "Content",
-      removeClickableLinks(message.content),
+      removeClickableLinks(maxLength(message.content)),
     ],
     Constants.KICK_COLOR,
     [

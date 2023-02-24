@@ -166,6 +166,8 @@ export class Constants {
   };
 
   static readonly INTENTS: Array<GatewayIntentBits> = [
+    GatewayIntentBits.AutoModerationConfiguration,
+    GatewayIntentBits.AutoModerationExecution,
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildBans,
     GatewayIntentBits.GuildMembers,

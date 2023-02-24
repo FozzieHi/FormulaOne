@@ -7,10 +7,6 @@ import { Constants } from "../utility/Constants.js";
 import TryVal from "../utility/TryVal.js";
 
 export class GuildMemberAddListener extends Listener {
-  public constructor(context: Listener.Context) {
-    super(context);
-  }
-
   public async run(member: GuildMember) {
     await ProtectionService.checkJoins(member.guild);
 
