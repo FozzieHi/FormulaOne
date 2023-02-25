@@ -18,7 +18,8 @@ export class AutoModerationActionExecutionListener extends Listener {
     if (
       action.channelId == null ||
       autoModerationRule == null ||
-      action.action.type !== AutoModerationActionType.SendAlertMessage
+      action.action.type !== AutoModerationActionType.SendAlertMessage ||
+      action.action.metadata.channelId !== Constants.CHANNELS.AUTO_BOT_QUEUE
     ) {
       return;
     }
