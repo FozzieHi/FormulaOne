@@ -1,5 +1,4 @@
 import {
-  container,
   InteractionHandler,
   InteractionHandlerTypes,
   PieceContext,
@@ -76,11 +75,6 @@ export class RuleSelect extends InteractionHandler {
           const channel = (await TryVal(
             interaction.guild.channels.fetch(parsedData.channelId as Snowflake)
           )) as TextChannel;
-          if (channel == null) {
-            container.logger.debug(
-              `Channel is null - Channel ID: ${parsedData.channelId as Snowflake}`
-            );
-          }
           const message =
             channel != null
               ? ((await TryVal(

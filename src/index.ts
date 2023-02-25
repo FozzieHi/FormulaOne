@@ -2,7 +2,6 @@ import "@sapphire/plugin-logger/register";
 import {
   ApplicationCommandRegistries,
   container,
-  LogLevel,
   RegisterBehavior,
   SapphireClient,
 } from "@sapphire/framework";
@@ -58,7 +57,6 @@ declare module "@sapphire/framework" {
     intents: Constants.INTENTS,
     partials: Constants.PARTIALS,
     presence: Constants.PRESENCE,
-    logger: { level: LogLevel.Debug },
   });
   ApplicationCommandRegistries.setDefaultBehaviorWhenNotIdentical(
     RegisterBehavior.Overwrite

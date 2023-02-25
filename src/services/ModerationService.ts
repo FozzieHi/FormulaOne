@@ -52,7 +52,7 @@ function getModerationQueueButtons(
       returnButtons.push(
         new ButtonBuilder({
           // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-          customId: `showamountselect-${targetUserId}-${targetChannelId}$-${targetMessageId}`,
+          customId: `showamountselect-${targetUserId}-${targetChannelId}-${targetMessageId}`,
           label: "Punish",
           style: ButtonStyle.Danger,
         })
