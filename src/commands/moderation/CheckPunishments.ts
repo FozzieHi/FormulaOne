@@ -59,7 +59,7 @@ export class CheckPunishmentsCommand extends Command {
     }
 
     const dbUser = await getDBUser(user.id, interaction.guild.id);
-    if (dbUser?.punishments === undefined || dbUser.punishments.length === 0) {
+    if (dbUser?.punishments == null || dbUser.punishments.length === 0) {
       await replyInteractionPublic(
         interaction,
         `${boldify(user.tag)} has a clean slate.`,
