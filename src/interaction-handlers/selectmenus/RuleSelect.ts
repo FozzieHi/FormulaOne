@@ -75,12 +75,16 @@ export class RuleSelect extends InteractionHandler {
           const channel = (await TryVal(
             interaction.guild.channels.fetch(parsedData.channelId as Snowflake)
           )) as TextChannel;
-          const message =
-            channel != null
-              ? ((await TryVal(
-                  channel.messages.fetch(parsedData.messageId as Snowflake)
-                )) as Message)
-              : null;
+          let message = null;
+          if (channel != null) {
+            message = (await TryVal(
+              channel.messages.fetch(parsedData.messageId as Snowflake)
+            )) as Message;
+          } else {
+            this.container.logger.warn(
+              `Channel is null - Channel ID: ${parsedData.channelId as Snowflake}`
+            );
+          }
           const reason = `Rule ${parsedData.ruleNumber + 1} - ${
             Constants.RULES[parsedData.ruleNumber]
           }`;
