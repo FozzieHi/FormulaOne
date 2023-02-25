@@ -141,7 +141,7 @@ export async function punish(
   action: string,
   reason: string,
   amount: number,
-  message?: Message
+  message?: Message | null
 ): Promise<Message | null> {
   let messageSent;
   if (interaction.guild == null || interaction.channel == null) {
