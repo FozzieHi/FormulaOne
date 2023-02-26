@@ -11,6 +11,7 @@ import {
   TextInputBuilder,
   TextInputStyle,
 } from "discord.js";
+import db from "../../database/index.js";
 import { upperFirstChar } from "../../utility/StringUtil.js";
 import Try from "../../utility/Try.js";
 import { replyInteractionError } from "../../utility/Sender.js";
@@ -33,7 +34,8 @@ export class ShowReasonOptionInteraction extends InteractionHandler {
     }
     if (
       parsedData.action === "ban" &&
-      (await Try(interaction.guild.bans.fetch(parsedData.targetUserId)))
+      (await Try(interaction.guild.bans.fetch(parsedData.targetUserId))) &&
+      !(await db.banRepo?.anyBan(parsedData.targetUserId, interaction.guild.id))
     ) {
       await MutexManager.getUserMutex(parsedData.targetUserId).runExclusive(
         async () => {
