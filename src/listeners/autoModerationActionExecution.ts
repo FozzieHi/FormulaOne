@@ -19,7 +19,9 @@ export class AutoModerationActionExecutionListener extends Listener {
       action.channelId == null ||
       autoModerationRule == null ||
       action.action.type !== AutoModerationActionType.SendAlertMessage ||
-      action.action.metadata.channelId !== Constants.CHANNELS.AUTO_BOT_QUEUE
+      autoModerationRule.actions.every(
+        (act) => act.metadata.channelId !== Constants.CHANNELS.AUTO_BOT_QUEUE
+      )
     ) {
       return;
     }
