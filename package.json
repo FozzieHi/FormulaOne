@@ -24,7 +24,7 @@
     "@tsconfig/node18": "^1.0.1",
     "async-mutex": "^0.4.0",
     "bufferutil": "^4.0.7",
-    "discord.js": "^14.7.1",
+    "discord.js": "^14.8.0",
     "erlpack": "github:discord/erlpack",
     "mongodb": "^5.1.0",
     "re2": "^1.18.0",
