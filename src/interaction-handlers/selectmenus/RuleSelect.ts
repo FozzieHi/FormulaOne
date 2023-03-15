@@ -42,9 +42,7 @@ export class RuleSelect extends InteractionHandler {
         await replyInteractionError(interaction, "Member not found.");
         return;
       }
-      const reason = `Rule ${parsedData.ruleNumber + 1} - ${
-        Constants.RULES[parsedData.ruleNumber]
-      }`;
+      const reason = `${parsedData.rule} - ${Constants.RULES[parsedData.rule]}`;
       await banish(
         interaction,
         interaction.member as GuildMember,
@@ -85,9 +83,7 @@ export class RuleSelect extends InteractionHandler {
               `Channel is null - Channel ID: ${parsedData.channelId as Snowflake}`
             );
           }
-          const reason = `Rule ${parsedData.ruleNumber + 1} - ${
-            Constants.RULES[parsedData.ruleNumber]
-          }`;
+          const reason = `${parsedData.rule} - ${Constants.RULES[parsedData.rule]}`;
           const messageSent: Message = (await punish(
             interaction,
             interaction.member as GuildMember,
@@ -120,18 +116,17 @@ export class RuleSelect extends InteractionHandler {
     split.shift();
     const [commandName] = split;
     split.shift();
-    const interactionRuleNum = interaction.values.at(0);
-    if (interactionRuleNum == null) {
+    const rule = interaction.values.at(0);
+    if (rule == null) {
       return this.none();
     }
-    const ruleNumber = parseInt(interactionRuleNum, 10);
     if (commandName === "banish") {
       const [targetMemberId, targetRoleId] = split;
       return this.some({
         commandName,
         targetMemberId,
         targetRoleId,
-        ruleNumber,
+        rule,
         channelId: null,
         messageId: null,
         logMessageId: null,
@@ -147,7 +142,7 @@ export class RuleSelect extends InteractionHandler {
         messageId,
         logMessageId,
         amount: parseInt(amount, 10),
-        ruleNumber,
+        rule,
         targetRoleId: null,
       });
     }

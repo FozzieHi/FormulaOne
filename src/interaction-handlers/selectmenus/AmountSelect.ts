@@ -27,11 +27,11 @@ export class AmountSelect extends InteractionHandler {
       return;
     }
     const ruleOptions: Array<SelectMenuComponentOptionData> = [];
-    Constants.RULES.forEach((rule, i) => {
+    Object.entries(Constants.RULES).forEach(([name, rule]) => {
       ruleOptions.push({
-        label: `Rule ${i + 1}`,
+        label: name,
         description: rule,
-        value: i.toString(),
+        value: name,
       });
     });
     const ruleSelect: Array<Array<StringSelectMenuBuilder>> = [

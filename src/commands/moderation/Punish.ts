@@ -44,7 +44,7 @@ export class PunishCommand extends Command {
               {
                 name: "reason",
                 description: "The reason for the punish",
-                type: ApplicationCommandOptionType.Number,
+                type: ApplicationCommandOptionType.String,
                 choices: getRuleChoices(),
                 required: true,
               },
@@ -83,11 +83,11 @@ export class PunishCommand extends Command {
     const targetMember = interaction.options.getMember("member") as GuildMember;
     let reason: string | null;
     if (subcommand === "add") {
-      const ruleNumber = interaction.options.getNumber("reason");
-      if (ruleNumber == null) {
+      const rule = interaction.options.getString("reason");
+      if (rule == null) {
         return;
       }
-      reason = `Rule ${ruleNumber + 1} - ${Constants.RULES[ruleNumber]}`;
+      reason = `${rule} - ${Constants.RULES[rule]}`;
     } else if (subcommand === "remove") {
       reason = interaction.options.getString("reason");
     }
