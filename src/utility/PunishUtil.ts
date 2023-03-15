@@ -215,11 +215,7 @@ export async function punish(
       color = Constants.BAN_COLOR;
     }
 
-    if (
-      interaction.isStringSelectMenu() &&
-      (interaction.channel.id === Constants.CHANNELS.MOD_QUEUE ||
-        interaction.channel.id === Constants.CHANNELS.STEWARDS_QUEUE)
-    ) {
+    if (interaction.isStringSelectMenu()) {
       await updateInteraction(
         interaction,
         `Successfully punished member.`,
