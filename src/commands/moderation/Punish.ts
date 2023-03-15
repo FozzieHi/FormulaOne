@@ -6,13 +6,16 @@ import {
 } from "@sapphire/framework";
 import {
   ApplicationCommandOptionType,
+  ApplicationCommandType,
   ChatInputCommandInteraction,
+  ContextMenuCommandInteraction,
   GuildMember,
 } from "discord.js";
 import { getRuleChoices } from "../../utility/CommandUtil.js";
 import { Constants } from "../../utility/Constants.js";
 import { punish } from "../../utility/PunishUtil.js";
 import MutexManager from "../../managers/MutexManager.js";
+import { showAmountSelect } from "../../interaction-handlers/buttons/ShowAmountSelect.js";
 
 export class PunishCommand extends Command {
   public constructor(context: Command.Context) {
@@ -76,6 +79,17 @@ export class PunishCommand extends Command {
         idHints: ["985885134408536104"],
       }
     );
+
+    registry.registerContextMenuCommand(
+      {
+        name: "Punish (Dev)",
+        type: ApplicationCommandType.Message,
+      },
+      {
+        guildIds: Constants.GUILD_IDS,
+        idHints: ["1085683717802049556"],
+      }
+    );
   }
 
   public async chatInputRun(interaction: ChatInputCommandInteraction) {
@@ -104,5 +118,19 @@ export class PunishCommand extends Command {
         1
       );
     });
+  }
+
+  public async contextMenuRun(interaction: ContextMenuCommandInteraction) {
+    const message = interaction.options.getMessage("message");
+    if (interaction.channel == null || message == null) {
+      return;
+    }
+
+    await showAmountSelect(
+      interaction,
+      message.author.id,
+      interaction.channel.id,
+      message.id
+    );
   }
 }

@@ -55,12 +55,15 @@ export class RuleSelect extends InteractionHandler {
     } else if (parsedData.commandName === "punish") {
       await MutexManager.getUserMutex(parsedData.targetMemberId).runExclusive(
         async () => {
-          const logMessage = (await TryVal(
-            (interaction.channel as TextChannel).messages.fetch(
-              parsedData.logMessageId as Snowflake
-            )
-          )) as Message;
-          if (interaction.guild == null || logMessage == null) {
+          const logMessage =
+            parsedData.logMessageId != null
+              ? await TryVal(
+                  (interaction.channel as TextChannel).messages.fetch(
+                    parsedData.logMessageId
+                  )
+                )
+              : null;
+          if (interaction.guild == null) {
             return;
           }
           const targetMember = (await TryVal(
@@ -93,16 +96,18 @@ export class RuleSelect extends InteractionHandler {
             parsedData.amount as number,
             message
           )) as Message;
-          await archiveLog(
-            interaction.guild,
-            interaction.channel as TextChannel,
-            targetMember.id,
-            interaction.user,
-            logMessage,
-            "Punished"
-          );
-          await setTimeout(10000, "result");
-          await Try(messageSent.delete());
+          if (logMessage != null) {
+            await archiveLog(
+              interaction.guild,
+              interaction.channel as TextChannel,
+              targetMember.id,
+              interaction.user,
+              logMessage,
+              "Punished"
+            );
+            await setTimeout(10000, "result");
+            await Try(messageSent.delete());
+          }
         }
       );
     }
