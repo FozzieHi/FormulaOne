@@ -94,7 +94,8 @@ export class RuleSelect extends InteractionHandler {
             "add",
             reason,
             parsedData.amount as number,
-            message
+            message,
+            channel
           )) as Message;
           if (logMessage != null) {
             await archiveLog(

@@ -2,6 +2,7 @@ import {
   CommandInteraction,
   Guild,
   GuildMember,
+  GuildTextBasedChannel,
   Message,
   ModalSubmitInteraction,
   SelectMenuInteraction,
@@ -141,7 +142,8 @@ export async function punish(
   action: string,
   reason: string,
   amount: number,
-  message?: Message | null
+  message?: Message | null,
+  channel?: GuildTextBasedChannel
 ): Promise<Message | null> {
   let messageSent;
   if (interaction.guild == null || interaction.channel == null) {
@@ -225,14 +227,15 @@ export async function punish(
     } else {
       await replyInteraction(interaction, `Successfully punished member.`);
     }
-    messageSent = await send(
-      interaction.channel,
-      `Successfully ${punishmentDisplay.displayPastTense} ${boldify(
-        targetMember.user.tag
-      )}${
-        punishment.length != null ? ` for ${punishmentDisplay.displayCurrent}` : ""
-      } for the reason ${reason}.\n\nThey have ${currentPun} punishments in the last 30 days.`
-    );
+    const messageDescription = `Successfully ${
+      punishmentDisplay.displayPastTense
+    } ${boldify(targetMember.user.tag)}${
+      punishment.length != null ? ` for ${punishmentDisplay.displayCurrent}` : ""
+    } for the reason ${reason}.\n\nThey have ${currentPun} punishments in the last 30 days.`;
+    if (channel != null && interaction.channel.id !== channel.id) {
+      await send(channel, messageDescription);
+    }
+    messageSent = await send(interaction.channel, messageDescription);
 
     const punishData: Punishment = {
       date: Date.now(),
