@@ -49,10 +49,10 @@ export class ReportCommand extends Command {
         return;
       }
       if (
-        ViolationService.reports.every(
+        !ViolationService.reports.some(
           (report) =>
-            report.channelId !== interaction.channel?.id &&
-            report.messageId !== message.id
+            report.channelId === interaction.channel?.id &&
+            report.messageId === message.id
         )
       ) {
         const fieldsAndValues = [
