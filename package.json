@@ -10,7 +10,7 @@
     "prettier:check": "prettier --cache --check .",
     "eslint:write": "eslint . --fix",
     "eslint:check": "eslint .",
-    "build": "rm -r target/ && tsc",
+    "build": "rm -rf target/ && tsc",
     "start": "node target/index.js"
   },
   "author": "Fozzie#0001",
