@@ -66,7 +66,7 @@ export class NewsPublishInteraction extends InteractionHandler {
       return;
     }
 
-    await Try(message.crosspost(), "This message has already been crossposted");
+    await Try(message.crosspost(), "40033");
     await message.edit({
       content: message.content,
       components: [],
