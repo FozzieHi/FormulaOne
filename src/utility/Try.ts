@@ -1,4 +1,7 @@
-export default async <T>(promise: Promise<T>, filterMsg?: string): Promise<boolean> => {
+export default async <Type>(
+  promise: Promise<Type>,
+  filterMsg?: string
+): Promise<boolean> => {
   try {
     await promise;
     return true;
