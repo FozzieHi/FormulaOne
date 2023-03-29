@@ -7,6 +7,7 @@ import { ButtonInteraction, GuildMember, Snowflake } from "discord.js";
 import { replyInteraction, replyInteractionError } from "../../utility/Sender.js";
 import { Constants } from "../../utility/Constants.js";
 import { isModerator } from "../../services/ModerationService.js";
+import Try from "../../utility/Try.js";
 
 export class NewsPublishInteraction extends InteractionHandler {
   public constructor(context: PieceContext) {
@@ -65,7 +66,7 @@ export class NewsPublishInteraction extends InteractionHandler {
       return;
     }
 
-    await message.crosspost();
+    await Try(message.crosspost(), "This message has already been crossposted");
     await message.edit({
       content: message.content,
       components: [],
