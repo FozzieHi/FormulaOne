@@ -122,6 +122,9 @@ async function replyInteractionHandler(
   if (newEmbedOptions != null) {
     newBaseMessageOptions.embeds = [new Embed(newEmbedOptions)];
   }
+  if (interaction.deferred) {
+    return interaction.followUp(newBaseMessageOptions);
+  }
   return interaction.reply(newBaseMessageOptions);
 }
 
@@ -231,53 +234,5 @@ export async function updateInteraction(
       : undefined,
     embedOptions,
     messageOptions
-  );
-}
-
-async function followUpInteractionHandler(
-  interaction: ModalSubmitInteraction,
-  description: string | undefined,
-  embedOptions: APIEmbed | null = {},
-  messageOptions: InteractionReplyOptions = {}
-) {
-  const newEmbedOptions = embedOptions;
-  const newBaseMessageOptions = messageOptions;
-  if (newEmbedOptions != null && description != null) {
-    newEmbedOptions.description = description;
-  }
-  if (newEmbedOptions != null) {
-    newBaseMessageOptions.embeds = [new Embed(newEmbedOptions)];
-  }
-  return interaction.followUp(newBaseMessageOptions);
-}
-
-export async function followUpInteraction(
-  interaction: ModalSubmitInteraction,
-  description: string | undefined,
-  embedOptions: APIEmbed | null = {},
-  messageOptions: InteractionReplyOptions = {}
-) {
-  return followUpInteractionHandler(
-    interaction,
-    description != null
-      ? `${boldify(interaction.user.tag)}, ${description}`
-      : undefined,
-    embedOptions,
-    messageOptions
-  );
-}
-
-export async function followUpInteractionError(
-  interaction: ModalSubmitInteraction,
-  description: string,
-  embedOptions: APIEmbed = {}
-) {
-  const newEmbedOptions = embedOptions;
-  newEmbedOptions.color = Constants.ERROR_COLOR;
-  return followUpInteractionHandler(
-    interaction,
-    `${boldify(interaction.user.tag)}, ${description}`,
-    newEmbedOptions,
-    { ephemeral: true }
   );
 }

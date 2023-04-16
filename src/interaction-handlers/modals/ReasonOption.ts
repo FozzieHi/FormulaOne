@@ -15,11 +15,11 @@ import {
 } from "discord.js";
 import { banish } from "../../utility/BanishUtil.js";
 import { ban } from "../../utility/BanUtil.js";
-import { followUpInteraction, followUpInteractionError } from "../../utility/Sender.js";
 import MutexManager from "../../managers/MutexManager.js";
 import { Constants } from "../../utility/Constants.js";
 import TryVal from "../../utility/TryVal.js";
 import { archiveLog } from "../../services/BotQueueService.js";
+import { replyInteraction, replyInteractionError } from "../../utility/Sender.js";
 
 export class ReasonOption extends InteractionHandler {
   public constructor(context: PieceContext) {
@@ -83,7 +83,7 @@ export class ReasonOption extends InteractionHandler {
           channel
         );
         if (!result) {
-          await followUpInteractionError(interaction, "Error banning user.");
+          await replyInteractionError(interaction, "Error banning user.");
           return;
         }
         await archiveLog(
@@ -94,7 +94,7 @@ export class ReasonOption extends InteractionHandler {
           logMessage,
           "Banned"
         );
-        await followUpInteraction(interaction, "Successfully banned user.", {
+        await replyInteraction(interaction, "Successfully banned user.", {
           color: Constants.UNMUTE_COLOR,
         });
       });
