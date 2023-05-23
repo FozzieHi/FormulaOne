@@ -28,7 +28,7 @@
     "erlpack": "github:discord/erlpack",
     "mongodb": "^5.5.0",
     "re2": "^1.18.0",
-    "tslib": "^2.5.1",
+    "tslib": "^2.5.2",
     "utf-8-validate": "^6.0.3"
   },
   "devDependencies": {
