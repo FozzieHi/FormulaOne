@@ -53,23 +53,25 @@ export class Constants {
   static readonly GUILD_IDS: Array<Snowflake> = ["177387572505346048"];
 
   static readonly RULES: { [key: string]: string } = {
-    "Rule 1":
-      "Adhere to the r/formula1 server rules and Discord community guidelines and Terms of Service",
+    "Rule 1": "Adhere to the Discord community guidelines and Terms of Service",
     "Rule 2": "Circumventing moderation action is prohibited",
     "Rule 3": "Illegal, harmful and NSFW/NSFL content is prohibited",
+    "Rule 3.1": "Do not ask for links or references to illegal content",
+    "Rule 3.2": "Do not provide links, hints, or suggestions to illegal content",
     "Rule 4": "Do not send low-quality messages",
     "Rule 5": "Be respectful and act in good faith",
-    "Rule 5.1": "Do not predict, wish, suggest any misfortune",
+    "Rule 5.1": "Do not predict, wish, or suggest any misfortune to competitors",
     "Rule 5.2": "Do not excessively rant about a session",
-    "Rule 5.3": "Do not harass, bait, flame",
+    "Rule 5.3": "Do not harass, bait, or flame any individuals or communities",
     "Rule 5.4": "Do not spread misinformation or sensationalism",
-    "Rule 5.5": "Do not bring / take drama or toxicity",
+    "Rule 5.5": "Do not bring in drama or toxicity from other servers or platforms",
     "Rule 6": "Do not enforce the rules on behalf of a moderator",
     "Rule 7": "No self-promotion",
     "Rule 8": "Agree to disagree",
-    "Rule 9": "Usernames",
+    "Rule 9": "Usernames must be taggable and appropriate",
     "Rule 10": "Use relevant channels and read the channel topic and pinned messages",
     "Rule 11": "Keep all discussions in English",
+    "Rule 12": "Everyone is welcome",
   };
 
   static readonly PUNISHMENTS: Array<PunishmentLevel> = [
