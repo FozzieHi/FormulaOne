@@ -45,7 +45,6 @@ export class RuleSelect extends InteractionHandler {
       const reason = `${parsedData.rule} - ${Constants.RULES[parsedData.rule]}`;
       await banish(
         interaction,
-        interaction.member as GuildMember,
         targetMember,
         parsedData.targetRoleId as Snowflake,
         "add",

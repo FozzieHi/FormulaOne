@@ -1,4 +1,4 @@
-import { Guild, GuildTextBasedChannel, User } from "discord.js";
+import { Guild, GuildMember, GuildTextBasedChannel, User } from "discord.js";
 import db from "../database/index.js";
 import { dm } from "./Sender.js";
 import { PushUpdate } from "../database/updates/PushUpdate.js";
@@ -8,14 +8,14 @@ import { Constants } from "./Constants.js";
 export async function ban(
   guild: Guild,
   targetUser: User,
-  moderator: User,
+  moderator: GuildMember,
   reason: string,
   originChannel: GuildTextBasedChannel,
   targetChannel?: GuildTextBasedChannel
 ): Promise<boolean> {
   if (
     reason == null ||
-    (await getPermLevel(guild, moderator)) <
+    (await getPermLevel(guild, moderator.user)) <
       (originChannel.id === Constants.CHANNELS.MOD_QUEUE ? 1 : 2) ||
     (await isModerator(guild, targetUser))
   ) {
@@ -31,7 +31,7 @@ export async function ban(
     guild.members.cache.has(targetUser.id)
   );
   await guild.members.ban(targetUser, {
-    reason: `(${moderator.tag}) ${reason}`,
+    reason: `(${moderator.user.tag}) ${reason}`,
   });
   await db.userRepo?.upsertUser(targetUser.id, guild.id, {
     $inc: { bans: 1 },
@@ -43,7 +43,7 @@ export async function ban(
       date: Date.now(),
       escalation: "Ban",
       reason,
-      mod: moderator.tag,
+      mod: moderator.user.tag,
       channelId: targetChannel?.id ?? originChannel.id,
     })
   );

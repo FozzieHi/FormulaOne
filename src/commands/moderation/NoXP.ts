@@ -93,7 +93,11 @@ export class NoXP extends Command {
     }
     await MutexManager.getUserMutex(targetMember.id).runExclusive(async () => {
       let reason;
-      if (interaction.guild == null || interaction.channel == null) {
+      if (
+        interaction.guild == null ||
+        interaction.channel == null ||
+        interaction.member == null
+      ) {
         return;
       }
       const role = await TryVal(interaction.guild.roles.fetch(Constants.ROLES.NOXP));
@@ -127,7 +131,7 @@ export class NoXP extends Command {
         );
         await modLog(
           interaction.guild,
-          interaction.user,
+          interaction.member as GuildMember,
           [
             "Action",
             "Added NoXP",
@@ -167,7 +171,7 @@ export class NoXP extends Command {
         );
         await modLog(
           interaction.guild,
-          interaction.user,
+          interaction.member as GuildMember,
           [
             "Action",
             "Removed NoXP",

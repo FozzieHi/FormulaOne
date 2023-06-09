@@ -22,7 +22,6 @@ import { boldify } from "./StringUtil.js";
 
 export async function banish(
   interaction: CommandInteraction | SelectMenuInteraction | ModalSubmitInteraction,
-  moderator: GuildMember,
   targetMember: GuildMember,
   targetRoleId: Snowflake,
   action: string,
@@ -30,7 +29,11 @@ export async function banish(
   reason: string
 ) {
   await MutexManager.getUserMutex(targetMember.id).runExclusive(async () => {
-    if (interaction.guild == null || interaction.channel == null) {
+    if (
+      interaction.guild == null ||
+      interaction.channel == null ||
+      interaction.member == null
+    ) {
       return;
     }
 
@@ -45,7 +48,7 @@ export async function banish(
 
     if (
       (await isModerator(interaction.guild, targetMember.user)) ||
-      ((await getPermLevel(interaction.guild, moderator.user)) === 0 &&
+      ((await getPermLevel(interaction.guild, interaction.user)) === 0 &&
         targetMember.roles.cache.has(Constants.ROLES.HELPERS))
     ) {
       await replyInteractionError(
@@ -110,7 +113,7 @@ export async function banish(
       );
       await modLog(
         interaction.guild,
-        interaction.user,
+        interaction.member as GuildMember,
         [
           "Action",
           logAction,
@@ -162,7 +165,7 @@ export async function banish(
       }
       await modLog(
         interaction.guild,
-        interaction.user,
+        interaction.member as GuildMember,
         [
           "Action",
           logAction,

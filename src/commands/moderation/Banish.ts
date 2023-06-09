@@ -135,15 +135,7 @@ export class BanishCommand extends Command {
       return;
     }
 
-    await banish(
-      interaction,
-      interaction.member as GuildMember,
-      member,
-      roleId,
-      subcommand,
-      "command",
-      reason
-    );
+    await banish(interaction, member, roleId, subcommand, "command", reason);
   }
 
   public async contextMenuRun(interaction: ContextMenuCommandInteraction) {

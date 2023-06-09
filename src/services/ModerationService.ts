@@ -17,7 +17,7 @@ import { Constants, ModerationQueueButtons } from "../utility/Constants.js";
 import { send } from "../utility/Sender.js";
 import TryVal from "../utility/TryVal.js";
 import { isEven } from "../utility/NumberUtil.js";
-import { boldify } from "../utility/StringUtil.js";
+import { boldify, getDisplayTag } from "../utility/StringUtil.js";
 
 export async function getPermLevel(guild: Guild, user: User) {
   const member = (await TryVal(guild.members.fetch(user))) as GuildMember;
@@ -96,7 +96,7 @@ function getModerationQueueButtons(
 
 export async function genericLog(
   guild: Guild,
-  user: User,
+  member: GuildMember,
   fieldsAndValues: Array<string>,
   color: number
 ) {
@@ -109,11 +109,11 @@ export async function genericLog(
   const messageOptions: BaseMessageOptions = {};
   const embedOptions: APIEmbed = {
     author: {
-      name: user.tag,
-      icon_url: user.displayAvatarURL(),
+      name: getDisplayTag(member),
+      icon_url: member.user.displayAvatarURL(),
     },
     footer: {
-      text: `User ID: ${user.id}`,
+      text: `User ID: ${member.user.id}`,
     },
     color,
     timestamp: new Date().toISOString(),
@@ -122,7 +122,7 @@ export async function genericLog(
   const buttons = [
     [
       new ButtonBuilder({
-        customId: `userid-${user.id}`,
+        customId: `userid-${member.user.id}`,
         label: `User ID`,
         style: ButtonStyle.Secondary,
       }),
@@ -158,7 +158,7 @@ export async function genericLog(
 
 export async function modLog(
   guild: Guild,
-  moderator: User | null,
+  moderator: GuildMember | null,
   fieldsAndValues: Array<string>,
   color: number,
   target?: User
@@ -177,7 +177,7 @@ export async function modLog(
 
   if (moderator != null) {
     embedOptions.author = {
-      name: moderator.tag,
+      name: getDisplayTag(moderator),
       icon_url: moderator.displayAvatarURL(),
     };
   }

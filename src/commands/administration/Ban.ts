@@ -7,6 +7,7 @@ import {
 import {
   ApplicationCommandOptionType,
   ChatInputCommandInteraction,
+  GuildMember,
   GuildTextBasedChannel,
 } from "discord.js";
 import {
@@ -93,7 +94,11 @@ export class BanCommand extends Command {
       return;
     }
     await MutexManager.getUserMutex(targetUser.id).runExclusive(async () => {
-      if (interaction.channel == null || interaction.guild == null) {
+      if (
+        interaction.channel == null ||
+        interaction.guild == null ||
+        interaction.member == null
+      ) {
         return;
       }
       let reason;
@@ -107,7 +112,7 @@ export class BanCommand extends Command {
         const result = await ban(
           interaction.guild,
           targetUser,
-          interaction.user,
+          interaction.member as GuildMember,
           reason,
           interaction.channel as GuildTextBasedChannel
         );
@@ -140,7 +145,7 @@ export class BanCommand extends Command {
         );
         await modLog(
           interaction.guild,
-          interaction.user,
+          interaction.member as GuildMember,
           [
             "Action",
             "Unban",

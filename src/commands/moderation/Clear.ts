@@ -7,6 +7,7 @@ import {
 import {
   ApplicationCommandOptionType,
   ChatInputCommandInteraction,
+  GuildMember,
   GuildTextBasedChannel,
 } from "discord.js";
 import { replyInteractionError, replyInteractionPublic } from "../../utility/Sender.js";
@@ -55,6 +56,7 @@ export class ClearCommand extends Command {
         amount == null ||
         interaction.channel == null ||
         interaction.guild == null ||
+        interaction.member == null ||
         amount < 1 ||
         amount > 200
       ) {
@@ -75,7 +77,7 @@ export class ClearCommand extends Command {
       );
       await modLog(
         interaction.guild,
-        interaction.user,
+        interaction.member as GuildMember,
         [
           "Action",
           "Clear",

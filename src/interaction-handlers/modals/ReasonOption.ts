@@ -32,7 +32,7 @@ export class ReasonOption extends InteractionHandler {
     interaction: ModalSubmitInteraction,
     parsedData: InteractionHandler.ParseResult<this>
   ) {
-    if (interaction.guild == null) {
+    if (interaction.guild == null || interaction.member == null) {
       return;
     }
     if (parsedData.commandName === "banish") {
@@ -44,7 +44,6 @@ export class ReasonOption extends InteractionHandler {
       }
       await banish(
         interaction,
-        interaction.member as GuildMember,
         targetMember,
         parsedData.targetRoleId as Snowflake,
         parsedData.action as string,
@@ -77,7 +76,7 @@ export class ReasonOption extends InteractionHandler {
         const result = await ban(
           interaction.guild as Guild,
           targetUser,
-          interaction.user,
+          interaction.member as GuildMember,
           parsedData.reason,
           interaction.channel as GuildTextBasedChannel,
           channel

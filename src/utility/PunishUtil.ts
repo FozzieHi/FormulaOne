@@ -272,7 +272,7 @@ export async function punish(
     }
     await modLog(
       interaction.guild,
-      moderator.user,
+      moderator,
       modLogFieldAndValues,
       color,
       targetMember.user
@@ -299,7 +299,7 @@ export async function punish(
     await decreasePunishment(targetMember.id, interaction.guild.id);
     await modLog(
       interaction.guild,
-      moderator.user,
+      moderator,
       [
         "Action",
         "Unpunish",

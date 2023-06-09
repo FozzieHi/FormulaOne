@@ -8,6 +8,7 @@ import {
   ApplicationCommandOptionType,
   ChannelType,
   ChatInputCommandInteraction,
+  GuildMember,
 } from "discord.js";
 import db from "../../database/index.js";
 import { replyInteractionError, replyInteractionPublic } from "../../utility/Sender.js";
@@ -59,6 +60,7 @@ export class FilterCommand extends Command {
     await MutexManager.getGuildMutex().runExclusive(async () => {
       if (
         interaction.guild == null ||
+        interaction.member == null ||
         interaction.channel == null ||
         interaction.channel.type !== ChannelType.GuildText
       ) {
@@ -87,7 +89,7 @@ export class FilterCommand extends Command {
         );
         await modLog(
           interaction.guild,
-          interaction.user,
+          interaction.member as GuildMember,
           [
             "Action",
             "Toggled One Word Filter",
@@ -122,7 +124,7 @@ export class FilterCommand extends Command {
         );
         await modLog(
           interaction.guild,
-          interaction.user,
+          interaction.member as GuildMember,
           [
             "Action",
             "Toggled One Word Filter",

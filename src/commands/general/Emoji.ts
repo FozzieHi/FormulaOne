@@ -2,6 +2,7 @@ import { ApplicationCommandRegistry, Awaitable, Command } from "@sapphire/framew
 import {
   ApplicationCommandOptionType,
   ChatInputCommandInteraction,
+  GuildMember,
   TextBasedChannel,
 } from "discord.js";
 import {
@@ -53,7 +54,12 @@ export class EmojiCommand extends Command {
   public async chatInputRun(interaction: ChatInputCommandInteraction) {
     const name = interaction.options.getString("name")?.replaceAll(":", "");
     const attachment = interaction.options.getAttachment("attachment");
-    if (interaction.guild == null || name == null || attachment == null) {
+    if (
+      interaction.guild == null ||
+      interaction.member == null ||
+      name == null ||
+      attachment == null
+    ) {
       return;
     }
     if (attachment.height == null || attachment.width == null) {
@@ -95,7 +101,7 @@ export class EmojiCommand extends Command {
 
     await genericLog(
       interaction.guild,
-      interaction.user,
+      interaction.member as GuildMember,
       [
         "Action",
         `Proposed an emote [Jump to message](${sentMessage.url})`,

@@ -7,6 +7,7 @@ import {
 import {
   ApplicationCommandOptionType,
   ChatInputCommandInteraction,
+  GuildMember,
   TextChannel,
 } from "discord.js";
 import { replyInteractionError, replyInteractionPublic } from "../../utility/Sender.js";
@@ -63,7 +64,11 @@ export class SlowmodeCommand extends Command {
   public async chatInputRun(interaction: ChatInputCommandInteraction) {
     const subcommand = interaction.options.getSubcommand();
     await MutexManager.getGuildMutex().runExclusive(async () => {
-      if (interaction.guild == null || interaction.channel == null) {
+      if (
+        interaction.guild == null ||
+        interaction.channel == null ||
+        interaction.member == null
+      ) {
         return;
       }
       if (subcommand === "set") {
@@ -82,7 +87,7 @@ export class SlowmodeCommand extends Command {
         );
         await modLog(
           interaction.guild,
-          interaction.user,
+          interaction.member as GuildMember,
           [
             "Action",
             "Changed Slowmode",
@@ -114,7 +119,7 @@ export class SlowmodeCommand extends Command {
         );
         await modLog(
           interaction.guild,
-          interaction.user,
+          interaction.member as GuildMember,
           [
             "Action",
             "Changed Slowmode",

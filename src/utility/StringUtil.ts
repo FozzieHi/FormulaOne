@@ -1,3 +1,4 @@
+import { GuildMember } from "discord.js";
 import { Constants } from "./Constants.js";
 
 export function boldify(str: string) {
@@ -29,4 +30,10 @@ export function removeClickableLinks(str: string) {
     });
   }
   return returnVal;
+}
+
+export function getDisplayTag(member: GuildMember) {
+  return `${member.displayName} (${
+    member.user.discriminator === "0" ? member.user.username : member.user.tag
+  })`;
 }

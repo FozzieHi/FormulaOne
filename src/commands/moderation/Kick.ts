@@ -62,7 +62,12 @@ export class KickCommand extends Command {
       return;
     }
     await MutexManager.getUserMutex(targetMember.id).runExclusive(async () => {
-      if (reason == null || interaction.channel == null || interaction.guild == null) {
+      if (
+        reason == null ||
+        interaction.channel == null ||
+        interaction.guild == null ||
+        interaction.member == null
+      ) {
         return;
       }
 
@@ -92,7 +97,7 @@ export class KickCommand extends Command {
       );
       await modLog(
         interaction.guild,
-        interaction.user,
+        interaction.member as GuildMember,
         [
           "Action",
           "Kick",
