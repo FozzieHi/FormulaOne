@@ -17,6 +17,7 @@ import { Constants } from "../../utility/Constants.js";
 import { getDBUser } from "../../utility/DatabaseUtil.js";
 import db from "../../database/index.js";
 import TryVal from "../../utility/TryVal.js";
+import { getDisplayTag, getUserTag } from "../../utility/StringUtil.js";
 
 export class UserInfoCommand extends Command {
   public constructor(context: Command.Context) {
@@ -88,7 +89,7 @@ export class UserInfoCommand extends Command {
           (await db.muteRepo?.anyMute(user.id, interaction.guild.id)) ? "Yes" : "No",
         ],
         {
-          author: { name: user.tag, icon_url: user.displayAvatarURL() },
+          author: { name: getUserTag(user), icon_url: user.displayAvatarURL() },
           footer: { text: `User ID: ${user.id}` },
         },
         {
@@ -121,7 +122,7 @@ export class UserInfoCommand extends Command {
             : "No",
         ],
         {
-          author: { name: user.tag, icon_url: user.displayAvatarURL() },
+          author: { name: getDisplayTag(member), icon_url: user.displayAvatarURL() },
           footer: { text: `User ID: ${user.id}` },
         },
         {

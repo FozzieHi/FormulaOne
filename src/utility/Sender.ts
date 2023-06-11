@@ -18,7 +18,7 @@ import { Embed } from "../structures/Embed.js";
 import { Constants } from "./Constants.js";
 import Try from "./Try.js";
 import { isEven } from "./NumberUtil.js";
-import { boldify } from "./StringUtil.js";
+import { boldify, getUserTag } from "./StringUtil.js";
 
 export function getFields(fieldsAndValues: Array<string>): Array<APIEmbedField> {
   const fields = [];
@@ -87,22 +87,6 @@ export async function dm(
   return result;
 }
 
-export async function replyMsg(
-  message: Message,
-  description: string
-): Promise<Message> {
-  return send(message.channel, `${boldify(message.author.tag)}, ${description}`);
-}
-
-export async function replyMsgError(
-  message: Message,
-  description: string
-): Promise<Message> {
-  return send(message.channel, `${boldify(message.author.tag)}, ${description}`, {
-    color: Constants.ERROR_COLOR,
-  });
-}
-
 async function replyInteractionHandler(
   interaction:
     | CommandInteraction
@@ -144,7 +128,7 @@ export async function replyInteraction(
   return replyInteractionHandler(
     interaction,
     description != null
-      ? `${boldify(interaction.user.tag)}, ${description}`
+      ? `${boldify(getUserTag(interaction.user))}, ${description}`
       : undefined,
     embedOptions,
     newBaseMessageOptions
@@ -163,7 +147,7 @@ export async function replyInteractionPublic(
 ) {
   return replyInteractionHandler(
     interaction,
-    `${boldify(interaction.user.tag)}, ${description}`,
+    `${boldify(getUserTag(interaction.user))}, ${description}`,
     embedOptions
   );
 }
@@ -198,7 +182,7 @@ export async function replyInteractionError(
   newEmbedOptions.color = Constants.ERROR_COLOR;
   return replyInteractionHandler(
     interaction,
-    `${boldify(interaction.user.tag)}, ${description}`,
+    `${boldify(getUserTag(interaction.user))}, ${description}`,
     newEmbedOptions,
     { ephemeral: true }
   );
@@ -230,7 +214,7 @@ export async function updateInteraction(
   return updateInteractionHandler(
     interaction,
     description != null
-      ? `${boldify(interaction.user.tag)}, ${description}`
+      ? `${boldify(getUserTag(interaction.user))}, ${description}`
       : undefined,
     embedOptions,
     messageOptions

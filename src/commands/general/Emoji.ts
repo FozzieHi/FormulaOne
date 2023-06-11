@@ -13,6 +13,7 @@ import {
 import { Constants } from "../../utility/Constants.js";
 import { genericLog } from "../../services/ModerationService.js";
 import TryVal from "../../utility/TryVal.js";
+import { getDisplayTag } from "../../utility/StringUtil.js";
 
 export class EmojiCommand extends Command {
   public constructor(context: Command.Context) {
@@ -79,7 +80,7 @@ export class EmojiCommand extends Command {
     const options = {
       timestamp: new Date().toISOString(),
       author: {
-        name: interaction.user.tag,
+        name: getDisplayTag(interaction.member as GuildMember),
         icon_url: interaction.user.displayAvatarURL(),
       },
       image: {

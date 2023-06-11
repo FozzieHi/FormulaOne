@@ -17,7 +17,7 @@ import { Constants, ModerationQueueButtons } from "../utility/Constants.js";
 import { send } from "../utility/Sender.js";
 import TryVal from "../utility/TryVal.js";
 import { isEven } from "../utility/NumberUtil.js";
-import { boldify, getDisplayTag } from "../utility/StringUtil.js";
+import { boldify, getDisplayTag, getUserTag } from "../utility/StringUtil.js";
 
 export async function getPermLevel(guild: Guild, user: User) {
   const member = (await TryVal(guild.members.fetch(user))) as GuildMember;
@@ -223,7 +223,7 @@ export async function modLog(
 
 export async function modQueue(
   guild: Guild,
-  target: User,
+  targetUser: User,
   targetChannelId: Snowflake,
   targetMessageId: Snowflake | null,
   fieldsAndValues: Array<string>,
@@ -243,7 +243,7 @@ export async function modQueue(
   }
   const embedOptions: APIEmbed = {
     footer: {
-      text: `User ID: ${target.id}${
+      text: `User ID: ${targetUser.id}${
         targetMessageId != null ? ` - Message ID: ${targetMessageId}` : ""
       }`,
     },
@@ -252,14 +252,14 @@ export async function modQueue(
   };
 
   embedOptions.author = {
-    name: target.tag,
-    icon_url: target.displayAvatarURL(),
+    name: getUserTag(targetUser),
+    icon_url: targetUser.displayAvatarURL(),
   };
 
   const msgButtons = [
     [
       new ButtonBuilder({
-        customId: `userid-${target.id}`,
+        customId: `userid-${targetUser.id}`,
         label: `User ID`,
         style: ButtonStyle.Secondary,
       }),
@@ -267,7 +267,7 @@ export async function modQueue(
   ];
   getModerationQueueButtons(
     buttons,
-    target.id,
+    targetUser.id,
     targetChannelId,
     targetMessageId
   ).forEach((button) => msgButtons.at(0)?.push(button));
@@ -300,7 +300,7 @@ export async function modQueue(
 
 export async function escalate(
   guild: Guild,
-  moderator: User,
+  moderator: GuildMember,
   target: User,
   targetChannelId: Snowflake,
   targetMessageId: Snowflake,
@@ -317,10 +317,10 @@ export async function escalate(
 
   const messageOptions: BaseMessageOptions = {};
   messageOptions.content = `${
-    (await getPermLevel(guild, moderator)) > 1
+    (await getPermLevel(guild, moderator.user)) > 1
       ? ""
       : `<@&${Constants.ROLES.STEWARDS}>, `
-  }Escalated by ${boldify(moderator.tag)}`;
+  }Escalated by ${boldify(getDisplayTag(moderator))}`;
 
   const msgButtons = [
     [

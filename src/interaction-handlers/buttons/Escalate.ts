@@ -4,7 +4,13 @@ import {
   InteractionHandlerTypes,
   PieceContext,
 } from "@sapphire/framework";
-import { ButtonInteraction, Guild, TextChannel, APIEmbed } from "discord.js";
+import {
+  ButtonInteraction,
+  Guild,
+  TextChannel,
+  APIEmbed,
+  GuildMember,
+} from "discord.js";
 import { escalate } from "../../services/ModerationService.js";
 import TryVal from "../../utility/TryVal.js";
 import { Constants, ModerationQueueButtons } from "../../utility/Constants.js";
@@ -24,6 +30,9 @@ export class Escalate extends InteractionHandler {
     parsedData: InteractionHandler.ParseResult<this>
   ) {
     await MutexManager.getUserMutex(parsedData.targetUserId).runExclusive(async () => {
+      if (interaction.member == null) {
+        return;
+      }
       const logMessage = await TryVal(
         (interaction.channel as TextChannel).messages.fetch(interaction.message.id)
       );
@@ -42,7 +51,7 @@ export class Escalate extends InteractionHandler {
       }
       const escalationSent = await escalate(
         interaction.guild as Guild,
-        interaction.user,
+        interaction.member as GuildMember,
         targetUser,
         parsedData.targetChannelId,
         parsedData.targetMessageId,
@@ -61,7 +70,7 @@ export class Escalate extends InteractionHandler {
         interaction.guild as Guild,
         interaction.channel as TextChannel,
         parsedData.targetUserId,
-        interaction.user,
+        interaction.member as GuildMember,
         logMessage,
         "Escalated"
       );

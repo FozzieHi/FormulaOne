@@ -89,7 +89,7 @@ export class ReasonOption extends InteractionHandler {
           interaction.guild as Guild,
           interaction.channel as TextChannel,
           targetUser.id,
-          interaction.user,
+          interaction.member as GuildMember,
           logMessage,
           "Banned"
         );

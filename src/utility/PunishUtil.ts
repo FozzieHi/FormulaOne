@@ -25,7 +25,7 @@ import { millisecondsToUnits } from "./NumberUtil.js";
 import { PopUpdate } from "../database/updates/PopUpdate.js";
 import { Punishment } from "../database/models/User.js";
 import { Pun } from "../database/models/Pun.js";
-import { boldify, maxLength } from "./StringUtil.js";
+import { boldify, getDisplayTag, getUserTag, maxLength } from "./StringUtil.js";
 import TryVal from "./TryVal.js";
 
 async function increasePunishment(
@@ -77,7 +77,7 @@ async function mute(
 
   await targetMember.disableCommunicationUntil(
     Date.now() + length,
-    `(${moderator.user.tag}) ${displayLog} - ${reason}`
+    `(${getDisplayTag(moderator)}) ${displayLog} - ${reason}`
   );
   await targetMember.roles.add(role);
   await db.muteRepo?.insertMute(targetMember.id, guild.id, length);
@@ -100,7 +100,7 @@ async function ban(
   }
 
   await guild.members.ban(targetMember.user, {
-    reason: `(${moderator.user.tag}) ${displayLog} - ${reason}`,
+    reason: `(${getDisplayTag(moderator)}) ${displayLog} - ${reason}`,
   });
   await db.banRepo?.insertBan(targetMember.id, guild.id, length);
 }
@@ -160,7 +160,7 @@ export async function punish(
     if (currentPun > Constants.PUNISHMENTS.length - 1) {
       await replyInteractionError(
         interaction,
-        `${boldify(targetMember.user.tag)} has exceeded ${
+        `${boldify(getDisplayTag(targetMember))} has exceeded ${
           Constants.PUNISHMENTS.length
         } punishments in the last 30 days, escalate their punishment manually.`
       );
@@ -229,7 +229,7 @@ export async function punish(
     }
     const messageDescription = `Successfully ${
       punishmentDisplay.displayPastTense
-    } ${boldify(targetMember.user.tag)}${
+    } ${boldify(getDisplayTag(targetMember))}${
       punishment.length != null ? ` for ${punishmentDisplay.displayCurrent}` : ""
     } for the reason ${reason}.\n\nThey have ${currentPun} punishments in the last 30 days.`;
     if (channel != null && interaction.channel.id !== channel.id) {
@@ -243,7 +243,7 @@ export async function punish(
         escalations > 1 ? ` (${escalations} punishments)` : ""
       }`,
       reason,
-      mod: moderator.user.tag,
+      mod: getUserTag(moderator.user),
       channelId: message?.channel.id ?? interaction.channel.id,
     };
     if (message != null) {
@@ -261,7 +261,7 @@ export async function punish(
         escalations > 1 ? ` (${escalations} punishments)` : ""
       }`,
       "Member",
-      `${targetMember.user.tag} (${targetMember.id})`,
+      `${getDisplayTag(targetMember)} (${targetMember.id})`,
       "Reason",
       reason,
       "Channel",
@@ -286,7 +286,7 @@ export async function punish(
       await targetMember.roles.remove(role);
       await targetMember.disableCommunicationUntil(
         null,
-        `Unpunished by ${moderator.user.tag}`
+        `Unpunished by ${getDisplayTag(moderator)}`
       );
       await db.muteRepo?.deleteMute(targetMember.id, interaction.guild.id);
     }
@@ -304,7 +304,7 @@ export async function punish(
         "Action",
         "Unpunish",
         "Member",
-        `${targetMember.user.tag} (${targetMember.id})`,
+        `${getDisplayTag(targetMember)} (${targetMember.id})`,
         "Reason",
         reason,
         "Channel",
@@ -321,7 +321,7 @@ export async function punish(
 
     await replyInteractionPublic(
       interaction,
-      `Successfully unpunished ${boldify(targetMember.user.tag)}.`
+      `Successfully unpunished ${boldify(getDisplayTag(targetMember))}.`
     );
   }
   if (messageSent != null) {

@@ -62,7 +62,7 @@ export class RuleSelect extends InteractionHandler {
                   )
                 )
               : null;
-          if (interaction.guild == null) {
+          if (interaction.guild == null || interaction.member == null) {
             return;
           }
           const targetMember = (await TryVal(
@@ -101,7 +101,7 @@ export class RuleSelect extends InteractionHandler {
               interaction.guild,
               interaction.channel as TextChannel,
               targetMember.id,
-              interaction.user,
+              interaction.member as GuildMember,
               logMessage,
               "Punished"
             );

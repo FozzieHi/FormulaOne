@@ -15,6 +15,7 @@ import { getHistory } from "../../utility/PunishmentUtil.js";
 import { Embed } from "../../structures/Embed.js";
 import { getFields } from "../../utility/Sender.js";
 import TryVal from "../../utility/TryVal.js";
+import { getUserTag } from "../../utility/StringUtil.js";
 
 export class CheckPunishmentsPagesInteraction extends InteractionHandler {
   public constructor(context: PieceContext) {
@@ -48,11 +49,13 @@ export class CheckPunishmentsPagesInteraction extends InteractionHandler {
       return;
     }
     const embedOptions: APIEmbed = {
-      title: `${user.tag}'s Punishment History (${newPage}/${parsedData.maxPages})`,
+      title: `${getUserTag(user)}'s Punishment History (${newPage}/${
+        parsedData.maxPages
+      })`,
       color: embed.color ?? undefined,
       fields: getFields(fieldsAndValues),
       footer: {
-        text: `${user.tag} has ${parsedData.currentPun} punishment${
+        text: `${getUserTag(user)} has ${parsedData.currentPun} punishment${
           parsedData.currentPun !== 1 ? "s" : ""
         } in the last 30 days`,
       },

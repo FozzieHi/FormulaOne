@@ -14,6 +14,7 @@ import { replyInteractionError, replyInteractionPublic } from "../../utility/Sen
 import { Constants } from "../../utility/Constants.js";
 import { modLog } from "../../services/ModerationService.js";
 import MutexManager from "../../managers/MutexManager.js";
+import { getDisplayTag } from "../../utility/StringUtil.js";
 
 export class SlowmodeCommand extends Command {
   public constructor(context: Command.Context) {
@@ -79,7 +80,7 @@ export class SlowmodeCommand extends Command {
 
         await (interaction.channel as TextChannel).setRateLimitPerUser(
           seconds,
-          `Slowmode enabled by ${interaction.user.tag}`
+          `Slowmode enabled by ${getDisplayTag(interaction.member as GuildMember)}`
         );
         await replyInteractionPublic(
           interaction,
@@ -111,7 +112,7 @@ export class SlowmodeCommand extends Command {
 
         await (interaction.channel as TextChannel).setRateLimitPerUser(
           0,
-          `Slowmode disabled by ${interaction.user.tag}`
+          `Slowmode disabled by ${getDisplayTag(interaction.member as GuildMember)}`
         );
         await replyInteractionPublic(
           interaction,

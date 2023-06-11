@@ -15,7 +15,7 @@ import { Constants } from "../../utility/Constants.js";
 import { modLog } from "../../services/ModerationService.js";
 import { PushUpdate } from "../../database/updates/PushUpdate.js";
 import MutexManager from "../../managers/MutexManager.js";
-import { boldify } from "../../utility/StringUtil.js";
+import { boldify, getDisplayTag, getUserTag } from "../../utility/StringUtil.js";
 
 export class KickCommand extends Command {
   public constructor(context: Command.Context) {
@@ -76,10 +76,12 @@ export class KickCommand extends Command {
         `A moderator has kicked you for the reason: ${reason}.`,
         interaction.channel
       );
-      await targetMember.kick(`(${interaction.user.tag}) ${reason}`);
+      await targetMember.kick(
+        `(${getDisplayTag(interaction.member as GuildMember)}) ${reason}`
+      );
       await replyInteractionPublic(
         interaction,
-        `Successfully kicked ${boldify(targetMember.user.tag)}.`
+        `Successfully kicked ${boldify(getDisplayTag(targetMember))}.`
       );
       await db.userRepo?.upsertUser(targetMember.id, interaction.guild.id, {
         $inc: { kicks: 1 },
@@ -91,7 +93,7 @@ export class KickCommand extends Command {
           date: Date.now(),
           escalation: "Kick",
           reason,
-          mod: interaction.user.tag,
+          mod: getUserTag(interaction.user),
           channelId: interaction.channel.id,
         })
       );
@@ -102,7 +104,7 @@ export class KickCommand extends Command {
           "Action",
           "Kick",
           "Member",
-          `${targetMember.user.tag.toString()} (${targetMember.id})`,
+          `${getDisplayTag(targetMember)} (${targetMember.id})`,
           "Reason",
           reason,
           "Channel",

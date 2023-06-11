@@ -4,14 +4,14 @@ import {
   ButtonBuilder,
   TextChannel,
   ThreadChannel,
-  User,
   ButtonStyle,
   ComponentType,
+  GuildMember,
 } from "discord.js";
 import { Constants } from "../utility/Constants.js";
 import { checkInvites } from "./FilterService.js";
 import ViolationService from "./ViolationService.js";
-import { boldify } from "../utility/StringUtil.js";
+import { boldify, getDisplayTag } from "../utility/StringUtil.js";
 import { isModerator } from "./ModerationService.js";
 import TryVal from "../utility/TryVal.js";
 
@@ -29,7 +29,7 @@ export async function archiveLog(
   guild: Guild,
   channel: TextChannel,
   targetUserId: string,
-  moderator: User | null,
+  moderator: GuildMember | null,
   message: Message,
   action: string
 ): Promise<Message | null> {
@@ -60,7 +60,7 @@ export async function archiveLog(
   const messageSent = await archiveThread.send({
     content: `${
       channel.id === Constants.CHANNELS.STEWARDS_QUEUE ? "Escalation result - " : ""
-    }${action}${moderator != null ? ` by ${boldify(moderator.tag)}` : ""}`,
+    }${action}${moderator != null ? ` by ${boldify(getDisplayTag(moderator))}` : ""}`,
     embeds: [EmbedBuilder],
     components: buttons.map((button) => ({
       type: ComponentType.ActionRow,

@@ -3,7 +3,13 @@ import {
   InteractionHandlerTypes,
   PieceContext,
 } from "@sapphire/framework";
-import { ButtonInteraction, Guild, Snowflake, TextChannel } from "discord.js";
+import {
+  ButtonInteraction,
+  Guild,
+  GuildMember,
+  Snowflake,
+  TextChannel,
+} from "discord.js";
 import { Constants } from "../../utility/Constants.js";
 import MutexManager from "../../managers/MutexManager.js";
 import { replyInteraction, replyInteractionError } from "../../utility/Sender.js";
@@ -20,6 +26,7 @@ export class IgnoreInteraction extends InteractionHandler {
   public async run(interaction: ButtonInteraction, userId: Snowflake) {
     if (
       interaction.guild == null ||
+      interaction.member == null ||
       interaction.channel == null ||
       interaction.message == null
     ) {
@@ -36,7 +43,7 @@ export class IgnoreInteraction extends InteractionHandler {
         interaction.guild as Guild,
         interaction.channel as TextChannel,
         userId,
-        interaction.user,
+        interaction.member as GuildMember,
         logMessage,
         "Ignored"
       );

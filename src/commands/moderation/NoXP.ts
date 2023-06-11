@@ -18,7 +18,7 @@ import {
   replyInteractionPublic,
 } from "../../utility/Sender.js";
 import MutexManager from "../../managers/MutexManager.js";
-import { boldify } from "../../utility/StringUtil.js";
+import { boldify, getDisplayTag } from "../../utility/StringUtil.js";
 import TryVal from "../../utility/TryVal.js";
 
 export class NoXP extends Command {
@@ -114,7 +114,7 @@ export class NoXP extends Command {
         if (targetMember.roles.cache.has(Constants.ROLES.NOXP)) {
           await replyInteractionError(
             interaction,
-            `${boldify(targetMember.user.tag)} already has the NoXP role.`
+            `${boldify(getDisplayTag(targetMember))} already has the NoXP role.`
           );
           return;
         }
@@ -127,7 +127,7 @@ export class NoXP extends Command {
         );
         await replyInteractionPublic(
           interaction,
-          `Successfully added NoXP to ${boldify(targetMember.user.tag)}.`
+          `Successfully added NoXP to ${boldify(getDisplayTag(targetMember))}.`
         );
         await modLog(
           interaction.guild,
@@ -136,7 +136,7 @@ export class NoXP extends Command {
             "Action",
             "Added NoXP",
             "Member",
-            `${targetMember.user.tag} (${targetMember.id})`,
+            `${getDisplayTag(targetMember)} (${targetMember.id})`,
             "Reason",
             reason,
             "Channel",
@@ -154,7 +154,7 @@ export class NoXP extends Command {
         if (!targetMember.roles.cache.has(Constants.ROLES.NOXP)) {
           await replyInteractionError(
             interaction,
-            `${boldify(targetMember.user.tag)} does not have the NoXP role.`
+            `${boldify(getDisplayTag(targetMember))} does not have the NoXP role.`
           );
           return;
         }
@@ -167,7 +167,7 @@ export class NoXP extends Command {
         );
         await replyInteractionPublic(
           interaction,
-          `Successfully removed NoXP from ${boldify(targetMember.user.tag)}.`
+          `Successfully removed NoXP from ${boldify(getDisplayTag(targetMember))}.`
         );
         await modLog(
           interaction.guild,
@@ -176,7 +176,7 @@ export class NoXP extends Command {
             "Action",
             "Removed NoXP",
             "Member",
-            `${targetMember.user.tag} (${targetMember.id})`,
+            `${getDisplayTag(targetMember)} (${targetMember.id})`,
             "Reason",
             reason,
             "Channel",

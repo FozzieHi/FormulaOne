@@ -1,4 +1,4 @@
-import { GuildMember } from "discord.js";
+import { GuildMember, User } from "discord.js";
 import { Constants } from "./Constants.js";
 
 export function boldify(str: string) {
@@ -36,4 +36,8 @@ export function getDisplayTag(member: GuildMember) {
   return `${member.displayName} (${
     member.user.discriminator === "0" ? member.user.username : member.user.tag
   })`;
+}
+
+export function getUserTag(user: User) {
+  return user.discriminator === "0" ? user.username : user.tag;
 }

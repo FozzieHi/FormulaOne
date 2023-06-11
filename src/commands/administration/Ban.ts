@@ -20,7 +20,7 @@ import { modLog } from "../../services/ModerationService.js";
 import { getRuleChoices } from "../../utility/CommandUtil.js";
 import MutexManager from "../../managers/MutexManager.js";
 import { ban } from "../../utility/BanUtil.js";
-import { boldify } from "../../utility/StringUtil.js";
+import { boldify, getDisplayTag, getUserTag } from "../../utility/StringUtil.js";
 
 export class BanCommand extends Command {
   public constructor(context: Command.Context) {
@@ -122,7 +122,7 @@ export class BanCommand extends Command {
         }
         await replyInteractionPublic(
           interaction,
-          `Successfully banned ${boldify(targetUser.tag)}.`
+          `Successfully banned ${boldify(getUserTag(targetUser))}.`
         );
       } else if (subcommand === "remove") {
         reason = interaction.options.getString("reason");
@@ -137,11 +137,11 @@ export class BanCommand extends Command {
         );
         await interaction.guild.members.unban(
           targetUser,
-          `(${interaction.user.tag}) ${reason}`
+          `(${getDisplayTag(interaction.member as GuildMember)}) ${reason}`
         );
         await replyInteractionPublic(
           interaction,
-          `Successfully unbanned ${boldify(targetUser.tag)}.`
+          `Successfully unbanned ${boldify(getUserTag(targetUser))}.`
         );
         await modLog(
           interaction.guild,
@@ -150,7 +150,7 @@ export class BanCommand extends Command {
             "Action",
             "Unban",
             "User",
-            `${targetUser.tag.toString()} (${targetUser.id})`,
+            `${getUserTag(targetUser)} (${targetUser.id})`,
             "Reason",
             reason,
             "Channel",

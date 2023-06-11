@@ -2,6 +2,7 @@ import { ApplicationCommandRegistry, Awaitable, Command } from "@sapphire/framew
 import {
   ApplicationCommandType,
   ContextMenuCommandInteraction,
+  GuildMember,
   Message,
 } from "discord.js";
 import { Constants, ModerationQueueButtons } from "../../utility/Constants.js";
@@ -9,7 +10,7 @@ import { isModerator, modQueue } from "../../services/ModerationService.js";
 import { replyInteraction, replyInteractionError } from "../../utility/Sender.js";
 import MutexManager from "../../managers/MutexManager.js";
 import ViolationService from "../../services/ViolationService.js";
-import { maxLength } from "../../utility/StringUtil.js";
+import { getDisplayTag, maxLength } from "../../utility/StringUtil.js";
 
 export class ReportCommand extends Command {
   public constructor(context: Command.Context) {
@@ -34,7 +35,12 @@ export class ReportCommand extends Command {
   public async contextMenuRun(interaction: ContextMenuCommandInteraction) {
     const message = interaction.options.getMessage("message") as Message;
     await MutexManager.getUserPublicMutex(message.author.id).runExclusive(async () => {
-      if (interaction.guild == null || interaction.channel == null || message == null) {
+      if (
+        interaction.guild == null ||
+        interaction.member == null ||
+        interaction.channel == null ||
+        message == null
+      ) {
         return;
       }
       if (interaction.user.id === message.author.id) {
@@ -59,7 +65,9 @@ export class ReportCommand extends Command {
           "Action",
           `Report [Jump to message](${message.url})`,
           "Reporter",
-          `${interaction.user.tag} (${interaction.user.id})`,
+          `${getDisplayTag(interaction.member as GuildMember)} (${
+            interaction.user.id
+          })`,
           "Channel",
           interaction.channel.toString(),
         ];

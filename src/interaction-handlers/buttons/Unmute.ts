@@ -24,7 +24,7 @@ export class UnmuteInteraction extends InteractionHandler {
   }
 
   public async run(interaction: ButtonInteraction, memberId: Snowflake) {
-    if (interaction.guild == null) {
+    if (interaction.guild == null || interaction.member == null) {
       return;
     }
     const member = (await TryVal(
@@ -39,7 +39,7 @@ export class UnmuteInteraction extends InteractionHandler {
         interaction.guild as Guild,
         interaction.channel as TextChannel,
         memberId,
-        interaction.user,
+        interaction.member as GuildMember,
         interaction.message,
         "Unmuted"
       );

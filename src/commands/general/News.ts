@@ -6,10 +6,11 @@ import {
   ChatInputCommandInteraction,
   ButtonStyle,
   ComponentType,
+  GuildMember,
 } from "discord.js";
 import { replyInteractionError, replyInteractionPublic } from "../../utility/Sender.js";
 import { Constants } from "../../utility/Constants.js";
-import { boldify } from "../../utility/StringUtil.js";
+import { boldify, getDisplayTag } from "../../utility/StringUtil.js";
 import TryVal from "../../utility/TryVal.js";
 
 export class NewsCommand extends Command {
@@ -44,7 +45,7 @@ export class NewsCommand extends Command {
 
   public async chatInputRun(interaction: ChatInputCommandInteraction) {
     const url = interaction.options.getString("url");
-    if (interaction.guild == null || url == null) {
+    if (interaction.guild == null || interaction.member == null || url == null) {
       return;
     }
     if (!Constants.REGEXES.URL.test(url)) {
@@ -69,7 +70,9 @@ export class NewsCommand extends Command {
       ],
     ];
     await newsChannel.send({
-      content: `${url} sent by ${boldify(interaction.user.tag)}`,
+      content: `${url} sent by ${boldify(
+        getDisplayTag(interaction.member as GuildMember)
+      )}`,
       components: buttons.map((button) => ({
         type: ComponentType.ActionRow,
         components: button,

@@ -19,7 +19,7 @@ import {
 import { Constants } from "../../utility/Constants.js";
 import { getHistory } from "../../utility/PunishmentUtil.js";
 import { getDBUser } from "../../utility/DatabaseUtil.js";
-import { boldify } from "../../utility/StringUtil.js";
+import { boldify, getUserTag } from "../../utility/StringUtil.js";
 
 export class CheckPunishmentsCommand extends Command {
   public constructor(context: Command.Context) {
@@ -62,7 +62,7 @@ export class CheckPunishmentsCommand extends Command {
     if (dbUser?.punishments == null || dbUser.punishments.length === 0) {
       await replyInteractionPublic(
         interaction,
-        `${boldify(user.tag)} has a clean slate.`,
+        `${boldify(getUserTag(user))} has a clean slate.`,
         { color: Constants.UNBAN_COLOR }
       );
       return;
@@ -70,9 +70,9 @@ export class CheckPunishmentsCommand extends Command {
     const fieldsAndValues = await getHistory(user, interaction.guild);
     const maxPages = Math.max(1, Math.ceil(dbUser.punishments.length / 5));
     const embedOptions: APIEmbed = {
-      title: `${user.tag}'s Punishment History (1/${maxPages})`,
+      title: `${getUserTag(user)}'s Punishment History (1/${maxPages})`,
       footer: {
-        text: `${user.tag} has ${dbUser.currentPunishment} punishment${
+        text: `${getUserTag(user)} has ${dbUser.currentPunishment} punishment${
           dbUser.currentPunishment !== 1 ? "s" : ""
         } in the last 30 days`,
       },

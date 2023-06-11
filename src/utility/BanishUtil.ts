@@ -18,7 +18,7 @@ import db from "../database/index.js";
 import { getPermLevel, isModerator, modLog } from "../services/ModerationService.js";
 import { PushUpdate } from "../database/updates/PushUpdate.js";
 import MutexManager from "../managers/MutexManager.js";
-import { boldify } from "./StringUtil.js";
+import { boldify, getDisplayTag, getUserTag } from "./StringUtil.js";
 
 export async function banish(
   interaction: CommandInteraction | SelectMenuInteraction | ModalSubmitInteraction,
@@ -70,7 +70,7 @@ export async function banish(
       if (targetMember.roles.cache.has(targetRoleId)) {
         await replyInteractionError(
           interaction,
-          `${boldify(targetMember.user.tag)} is already banished from ${
+          `${boldify(getDisplayTag(targetMember))} is already banished from ${
             banishedRole.name
           }.`
         );
@@ -82,20 +82,20 @@ export async function banish(
       if (handler === "command") {
         await replyInteractionPublic(
           interaction,
-          `Successfully banished ${boldify(targetMember.user.tag)} from ${
+          `Successfully banished ${boldify(getDisplayTag(targetMember))} from ${
             banishedRole.name
           }.`
         );
       } else {
         await updateInteraction(
           interaction as MessageComponentInteraction,
-          `Successfully banished ${boldify(targetMember.user.tag)}.`,
+          `Successfully banished ${boldify(getDisplayTag(targetMember))}.`,
           { color: Constants.UNMUTE_COLOR },
           { content: null, components: [] }
         );
         await send(
           interaction.channel,
-          `Successfully banished ${boldify(targetMember.user.tag)} from ${
+          `Successfully banished ${boldify(getDisplayTag(targetMember))} from ${
             banishedRole.name
           }.`
         );
@@ -107,7 +107,7 @@ export async function banish(
           date: Date.now(),
           escalation: logAction,
           reason,
-          mod: interaction.user.tag,
+          mod: getUserTag(interaction.user),
           channelId: interaction.channel.id,
         })
       );
@@ -118,7 +118,7 @@ export async function banish(
           "Action",
           logAction,
           "Member",
-          `${targetMember.user.tag.toString()} (${targetMember.id})`,
+          `${getDisplayTag(targetMember)} (${targetMember.id})`,
           "Reason",
           reason,
           "Channel",
@@ -136,7 +136,9 @@ export async function banish(
       if (!targetMember.roles.cache.has(targetRoleId)) {
         await replyInteractionError(
           interaction,
-          `${boldify(targetMember.user.tag)} is not banished from ${banishedRole.name}.`
+          `${boldify(getDisplayTag(targetMember))} is not banished from ${
+            banishedRole.name
+          }.`
         );
         return;
       }
@@ -145,20 +147,20 @@ export async function banish(
       if (handler === "command") {
         await replyInteractionPublic(
           interaction,
-          `Successfully unbanished ${boldify(targetMember.user.tag)} from ${
+          `Successfully unbanished ${boldify(getDisplayTag(targetMember))} from ${
             banishedRole.name
           }.`
         );
       } else {
         await updateInteraction(
           interaction as MessageComponentInteraction,
-          `Successfully unbanished ${boldify(targetMember.user.tag)}.`,
+          `Successfully unbanished ${boldify(getDisplayTag(targetMember))}.`,
           { color: Constants.UNMUTE_COLOR },
           { content: null, components: [] }
         );
         await send(
           interaction.channel,
-          `Successfully unbanished ${boldify(targetMember.user.tag)} from ${
+          `Successfully unbanished ${boldify(getDisplayTag(targetMember))} from ${
             banishedRole.name
           }.`
         );
@@ -170,7 +172,7 @@ export async function banish(
           "Action",
           logAction,
           "Member",
-          `${targetMember.user.tag.toString()} (${targetMember.id})`,
+          `${getDisplayTag(targetMember)} (${targetMember.id})`,
           "Reason",
           reason,
           "Channel",

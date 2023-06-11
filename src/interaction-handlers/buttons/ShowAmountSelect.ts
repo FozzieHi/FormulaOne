@@ -17,7 +17,7 @@ import { replyInteractionError } from "../../utility/Sender.js";
 import TryVal from "../../utility/TryVal.js";
 import { getPunishmentDisplay } from "../../utility/PunishUtil.js";
 import { Constants } from "../../utility/Constants.js";
-import { boldify } from "../../utility/StringUtil.js";
+import { boldify, getDisplayTag } from "../../utility/StringUtil.js";
 import { isModerator } from "../../services/ModerationService.js";
 
 export async function showAmountSelect(
@@ -52,7 +52,7 @@ export async function showAmountSelect(
     await replyInteractionError(
       interaction,
       `${boldify(
-        targetMember.user.tag
+        getDisplayTag(targetMember)
       )} has exceeded 5 punishments in the last 30 days, escalate their punishment manually.`
     );
     return;

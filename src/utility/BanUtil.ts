@@ -4,6 +4,7 @@ import { dm } from "./Sender.js";
 import { PushUpdate } from "../database/updates/PushUpdate.js";
 import { getPermLevel, isModerator, modLog } from "../services/ModerationService.js";
 import { Constants } from "./Constants.js";
+import { getDisplayTag, getUserTag } from "./StringUtil.js";
 
 export async function ban(
   guild: Guild,
@@ -31,7 +32,7 @@ export async function ban(
     guild.members.cache.has(targetUser.id)
   );
   await guild.members.ban(targetUser, {
-    reason: `(${moderator.user.tag}) ${reason}`,
+    reason: `(${getDisplayTag(moderator)}) ${reason}`,
   });
   await db.userRepo?.upsertUser(targetUser.id, guild.id, {
     $inc: { bans: 1 },
@@ -43,7 +44,7 @@ export async function ban(
       date: Date.now(),
       escalation: "Ban",
       reason,
-      mod: moderator.user.tag,
+      mod: getUserTag(moderator.user),
       channelId: targetChannel?.id ?? originChannel.id,
     })
   );
@@ -54,7 +55,7 @@ export async function ban(
       "Action",
       "Ban",
       "User",
-      `${targetUser.tag.toString()} (${targetUser.id})`,
+      `${getUserTag(targetUser)} (${targetUser.id})`,
       "Reason",
       reason,
       "Channel",
