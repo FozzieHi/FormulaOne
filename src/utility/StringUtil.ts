@@ -35,10 +35,9 @@ export function removeClickableLinks(str: string) {
 export function getDisplayTag(member: GuildMember) {
   const userTag =
     member.user.discriminator === "0" ? member.user.username : member.user.tag;
-  if (member.displayName === member.user.username) {
-    return userTag;
-  }
-  return `${member.displayName} (${userTag})`;
+  return member.displayName !== member.user.username
+    ? `${member.displayName} (${userTag})`
+    : userTag;
 }
 
 export function getUserTag(user: User) {
