@@ -5,10 +5,23 @@ import { send } from "../utility/Sender.js";
 import { boldify, getDisplayTag } from "../utility/StringUtil.js";
 import { Constants } from "../utility/Constants.js";
 import TryVal from "../utility/TryVal.js";
+import { genericLog } from "../services/ModerationService.js";
 
 export class GuildMemberAddListener extends Listener {
   public async run(member: GuildMember) {
     await ProtectionService.checkJoins(member.guild);
+
+    await genericLog(
+      member.guild,
+      member,
+      [
+        "Action",
+        "Joined the server",
+        "Members now",
+        member.guild.memberCount.toString(),
+      ],
+      Constants.GREEN_COLOR
+    );
 
     const welcomeChannel = (await TryVal(
       member.guild.channels.fetch(Constants.CHANNELS.WELCOME)

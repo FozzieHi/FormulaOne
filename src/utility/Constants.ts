@@ -48,6 +48,8 @@ export class Constants {
 
   static readonly UNBAN_COLOR = 0x13ff19;
 
+  static readonly GREEN_COLOR = 0x00e828;
+
   static readonly LIGHT_ORANGE_COLOR = 0xff720e;
 
   static readonly GUILD_IDS: Array<Snowflake> = ["177387572505346048"];
@@ -186,6 +188,7 @@ export class Constants {
   ];
 
   static readonly PARTIALS: Array<Partials> = [
+    Partials.GuildMember,
     Partials.Message,
     Partials.Channel,
     Partials.Reaction,
