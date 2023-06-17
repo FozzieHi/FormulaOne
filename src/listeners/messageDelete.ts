@@ -3,7 +3,7 @@ import { GuildTextBasedChannel, Message, AuditLogEvent } from "discord.js";
 import { genericLog } from "../services/ModerationService.js";
 import { Constants } from "../utility/Constants.js";
 import TryVal from "../utility/TryVal.js";
-import { getDisplayTag } from "../utility/StringUtil.js";
+import { getDisplayTag, maxLength } from "../utility/StringUtil.js";
 
 export class MessageDeleteListener extends Listener {
   public async run(message: Message) {
@@ -20,11 +20,11 @@ export class MessageDeleteListener extends Listener {
 
       const fieldsAndValues = [
         "Action",
-        `Message Deletion ${
+        `Message Deletion${
           aboveMessage != null ? ` [Jump to message above](${aboveMessage})` : ""
         }`,
         "Content",
-        message.content,
+        maxLength(message.content),
         "Channel",
         message.channel.toString(),
       ];

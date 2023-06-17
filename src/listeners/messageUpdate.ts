@@ -3,6 +3,7 @@ import { Message } from "discord.js";
 import { filterCheckMessage } from "../services/BotQueueService.js";
 import { genericLog } from "../services/ModerationService.js";
 import { Constants } from "../utility/Constants.js";
+import { maxLength } from "../utility/StringUtil.js";
 
 export class MessageUpdateListener extends Listener {
   public async run(oldMessage: Message, newMessage: Message) {
@@ -18,9 +19,9 @@ export class MessageUpdateListener extends Listener {
             "Action",
             `Message Edit [Jump to message](${newMessage.url})`,
             "Before",
-            oldMessage.content,
+            maxLength(oldMessage.content),
             "After",
-            newMessage.content,
+            maxLength(newMessage.content),
             "Channel",
             newMessage.channel.toString(),
           ],

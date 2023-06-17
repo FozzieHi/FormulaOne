@@ -151,7 +151,7 @@ export async function genericLog(
     if (isEven(i)) {
       const name = fieldsAndValues.at(i)?.toString();
       const value = fieldsAndValues.at(i + 1)?.toString();
-      if (name != null && value != null) {
+      if (name != null && value != null && value.length > 0) {
         embedOptions.fields.push({
           name,
           value,
