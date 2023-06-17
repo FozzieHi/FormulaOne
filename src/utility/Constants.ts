@@ -52,6 +52,8 @@ export class Constants {
 
   static readonly LIGHT_ORANGE_COLOR = 0xff720e;
 
+  static readonly ORANGE_COLOR = 0xe8511f;
+
   static readonly GUILD_IDS: Array<Snowflake> = ["177387572505346048"];
 
   static readonly RULES: { [key: string]: string } = {

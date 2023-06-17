@@ -64,7 +64,7 @@ export class UserInfoCommand extends Command {
     const buttons = [
       [
         new ButtonBuilder()
-          .setCustomId(`userid-${user.id}`)
+          .setCustomId(`id-${user.id}`)
           .setLabel("User ID")
           .setStyle(ButtonStyle.Secondary),
       ],

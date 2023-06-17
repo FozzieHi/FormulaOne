@@ -5,7 +5,7 @@ import {
 } from "@sapphire/framework";
 import { ButtonInteraction, Snowflake } from "discord.js";
 
-export class UserIDInteraction extends InteractionHandler {
+export class IDInteraction extends InteractionHandler {
   public constructor(context: PieceContext) {
     super(context, {
       interactionHandlerType: InteractionHandlerTypes.Button,
@@ -17,7 +17,10 @@ export class UserIDInteraction extends InteractionHandler {
   }
 
   public parse(interaction: ButtonInteraction) {
-    if (!interaction.customId.startsWith("userid-")) {
+    if (
+      !interaction.customId.startsWith("userid-") &&
+      !interaction.customId.startsWith("id-")
+    ) {
       return this.none();
     }
     return this.some(interaction.customId.split("-").at(1));

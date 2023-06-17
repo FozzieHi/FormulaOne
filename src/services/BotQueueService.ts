@@ -50,7 +50,7 @@ export async function archiveLog(
   const buttons = [
     [
       new ButtonBuilder({
-        customId: `userid-${targetUserId}`,
+        customId: `id-${targetUserId}`,
         label: `User ID`,
         style: ButtonStyle.Secondary,
       }),

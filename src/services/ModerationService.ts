@@ -98,7 +98,8 @@ export async function genericLog(
   guild: Guild,
   member: GuildMember,
   fieldsAndValues: Array<string>,
-  color: number
+  color: number,
+  messageId?: string
 ) {
   const logChannel = await TryVal(guild.channels.fetch(Constants.CHANNELS.LOGS));
   if (logChannel == null) {
@@ -113,7 +114,9 @@ export async function genericLog(
       icon_url: member.user.displayAvatarURL(),
     },
     footer: {
-      text: `User ID: ${member.user.id}`,
+      text: `User ID: ${member.user.id}${
+        messageId != null ? ` - Message ID: ${messageId}` : ""
+      }`,
     },
     color,
     timestamp: new Date().toISOString(),
@@ -122,12 +125,21 @@ export async function genericLog(
   const buttons = [
     [
       new ButtonBuilder({
-        customId: `userid-${member.user.id}`,
+        customId: `id-${member.user.id}`,
         label: `User ID`,
         style: ButtonStyle.Secondary,
       }),
     ],
   ];
+  if (messageId != null) {
+    buttons[0].push(
+      new ButtonBuilder({
+        customId: `id-${messageId}`,
+        label: `Message ID`,
+        style: ButtonStyle.Secondary,
+      })
+    );
+  }
   messageOptions.components = buttons.map((b) => ({
     type: ComponentType.ActionRow,
     components: b,
@@ -186,7 +198,7 @@ export async function modLog(
     const buttons = [
       [
         new ButtonBuilder({
-          customId: `userid-${target.id}`,
+          customId: `id-${target.id}`,
           label: `User ID`,
           style: ButtonStyle.Secondary,
         }),
@@ -259,7 +271,7 @@ export async function modQueue(
   const msgButtons = [
     [
       new ButtonBuilder({
-        customId: `userid-${targetUser.id}`,
+        customId: `id-${targetUser.id}`,
         label: `User ID`,
         style: ButtonStyle.Secondary,
       }),
@@ -325,7 +337,7 @@ export async function escalate(
   const msgButtons = [
     [
       new ButtonBuilder({
-        customId: `userid-${target.id}`,
+        customId: `id-${target.id}`,
         label: `User ID`,
         style: ButtonStyle.Secondary,
       }),
