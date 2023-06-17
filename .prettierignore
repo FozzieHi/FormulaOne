@@ -3,11 +3,8 @@ node_modules/
 target/
 
 # Authentication
-credentials.json
+.env
 
 # Miscellaneous
-.vscode/
-logs/
 .idea/
-.eslintcache
 *.md

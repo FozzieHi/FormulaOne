@@ -7,15 +7,13 @@ import {
 } from "@sapphire/framework";
 import Sentry from "@sentry/node";
 import { RewriteFrames } from "@sentry/integrations";
-// eslint-disable-next-line
-// @ts-ignore
-import credentials from "./credentials.json" assert { type: "json" };
 import db from "./database/index.js";
 import { Constants } from "./utility/Constants.js";
 import "./intervals/Protection.js";
 import "./intervals/MutexClear.js";
 import { handleError } from "./utility/Logger.js";
 import { getReleaseHash } from "./utility/ReleaseUtil.js";
+import "dotenv/config";
 
 declare module "@sapphire/framework" {
   interface Preconditions {
@@ -32,17 +30,17 @@ declare module "@sapphire/framework" {
 
 (async () => {
   Sentry.init({
-    dsn: credentials.sentryDsn, // eslint-disable-line
+    dsn: process.env.SENTRY_DSN,
     release: await getReleaseHash(),
     beforeSend(event) {
       const newEvent = event;
 
       let newMessage = event.message;
       newMessage = newMessage?.replaceAll(
-        credentials.mongodbConnectionURL, // eslint-disable-line
+        process.env.MONGODB_CONNECTION_URL as string,
         "[CONNECTION_URL]"
       );
-      newMessage = newMessage?.replaceAll(credentials.token, "[TOKEN]"); // eslint-disable-line
+      newMessage = newMessage?.replaceAll(process.env.TOKEN as string, "[TOKEN]");
       newEvent.message = newMessage;
 
       return newEvent;
@@ -63,7 +61,10 @@ declare module "@sapphire/framework" {
   );
   const start = Date.now();
   container.logger.info("Database: Connecting...");
-  await db.connect(credentials.mongodbConnectionURL, credentials.dbName); // eslint-disable-line
+  await db.connect(
+    process.env.MONGODB_CONNECTION_URL as string,
+    process.env.DB_NAME as string
+  );
   container.logger.info(`Database: Took ${Date.now() - start}ms to connect.`);
-  await client.login(credentials.token); // eslint-disable-line
+  await client.login(process.env.TOKEN);
 })().catch((err) => handleError(err));
