@@ -14,7 +14,7 @@ export function upperFirstChar(str: string) {
 }
 
 export function maxLength(str: string) {
-  if (str.length > 200) {
+  if (str?.length > 200) {
     return `${str.substring(0, 200)}...`;
   }
   return str;
