@@ -5,7 +5,7 @@ WORKDIR /app
 COPY package.json ./
 COPY package-lock.json ./
 
-RUN npm i typescript -g && npm ci --omit=dev
+RUN npm install -g typescript && npm ci --omit=dev
 
 COPY src/ src/
 COPY tsconfig.json ./
