@@ -17,7 +17,6 @@ import {
 } from "../../utility/Sender.js";
 import { Constants } from "../../utility/Constants.js";
 import { modLog } from "../../services/ModerationService.js";
-import { getRuleChoices } from "../../utility/CommandUtil.js";
 import MutexManager from "../../managers/MutexManager.js";
 import { ban } from "../../utility/BanUtil.js";
 import { boldify, getDisplayTag, getUserTag } from "../../utility/StringUtil.js";
@@ -54,7 +53,6 @@ export class BanCommand extends Command {
                 name: "reason",
                 description: "The reason for the ban",
                 type: ApplicationCommandOptionType.String,
-                choices: getRuleChoices(),
                 required: true,
               },
             ],
@@ -101,14 +99,16 @@ export class BanCommand extends Command {
       ) {
         return;
       }
-      let reason;
+      const reason = interaction.options.getString("reason");
+      if (reason == null) {
+        return;
+      }
       if (subcommand === "add") {
-        const rule = interaction.options.getString("reason");
-        if (rule == null) {
-          return;
-        }
-        reason = `${rule} - ${Constants.RULES[rule]}`;
-
+        await dm(
+          targetUser,
+          `A moderator has banned you for the reason: ${reason}.`,
+          interaction.channel
+        );
         const result = await ban(
           interaction.guild,
           targetUser,
@@ -125,10 +125,6 @@ export class BanCommand extends Command {
           `Successfully banned ${boldify(getUserTag(targetUser))}.`
         );
       } else if (subcommand === "remove") {
-        reason = interaction.options.getString("reason");
-        if (reason == null) {
-          return;
-        }
         await dm(
           targetUser,
           `A moderator has unbanned you for the reason: ${reason}.`,
