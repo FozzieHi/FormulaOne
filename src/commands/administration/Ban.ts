@@ -104,11 +104,6 @@ export class BanCommand extends Command {
         return;
       }
       if (subcommand === "add") {
-        await dm(
-          targetUser,
-          `A moderator has banned you for the reason: ${reason}.`,
-          interaction.channel
-        );
         const result = await ban(
           interaction.guild,
           targetUser,
