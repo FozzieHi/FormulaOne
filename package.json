@@ -19,7 +19,7 @@
     "@sapphire/framework": "^4.4.4",
     "@sapphire/plugin-logger": "^3.0.4",
     "@sentry/integrations": "^7.55.2",
-    "@sentry/node": "^7.55.2",
+    "@sentry/node": "^7.56.0",
     "@sentry/tracing": "^7.55.2",
     "@tsconfig/node18": "^2.0.1",
     "async-mutex": "^0.4.0",
