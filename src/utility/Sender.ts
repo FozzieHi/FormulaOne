@@ -55,7 +55,7 @@ export async function send(
 }
 
 export async function sendError(channel: TextBasedChannel | User, description: string) {
-  return send(channel, description, { color: Constants.ERROR_COLOR });
+  return Try(send(channel, description, { color: Constants.ERROR_COLOR }));
 }
 
 export async function sendFields(
