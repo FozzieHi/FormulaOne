@@ -241,7 +241,8 @@ export async function modQueue(
   fieldsAndValues: Array<string>,
   color: number,
   buttons: Array<ModerationQueueButtons>,
-  mention = false
+  mention = false,
+  timestamp: Date = new Date()
 ) {
   const logChannel = await TryVal(guild.channels.fetch(Constants.CHANNELS.MOD_QUEUE));
   if (logChannel == null) {
@@ -260,7 +261,7 @@ export async function modQueue(
       }`,
     },
     color,
-    timestamp: new Date().toISOString(),
+    timestamp: timestamp.toISOString(),
   };
 
   embedOptions.author = {

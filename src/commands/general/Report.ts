@@ -95,7 +95,8 @@ export class ReportCommand extends Command {
             ModerationQueueButtons.ESCALATE,
             ModerationQueueButtons.IGNORE,
           ],
-          true
+          true,
+          message.createdAt
         );
         ViolationService.reports.push({
           channelId: interaction.channel.id,
