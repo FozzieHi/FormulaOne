@@ -37,13 +37,13 @@ export default new (class ProtectionService {
           ) {
             await guild.setVerificationLevel(
               GuildVerificationLevel.VeryHigh,
-              `Protection activated at ${now}`
+              `Protection activated at ${now}`,
             );
             await modLog(
               guild,
               null,
               ["Action", "Protection Activated", "Verification Level", "VERY_HIGH"],
-              Constants.BAN_COLOR
+              Constants.BAN_COLOR,
             );
           }
           await db.guildRepo?.upsertGuild(guild.id, {

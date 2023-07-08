@@ -27,7 +27,7 @@ export class KickCommand extends Command {
   }
 
   public override registerApplicationCommands(
-    registry: ApplicationCommandRegistry
+    registry: ApplicationCommandRegistry,
   ): Awaitable<void> {
     registry.registerChatInputCommand(
       {
@@ -51,7 +51,7 @@ export class KickCommand extends Command {
       {
         guildIds: Constants.GUILD_IDS,
         idHints: ["977147569648074772"],
-      }
+      },
     );
   }
 
@@ -74,14 +74,14 @@ export class KickCommand extends Command {
       await dm(
         targetMember.user,
         `A moderator has kicked you for the reason: ${reason}.`,
-        interaction.channel
+        interaction.channel,
       );
       await targetMember.kick(
-        `(${getDisplayTag(interaction.member as GuildMember)}) ${reason}`
+        `(${getDisplayTag(interaction.member as GuildMember)}) ${reason}`,
       );
       await replyInteractionPublic(
         interaction,
-        `Successfully kicked ${boldify(getDisplayTag(targetMember))}.`
+        `Successfully kicked ${boldify(getDisplayTag(targetMember))}.`,
       );
       await db.userRepo?.upsertUser(targetMember.id, interaction.guild.id, {
         $inc: { kicks: 1 },
@@ -95,7 +95,7 @@ export class KickCommand extends Command {
           reason,
           mod: getUserTag(interaction.user),
           channelId: interaction.channel.id,
-        })
+        }),
       );
       await modLog(
         interaction.guild,
@@ -111,7 +111,7 @@ export class KickCommand extends Command {
           interaction.channel.toString(),
         ],
         Constants.KICK_COLOR,
-        targetMember.user
+        targetMember.user,
       );
     });
   }

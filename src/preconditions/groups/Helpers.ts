@@ -8,7 +8,7 @@ export class HelpersPrecondition extends Precondition {
   public async chatInputRun(interaction: ChatInputCommandInteraction) {
     return (await getPermLevel(
       interaction.guild as Guild,
-      (interaction.member as GuildMember).user
+      (interaction.member as GuildMember).user,
     )) > 0 ||
       (interaction.member as GuildMember).roles.cache.has(Constants.ROLES.HELPERS)
       ? this.ok()
@@ -18,7 +18,7 @@ export class HelpersPrecondition extends Precondition {
   public async contextMenuRun(interaction: ContextMenuCommandInteraction) {
     return (await getPermLevel(
       interaction.guild as Guild,
-      (interaction.member as GuildMember).user
+      (interaction.member as GuildMember).user,
     )) > 0 ||
       (interaction.member as GuildMember).roles.cache.has(Constants.ROLES.HELPERS)
       ? this.ok()

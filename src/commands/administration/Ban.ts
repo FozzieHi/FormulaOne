@@ -31,7 +31,7 @@ export class BanCommand extends Command {
   }
 
   public override registerApplicationCommands(
-    registry: ApplicationCommandRegistry
+    registry: ApplicationCommandRegistry,
   ): Awaitable<void> {
     registry.registerChatInputCommand(
       {
@@ -81,7 +81,7 @@ export class BanCommand extends Command {
       {
         guildIds: Constants.GUILD_IDS,
         idHints: ["977147741937500260"],
-      }
+      },
     );
   }
 
@@ -109,7 +109,7 @@ export class BanCommand extends Command {
           targetUser,
           interaction.member as GuildMember,
           reason,
-          interaction.channel as GuildTextBasedChannel
+          interaction.channel as GuildTextBasedChannel,
         );
         if (!result) {
           await replyInteractionError(interaction, "Error banning user.");
@@ -117,22 +117,22 @@ export class BanCommand extends Command {
         }
         await replyInteractionPublic(
           interaction,
-          `Successfully banned ${boldify(getUserTag(targetUser))}.`
+          `Successfully banned ${boldify(getUserTag(targetUser))}.`,
         );
       } else if (subcommand === "remove") {
         await dm(
           targetUser,
           `A moderator has unbanned you for the reason: ${reason}.`,
           undefined,
-          false
+          false,
         );
         await interaction.guild.members.unban(
           targetUser,
-          `(${getDisplayTag(interaction.member as GuildMember)}) ${reason}`
+          `(${getDisplayTag(interaction.member as GuildMember)}) ${reason}`,
         );
         await replyInteractionPublic(
           interaction,
-          `Successfully unbanned ${boldify(getUserTag(targetUser))}.`
+          `Successfully unbanned ${boldify(getUserTag(targetUser))}.`,
         );
         await modLog(
           interaction.guild,
@@ -148,7 +148,7 @@ export class BanCommand extends Command {
             interaction.channel.toString(),
           ],
           Constants.UNBAN_COLOR,
-          targetUser
+          targetUser,
         );
       }
     });

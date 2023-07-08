@@ -26,7 +26,7 @@ export async function banish(
   targetRoleId: Snowflake,
   action: string,
   handler: string,
-  reason: string
+  reason: string,
 ) {
   await MutexManager.getUserMutex(targetMember.id).runExclusive(async () => {
     if (
@@ -41,7 +41,7 @@ export async function banish(
     if (helper && targetRoleId !== Constants.ROLES.BEGINNERS_QUESTIONS) {
       await replyInteractionError(
         interaction,
-        "Helpers may only banish members from the f1-beginner-questions channel."
+        "Helpers may only banish members from the f1-beginner-questions channel.",
       );
       return;
     }
@@ -53,13 +53,13 @@ export async function banish(
     ) {
       await replyInteractionError(
         interaction,
-        "You may not use this command on a moderator."
+        "You may not use this command on a moderator.",
       );
       return;
     }
 
     const banishedRole = Constants.BANISH_ROLES.find(
-      (banishRole) => banishRole.id === targetRoleId
+      (banishRole) => banishRole.id === targetRoleId,
     );
     if (banishedRole == null) {
       await replyInteractionError(interaction, "Could not fetch target role.");
@@ -72,7 +72,7 @@ export async function banish(
           interaction,
           `${boldify(getDisplayTag(targetMember))} is already banished from ${
             banishedRole.name
-          }.`
+          }.`,
         );
         return;
       }
@@ -84,20 +84,20 @@ export async function banish(
           interaction,
           `Successfully banished ${boldify(getDisplayTag(targetMember))} from ${
             banishedRole.name
-          }.`
+          }.`,
         );
       } else {
         await updateInteraction(
           interaction as MessageComponentInteraction,
           `Successfully banished ${boldify(getDisplayTag(targetMember))}.`,
           { color: Constants.UNMUTE_COLOR },
-          { content: null, components: [] }
+          { content: null, components: [] },
         );
         await send(
           interaction.channel,
           `Successfully banished ${boldify(getDisplayTag(targetMember))} from ${
             banishedRole.name
-          }.`
+          }.`,
         );
       }
       await db.userRepo?.upsertUser(
@@ -109,7 +109,7 @@ export async function banish(
           reason,
           mod: getUserTag(interaction.user),
           channelId: interaction.channel.id,
-        })
+        }),
       );
       await modLog(
         interaction.guild,
@@ -125,12 +125,12 @@ export async function banish(
           interaction.channel.toString(),
         ],
         Constants.BANISH_COLOR,
-        targetMember.user
+        targetMember.user,
       );
       await dm(
         targetMember.user,
         `A moderator has banished you from the ${banishedRole.name} channel.`,
-        interaction.channel
+        interaction.channel,
       );
     } else if (action === "remove") {
       if (!targetMember.roles.cache.has(targetRoleId)) {
@@ -138,7 +138,7 @@ export async function banish(
           interaction,
           `${boldify(getDisplayTag(targetMember))} is not banished from ${
             banishedRole.name
-          }.`
+          }.`,
         );
         return;
       }
@@ -149,20 +149,20 @@ export async function banish(
           interaction,
           `Successfully unbanished ${boldify(getDisplayTag(targetMember))} from ${
             banishedRole.name
-          }.`
+          }.`,
         );
       } else {
         await updateInteraction(
           interaction as MessageComponentInteraction,
           `Successfully unbanished ${boldify(getDisplayTag(targetMember))}.`,
           { color: Constants.UNMUTE_COLOR },
-          { content: null, components: [] }
+          { content: null, components: [] },
         );
         await send(
           interaction.channel,
           `Successfully unbanished ${boldify(getDisplayTag(targetMember))} from ${
             banishedRole.name
-          }.`
+          }.`,
         );
       }
       await modLog(
@@ -179,12 +179,12 @@ export async function banish(
           interaction.channel.toString(),
         ],
         Constants.UNMUTE_COLOR,
-        targetMember.user
+        targetMember.user,
       );
       await dm(
         targetMember.user,
         `A moderator has unbanished you from the ${banishedRole.name} channel.`,
-        interaction.channel
+        interaction.channel,
       );
     }
   });

@@ -22,7 +22,7 @@ export class SayCommand extends Command {
   }
 
   public override registerApplicationCommands(
-    registry: ApplicationCommandRegistry
+    registry: ApplicationCommandRegistry,
   ): Awaitable<void> {
     registry.registerChatInputCommand(
       {
@@ -47,7 +47,7 @@ export class SayCommand extends Command {
       {
         guildIds: Constants.GUILD_IDS,
         idHints: ["977147740314284052"],
-      }
+      },
     );
   }
 

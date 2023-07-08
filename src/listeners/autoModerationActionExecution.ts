@@ -13,20 +13,20 @@ import TryVal from "../utility/TryVal.js";
 export class AutoModerationActionExecutionListener extends Listener {
   public async run(action: AutoModerationActionExecution) {
     const autoModerationRule = await TryVal(
-      action.guild.autoModerationRules.fetch(action.ruleId)
+      action.guild.autoModerationRules.fetch(action.ruleId),
     );
     if (
       action.channelId == null ||
       autoModerationRule == null ||
       action.action.type !== AutoModerationActionType.SendAlertMessage ||
       autoModerationRule.actions.every(
-        (act) => act.metadata.channelId !== Constants.CHANNELS.AUTO_BOT_QUEUE
+        (act) => act.metadata.channelId !== Constants.CHANNELS.AUTO_BOT_QUEUE,
       )
     ) {
       return;
     }
     const channel = (await TryVal(
-      action.guild.channels.fetch(action.channelId)
+      action.guild.channels.fetch(action.channelId),
     )) as GuildTextBasedChannel;
     if (channel == null || channel.type !== ChannelType.GuildText) {
       return;
@@ -44,14 +44,14 @@ export class AutoModerationActionExecutionListener extends Listener {
       fieldsAndValues.push(
         `AutoMod Filter Trigger${
           aboveMessage != null ? ` [Jump to message above](${aboveMessage})` : ""
-        }`
+        }`,
       );
     } else {
       const message = await TryVal(channel.messages.fetch(action.messageId));
       fieldsAndValues.push(
         `AutoMod Filter Trigger${
           message != null ? ` [Jump to message](${message.url})` : ""
-        }`
+        }`,
       );
     }
     fieldsAndValues.push(
@@ -60,7 +60,7 @@ export class AutoModerationActionExecutionListener extends Listener {
       "Filter Type",
       action.messageId == null ? "Block" : "Alert",
       "Channel",
-      channel.toString()
+      channel.toString(),
     );
     if (action.content.length > 0) {
       fieldsAndValues.push("Content");
@@ -82,7 +82,7 @@ export class AutoModerationActionExecutionListener extends Listener {
         ModerationQueueButtons.ESCALATE,
         ModerationQueueButtons.IGNORE,
       ],
-      true
+      true,
     );
   }
 }

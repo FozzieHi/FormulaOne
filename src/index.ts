@@ -38,7 +38,7 @@ declare module "@sapphire/framework" {
       let newMessage = event.message;
       newMessage = newMessage?.replaceAll(
         process.env.MONGODB_CONNECTION_URL as string,
-        "[CONNECTION_URL]"
+        "[CONNECTION_URL]",
       );
       newMessage = newMessage?.replaceAll(process.env.TOKEN as string, "[TOKEN]");
       newEvent.message = newMessage;
@@ -57,13 +57,13 @@ declare module "@sapphire/framework" {
     presence: Constants.PRESENCE,
   });
   ApplicationCommandRegistries.setDefaultBehaviorWhenNotIdentical(
-    RegisterBehavior.Overwrite
+    RegisterBehavior.Overwrite,
   );
   const start = Date.now();
   container.logger.info("Database: Connecting...");
   await db.connect(
     process.env.MONGODB_CONNECTION_URL as string,
-    process.env.DB_NAME as string
+    process.env.DB_NAME as string,
   );
   container.logger.info(`Database: Took ${Date.now() - start}ms to connect.`);
   await client.login(process.env.TOKEN);

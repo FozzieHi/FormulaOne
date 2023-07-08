@@ -27,7 +27,7 @@ export class ShowReasonOptionInteraction extends InteractionHandler {
 
   public async run(
     interaction: ButtonInteraction,
-    parsedData: InteractionHandler.ParseResult<this>
+    parsedData: InteractionHandler.ParseResult<this>,
   ) {
     if (interaction.guild == null) {
       return;
@@ -45,10 +45,10 @@ export class ShowReasonOptionInteraction extends InteractionHandler {
             parsedData.targetUserId,
             null,
             interaction.message,
-            "Already banned"
+            "Already banned",
           );
           await replyInteractionError(interaction, "Member is already banned.");
-        }
+        },
       );
       return;
     }

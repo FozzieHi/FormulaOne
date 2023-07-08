@@ -24,7 +24,7 @@ export class Pun {
     userId: Snowflake,
     guildId: Snowflake,
     punLength: number,
-    amount: number
+    amount: number,
   ) {
     this.userId = userId;
     this.guildId = guildId;

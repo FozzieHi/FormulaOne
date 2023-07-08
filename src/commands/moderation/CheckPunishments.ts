@@ -30,7 +30,7 @@ export class CheckPunishmentsCommand extends Command {
   }
 
   public override registerApplicationCommands(
-    registry: ApplicationCommandRegistry
+    registry: ApplicationCommandRegistry,
   ): Awaitable<void> {
     registry.registerChatInputCommand(
       {
@@ -48,7 +48,7 @@ export class CheckPunishmentsCommand extends Command {
       {
         guildIds: Constants.GUILD_IDS,
         idHints: ["977147654310088714"],
-      }
+      },
     );
   }
 
@@ -63,7 +63,7 @@ export class CheckPunishmentsCommand extends Command {
       await replyInteractionPublic(
         interaction,
         `${boldify(getUserTag(user))} has a clean slate.`,
-        { color: Constants.UNBAN_COLOR }
+        { color: Constants.UNBAN_COLOR },
       );
       return;
     }

@@ -15,7 +15,7 @@ export class FlairCommand extends Command {
   }
 
   public override registerApplicationCommands(
-    registry: ApplicationCommandRegistry
+    registry: ApplicationCommandRegistry,
   ): Awaitable<void> {
     registry.registerChatInputCommand(
       {
@@ -45,7 +45,7 @@ export class FlairCommand extends Command {
       {
         guildIds: Constants.GUILD_IDS,
         idHints: ["977147655698403328"],
-      }
+      },
     );
   }
 
@@ -60,23 +60,23 @@ export class FlairCommand extends Command {
       if (newNickname.length > 32) {
         await replyInteractionError(
           interaction,
-          "The nickname length (username, brackets and flair) must not exceed 32 characters."
+          "The nickname length (username, brackets and flair) must not exceed 32 characters.",
         );
         return;
       }
 
       await (interaction.member as GuildMember).setNickname(
         newNickname,
-        "Flair set command"
+        "Flair set command",
       );
       await replyInteractionPublic(
         interaction,
-        `Successfully set your flair to ${flair}.`
+        `Successfully set your flair to ${flair}.`,
       );
     } else if (subcommand === "remove") {
       await (interaction.member as GuildMember).setNickname(
         null,
-        "Flair remove command"
+        "Flair remove command",
       );
       await replyInteractionPublic(interaction, `Successfully removed your flair.`);
     }

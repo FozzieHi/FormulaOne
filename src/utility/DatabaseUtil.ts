@@ -9,7 +9,7 @@ export async function getDBGuild(guildId: Snowflake): Promise<DBGuild | undefine
 
 export async function getDBUser(
   userId: Snowflake,
-  guildId: Snowflake
+  guildId: Snowflake,
 ): Promise<DBUser | undefined> {
   return db.userRepo?.getUser(userId, guildId);
 }

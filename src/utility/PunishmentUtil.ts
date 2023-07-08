@@ -7,7 +7,7 @@ import TryVal from "./TryVal.js";
 export async function getHistory(
   user: User,
   guild: Guild,
-  start = 0
+  start = 0,
 ): Promise<Array<string>> {
   const dbUser = await getDBUser(user.id, guild.id);
   const allPunishments = dbUser?.punishments.sort((a, b) => b.date - a.date);

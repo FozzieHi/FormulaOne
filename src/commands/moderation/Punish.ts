@@ -26,7 +26,7 @@ export class PunishCommand extends Command {
   }
 
   public override registerApplicationCommands(
-    registry: ApplicationCommandRegistry
+    registry: ApplicationCommandRegistry,
   ): Awaitable<void> {
     registry.registerChatInputCommand(
       {
@@ -77,7 +77,7 @@ export class PunishCommand extends Command {
       {
         guildIds: Constants.GUILD_IDS,
         idHints: ["985885134408536104"],
-      }
+      },
     );
 
     registry.registerContextMenuCommand(
@@ -88,7 +88,7 @@ export class PunishCommand extends Command {
       {
         guildIds: Constants.GUILD_IDS,
         idHints: ["1085683717802049556"],
-      }
+      },
     );
   }
 
@@ -115,7 +115,7 @@ export class PunishCommand extends Command {
         targetMember,
         subcommand,
         reason,
-        1
+        1,
       );
     });
   }
@@ -130,7 +130,7 @@ export class PunishCommand extends Command {
       interaction,
       message.author.id,
       interaction.channel.id,
-      message.id
+      message.id,
     );
   }
 }

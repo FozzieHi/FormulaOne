@@ -6,7 +6,7 @@ export class ContextMenuCommandSuccessListener extends Listener {
     this.container.logger.info(
       `Successful context menu result - ${getUserTag(interaction.user)} - ${
         context.commandName
-      }`
+      }`,
     );
   }
 }

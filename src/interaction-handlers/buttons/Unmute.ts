@@ -28,7 +28,7 @@ export class UnmuteInteraction extends InteractionHandler {
       return;
     }
     const member = (await TryVal(
-      interaction.guild.members.fetch(memberId)
+      interaction.guild.members.fetch(memberId),
     )) as GuildMember;
     await MutexManager.getUserMutex(member.id).runExclusive(async () => {
       await member.roles.remove(Constants.ROLES.MUTED);
@@ -41,7 +41,7 @@ export class UnmuteInteraction extends InteractionHandler {
         memberId,
         interaction.member as GuildMember,
         interaction.message,
-        "Unmuted"
+        "Unmuted",
       );
     });
   }

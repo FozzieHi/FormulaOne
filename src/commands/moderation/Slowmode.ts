@@ -26,7 +26,7 @@ export class SlowmodeCommand extends Command {
   }
 
   public override registerApplicationCommands(
-    registry: ApplicationCommandRegistry
+    registry: ApplicationCommandRegistry,
   ): Awaitable<void> {
     registry.registerChatInputCommand(
       {
@@ -58,7 +58,7 @@ export class SlowmodeCommand extends Command {
       {
         guildIds: Constants.GUILD_IDS,
         idHints: ["977147567160840232"],
-      }
+      },
     );
   }
 
@@ -80,11 +80,11 @@ export class SlowmodeCommand extends Command {
 
         await (interaction.channel as TextChannel).setRateLimitPerUser(
           seconds,
-          `Slowmode enabled by ${getDisplayTag(interaction.member as GuildMember)}`
+          `Slowmode enabled by ${getDisplayTag(interaction.member as GuildMember)}`,
         );
         await replyInteractionPublic(
           interaction,
-          `Successfully enabled slowmode in ${interaction.channel.toString()} for ${seconds} seconds.`
+          `Successfully enabled slowmode in ${interaction.channel.toString()} for ${seconds} seconds.`,
         );
         await modLog(
           interaction.guild,
@@ -99,24 +99,24 @@ export class SlowmodeCommand extends Command {
             "Channel",
             interaction.channel.toString(),
           ],
-          Constants.WARN_COLOR
+          Constants.WARN_COLOR,
         );
       } else if (subcommand === "remove") {
         if ((interaction.channel as TextChannel).rateLimitPerUser === 0) {
           await replyInteractionError(
             interaction,
-            `Slowmode is already disabled for ${interaction.channel.toString()}`
+            `Slowmode is already disabled for ${interaction.channel.toString()}`,
           );
           return;
         }
 
         await (interaction.channel as TextChannel).setRateLimitPerUser(
           0,
-          `Slowmode disabled by ${getDisplayTag(interaction.member as GuildMember)}`
+          `Slowmode disabled by ${getDisplayTag(interaction.member as GuildMember)}`,
         );
         await replyInteractionPublic(
           interaction,
-          `Successfully disabled slowmode in ${interaction.channel.toString()}.`
+          `Successfully disabled slowmode in ${interaction.channel.toString()}.`,
         );
         await modLog(
           interaction.guild,
@@ -129,7 +129,7 @@ export class SlowmodeCommand extends Command {
             "Channel",
             interaction.channel.toString(),
           ],
-          Constants.UNMUTE_COLOR
+          Constants.UNMUTE_COLOR,
         );
       }
     });

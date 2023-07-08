@@ -6,7 +6,7 @@ export class StewardsPrecondition extends Precondition {
   public async chatInputRun(interaction: ChatInputCommandInteraction) {
     return (await getPermLevel(
       interaction.guild as Guild,
-      (interaction.member as GuildMember).user
+      (interaction.member as GuildMember).user,
     )) > 1
       ? this.ok()
       : this.error({ message: "You must be a Steward in order to use this command." });

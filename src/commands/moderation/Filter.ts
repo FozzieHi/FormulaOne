@@ -29,7 +29,7 @@ export class FilterCommand extends Command {
   }
 
   public override registerApplicationCommands(
-    registry: ApplicationCommandRegistry
+    registry: ApplicationCommandRegistry,
   ): Awaitable<void> {
     registry.registerChatInputCommand(
       {
@@ -51,7 +51,7 @@ export class FilterCommand extends Command {
       {
         guildIds: Constants.GUILD_IDS,
         idHints: ["977147571007012864"],
-      }
+      },
     );
   }
 
@@ -74,18 +74,18 @@ export class FilterCommand extends Command {
         if (dbGuild?.enabledChannels.includes(interaction.channel.id)) {
           await replyInteractionError(
             interaction,
-            `One word filter is already enabled in ${interaction.channel.toString()}`
+            `One word filter is already enabled in ${interaction.channel.toString()}`,
           );
           return;
         }
 
         await db.guildRepo?.upsertGuild(
           interaction.guild.id,
-          new PushUpdate("enabledChannels", interaction.channel.id)
+          new PushUpdate("enabledChannels", interaction.channel.id),
         );
         await replyInteractionPublic(
           interaction,
-          `Successfully enabled one word filter in ${interaction.channel.toString()}.`
+          `Successfully enabled one word filter in ${interaction.channel.toString()}.`,
         );
         await modLog(
           interaction.guild,
@@ -98,29 +98,29 @@ export class FilterCommand extends Command {
             "Channel",
             interaction.channel.toString(),
           ],
-          Constants.WARN_COLOR
+          Constants.WARN_COLOR,
         );
         if (channelDescription != null) {
           await interaction.channel.setTopic(
-            channelDescription.replace(enabledText, "")
+            channelDescription.replace(enabledText, ""),
           );
         }
       } else if (subcommand === "remove") {
         if (!dbGuild?.enabledChannels.includes(interaction.channel.id)) {
           await replyInteractionError(
             interaction,
-            `One word filter is already disabled in ${interaction.channel.toString()}`
+            `One word filter is already disabled in ${interaction.channel.toString()}`,
           );
           return;
         }
 
         await db.guildRepo?.upsertGuild(
           interaction.guild.id,
-          new PullUpdate("enabledChannels", interaction.channel.id)
+          new PullUpdate("enabledChannels", interaction.channel.id),
         );
         await replyInteractionPublic(
           interaction,
-          `Successfully disabled one word filter in ${interaction.channel.toString()}.`
+          `Successfully disabled one word filter in ${interaction.channel.toString()}.`,
         );
         await modLog(
           interaction.guild,
@@ -133,7 +133,7 @@ export class FilterCommand extends Command {
             "Channel",
             interaction.channel.toString(),
           ],
-          Constants.UNMUTE_COLOR
+          Constants.UNMUTE_COLOR,
         );
         if (channelDescription != null) {
           await interaction.channel.setTopic(enabledText + channelDescription);

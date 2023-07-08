@@ -31,7 +31,7 @@ import TryVal from "./TryVal.js";
 async function increasePunishment(
   memberId: Snowflake,
   guildId: Snowflake,
-  amount: number
+  amount: number,
 ) {
   await db.punRepo?.insertPun(memberId, guildId, amount);
   await db.userRepo?.upsertUser(memberId, guildId, {
@@ -61,7 +61,7 @@ async function mute(
   guild: Guild,
   reason: string,
   displayLog: string,
-  length: number
+  length: number,
 ) {
   const dbGuild = await getDBGuild(guild.id);
   if (dbGuild == null) {
@@ -77,7 +77,7 @@ async function mute(
 
   await targetMember.disableCommunicationUntil(
     Date.now() + length,
-    `(${getDisplayTag(moderator)}) ${displayLog} - ${reason}`
+    `(${getDisplayTag(moderator)}) ${displayLog} - ${reason}`,
   );
   await targetMember.roles.add(role);
   await db.muteRepo?.insertMute(targetMember.id, guild.id, length);
@@ -89,7 +89,7 @@ async function ban(
   guild: Guild,
   reason: string,
   displayLog: string,
-  length: number
+  length: number,
 ) {
   const dbGuild = await getDBGuild(guild.id);
   if (dbGuild == null) {
@@ -143,7 +143,7 @@ export async function punish(
   reason: string,
   amount: number,
   message?: Message | null,
-  channel?: GuildTextBasedChannel
+  channel?: GuildTextBasedChannel,
 ): Promise<Message | null> {
   let messageSent;
   if (interaction.guild == null || interaction.channel == null) {
@@ -162,7 +162,7 @@ export async function punish(
         interaction,
         `${boldify(getDisplayTag(targetMember))} has exceeded ${
           Constants.PUNISHMENTS.length
-        } punishments in the last 30 days, escalate their punishment manually.`
+        } punishments in the last 30 days, escalate their punishment manually.`,
       );
     }
 
@@ -180,7 +180,7 @@ export async function punish(
       `A moderator has ${punishmentDisplay.displayPastTense} you${
         punishment.length != null ? ` for ${punishmentDisplay.displayCurrent}` : ""
       } for the reason: ${reason}.`,
-      interaction.channel
+      interaction.channel,
     );
 
     let color = Constants.WARN_COLOR;
@@ -196,7 +196,7 @@ export async function punish(
         interaction.guild,
         reason,
         punishmentDisplay.displayLog,
-        punishment.length as number
+        punishment.length as number,
       );
       await db.userRepo?.upsertUser(targetMember.id, interaction.guild.id, {
         $inc: { mutes: 1 },
@@ -209,7 +209,7 @@ export async function punish(
         interaction.guild,
         reason,
         punishmentDisplay.displayLog,
-        punishment.length as number
+        punishment.length as number,
       );
       await db.userRepo?.upsertUser(targetMember.id, interaction.guild.id, {
         $inc: { bans: 1 },
@@ -222,7 +222,7 @@ export async function punish(
         interaction,
         `Successfully punished member.`,
         {},
-        { content: null, components: [] }
+        { content: null, components: [] },
       );
     } else {
       await replyInteraction(interaction, `Successfully punished member.`);
@@ -252,7 +252,7 @@ export async function punish(
     await db.userRepo?.upsertUser(
       targetMember.id,
       interaction.guild.id,
-      new PushUpdate("punishments", punishData)
+      new PushUpdate("punishments", punishData),
     );
     await increasePunishment(targetMember.id, interaction.guild.id, escalations);
     const modLogFieldAndValues = [
@@ -275,7 +275,7 @@ export async function punish(
       moderator,
       modLogFieldAndValues,
       color,
-      targetMember.user
+      targetMember.user,
     );
   } else if (action === "remove") {
     const role = await TryVal(interaction.guild.roles.fetch(Constants.ROLES.MUTED));
@@ -286,7 +286,7 @@ export async function punish(
       await targetMember.roles.remove(role);
       await targetMember.disableCommunicationUntil(
         null,
-        `Unpunished by ${getDisplayTag(moderator)}`
+        `Unpunished by ${getDisplayTag(moderator)}`,
       );
       await db.muteRepo?.deleteMute(targetMember.id, interaction.guild.id);
     }
@@ -311,17 +311,17 @@ export async function punish(
         interaction.channel.toString(),
       ],
       Constants.UNMUTE_COLOR,
-      targetMember.user
+      targetMember.user,
     );
     await db.userRepo?.upsertUser(
       targetMember.id,
       interaction.guild.id,
-      new PopUpdate("punishments", 1)
+      new PopUpdate("punishments", 1),
     );
 
     await replyInteractionPublic(
       interaction,
-      `Successfully unpunished ${boldify(getDisplayTag(targetMember))}.`
+      `Successfully unpunished ${boldify(getDisplayTag(targetMember))}.`,
     );
   }
   if (messageSent != null) {

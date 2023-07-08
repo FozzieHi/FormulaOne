@@ -41,7 +41,7 @@ export async function send(
   channel: TextBasedChannel | User,
   description: string | undefined,
   embedOptions: APIEmbed | null = {},
-  messageOptions: BaseMessageOptions = {}
+  messageOptions: BaseMessageOptions = {},
 ): Promise<Message> {
   const newEmbedOptions = embedOptions;
   const newBaseMessageOptions = messageOptions;
@@ -61,7 +61,7 @@ export async function sendError(channel: TextBasedChannel | User, description: s
 export async function sendFields(
   channel: TextBasedChannel | User,
   fieldsAndValues: Array<string>,
-  embedOptions: APIEmbed = {}
+  embedOptions: APIEmbed = {},
 ): Promise<Message> {
   const newEmbedOptions = embedOptions;
   newEmbedOptions.fields = getFields(fieldsAndValues);
@@ -72,7 +72,7 @@ export async function dm(
   user: User,
   description: string,
   channel: TextBasedChannel | undefined,
-  sendErrorMsg = true
+  sendErrorMsg = true,
 ): Promise<boolean> {
   const result = await Try(send(user, description));
   if (
@@ -96,7 +96,7 @@ async function replyInteractionHandler(
     | ModalSubmitInteraction,
   description: string | undefined,
   embedOptions: APIEmbed | null = {},
-  messageOptions: InteractionReplyOptions = {}
+  messageOptions: InteractionReplyOptions = {},
 ) {
   const newEmbedOptions = embedOptions;
   const newBaseMessageOptions = messageOptions;
@@ -121,7 +121,7 @@ export async function replyInteraction(
     | ModalSubmitInteraction,
   description: string | undefined,
   embedOptions: APIEmbed | null = {},
-  messageOptions: InteractionReplyOptions = {}
+  messageOptions: InteractionReplyOptions = {},
 ) {
   const newBaseMessageOptions = messageOptions;
   newBaseMessageOptions.ephemeral = true;
@@ -131,7 +131,7 @@ export async function replyInteraction(
       ? `${boldify(getUserTag(interaction.user))}, ${description}`
       : undefined,
     embedOptions,
-    newBaseMessageOptions
+    newBaseMessageOptions,
   );
 }
 
@@ -143,12 +143,12 @@ export async function replyInteractionPublic(
     | SelectMenuInteraction
     | ModalSubmitInteraction,
   description: string,
-  embedOptions: APIEmbed = {}
+  embedOptions: APIEmbed = {},
 ) {
   return replyInteractionHandler(
     interaction,
     `${boldify(getUserTag(interaction.user))}, ${description}`,
-    embedOptions
+    embedOptions,
   );
 }
 
@@ -156,7 +156,7 @@ export async function replyInteractionPublicFields(
   interaction: CommandInteraction | ButtonInteraction,
   fieldsAndValues: Array<string>,
   embedOptions: APIEmbed = {},
-  messageOptions: InteractionReplyOptions = {}
+  messageOptions: InteractionReplyOptions = {},
 ) {
   const newEmbedOptions = embedOptions;
   newEmbedOptions.fields = getFields(fieldsAndValues);
@@ -164,7 +164,7 @@ export async function replyInteractionPublicFields(
     interaction,
     undefined,
     newEmbedOptions,
-    messageOptions
+    messageOptions,
   );
 }
 
@@ -176,7 +176,7 @@ export async function replyInteractionError(
     | SelectMenuInteraction
     | ModalSubmitInteraction,
   description: string,
-  embedOptions: APIEmbed = {}
+  embedOptions: APIEmbed = {},
 ) {
   const newEmbedOptions = embedOptions;
   newEmbedOptions.color = Constants.ERROR_COLOR;
@@ -184,7 +184,7 @@ export async function replyInteractionError(
     interaction,
     `${boldify(getUserTag(interaction.user))}, ${description}`,
     newEmbedOptions,
-    { ephemeral: true }
+    { ephemeral: true },
   );
 }
 
@@ -192,7 +192,7 @@ async function updateInteractionHandler(
   interaction: SelectMenuInteraction | MessageComponentInteraction,
   description: string | undefined,
   embedOptions: APIEmbed | null = {},
-  messageOptions: InteractionUpdateOptions = {}
+  messageOptions: InteractionUpdateOptions = {},
 ) {
   const newEmbedOptions = embedOptions;
   const newBaseMessageOptions = messageOptions;
@@ -209,7 +209,7 @@ export async function updateInteraction(
   interaction: SelectMenuInteraction | MessageComponentInteraction,
   description: string | undefined,
   embedOptions: APIEmbed | null = {},
-  messageOptions: InteractionUpdateOptions = {}
+  messageOptions: InteractionUpdateOptions = {},
 ) {
   return updateInteractionHandler(
     interaction,
@@ -217,6 +217,6 @@ export async function updateInteraction(
       ? `${boldify(getUserTag(interaction.user))}, ${description}`
       : undefined,
     embedOptions,
-    messageOptions
+    messageOptions,
   );
 }

@@ -12,7 +12,7 @@ export async function ban(
   moderator: GuildMember,
   reason: string,
   originChannel: GuildTextBasedChannel,
-  targetChannel?: GuildTextBasedChannel
+  targetChannel?: GuildTextBasedChannel,
 ): Promise<boolean> {
   if (
     reason == null ||
@@ -29,7 +29,7 @@ export async function ban(
     targetUser,
     `A moderator has banned you for the reason: ${reason}.`,
     originChannel,
-    guild.members.cache.has(targetUser.id)
+    guild.members.cache.has(targetUser.id),
   );
   await guild.members.ban(targetUser, {
     reason: `(${getDisplayTag(moderator)}) ${reason}`,
@@ -46,7 +46,7 @@ export async function ban(
       reason,
       mod: getUserTag(moderator.user),
       channelId: targetChannel?.id ?? originChannel.id,
-    })
+    }),
   );
   await modLog(
     guild,
@@ -62,7 +62,7 @@ export async function ban(
       targetChannel?.toString() ?? originChannel.toString(),
     ],
     Constants.BAN_COLOR,
-    targetUser
+    targetUser,
   );
   return true;
 }

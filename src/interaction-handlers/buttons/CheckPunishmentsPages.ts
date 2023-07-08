@@ -26,10 +26,10 @@ export class CheckPunishmentsPagesInteraction extends InteractionHandler {
 
   public async run(
     interaction: ButtonInteraction,
-    parsedData: InteractionHandler.ParseResult<this>
+    parsedData: InteractionHandler.ParseResult<this>,
   ) {
     const user = (await TryVal(
-      interaction.client.users.fetch(parsedData.userId)
+      interaction.client.users.fetch(parsedData.userId),
     )) as User;
     if (user == null || interaction.guild == null) {
       return;
@@ -42,7 +42,7 @@ export class CheckPunishmentsPagesInteraction extends InteractionHandler {
     const fieldsAndValues = await getHistory(
       user,
       interaction.guild,
-      (newPage - 1) * 5
+      (newPage - 1) * 5,
     );
     const embed = interaction.message.embeds.at(0);
     if (embed == null) {

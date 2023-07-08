@@ -11,10 +11,10 @@ export class SafeBrowsingCacheRepository extends BaseRepository {
     hash: string,
     threatType: string,
     platformType: string,
-    cacheLength: number
+    cacheLength: number,
   ) {
     return this.insertOne(
-      new SafeBrowsingCache(hash, threatType, platformType, cacheLength)
+      new SafeBrowsingCache(hash, threatType, platformType, cacheLength),
     );
   }
 

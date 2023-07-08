@@ -9,7 +9,7 @@ export class GuildMemberRemoveListener extends Listener {
       member.guild,
       member,
       ["Action", "Left the server", "Members now", member.guild.memberCount.toString()],
-      Constants.LIGHT_ORANGE_COLOR
+      Constants.LIGHT_ORANGE_COLOR,
     );
   }
 }

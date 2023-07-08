@@ -27,7 +27,7 @@ export class NewsPublishInteraction extends InteractionHandler {
       if (!member.roles.cache.has(Constants.ROLES.F1)) {
         await replyInteractionError(
           interaction,
-          "You must have the F1 role in order to use this command."
+          "You must have the F1 role in order to use this command.",
         );
         return;
       }
@@ -35,7 +35,7 @@ export class NewsPublishInteraction extends InteractionHandler {
       if (interaction.user.id !== posterId) {
         await replyInteractionError(
           interaction,
-          "Only the original poster can publish a message."
+          "Only the original poster can publish a message.",
         );
         return;
       }
@@ -44,7 +44,7 @@ export class NewsPublishInteraction extends InteractionHandler {
     if (!message.crosspostable) {
       await replyInteractionError(
         interaction,
-        "Cannot publish message, maybe it is already published?"
+        "Cannot publish message, maybe it is already published?",
       );
       await message.edit({
         content: message.content,
@@ -57,7 +57,7 @@ export class NewsPublishInteraction extends InteractionHandler {
       // 48 hours in milliseconds
       await replyInteractionError(
         interaction,
-        "A message may only be published within the first 48 hours of its submission."
+        "A message may only be published within the first 48 hours of its submission.",
       );
       await message.edit({
         content: message.content,

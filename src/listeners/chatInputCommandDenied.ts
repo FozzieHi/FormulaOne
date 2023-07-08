@@ -12,7 +12,7 @@ export class ChatInputCommandDeniedListener extends Listener {
     this.container.logger.info(
       `Unsuccessful (denied) command result - ${getUserTag(interaction.user)} - ${
         interaction.commandName
-      } - ${error.message}`
+      } - ${error.message}`,
     );
   }
 }

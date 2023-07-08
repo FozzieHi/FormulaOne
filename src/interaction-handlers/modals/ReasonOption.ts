@@ -30,14 +30,14 @@ export class ReasonOption extends InteractionHandler {
 
   public async run(
     interaction: ModalSubmitInteraction,
-    parsedData: InteractionHandler.ParseResult<this>
+    parsedData: InteractionHandler.ParseResult<this>,
   ) {
     if (interaction.guild == null || interaction.member == null) {
       return;
     }
     if (parsedData.commandName === "banish") {
       const targetMember = (await TryVal(
-        interaction.guild.members.fetch(parsedData.targetMemberId)
+        interaction.guild.members.fetch(parsedData.targetMemberId),
       )) as GuildMember;
       if (targetMember == null) {
         return;
@@ -48,18 +48,18 @@ export class ReasonOption extends InteractionHandler {
         parsedData.targetRoleId as Snowflake,
         parsedData.action as string,
         "interaction",
-        parsedData.reason
+        parsedData.reason,
       );
     } else if (parsedData.commandName === "ban") {
       await interaction.deferReply({ ephemeral: true });
       const targetUser = await TryVal(
-        container.client.users.fetch(parsedData.targetMemberId)
+        container.client.users.fetch(parsedData.targetMemberId),
       );
       if (targetUser == null) {
         return;
       }
       const channel = (await TryVal(
-        interaction.guild.channels.fetch(parsedData.channelId as Snowflake)
+        interaction.guild.channels.fetch(parsedData.channelId as Snowflake),
       )) as GuildTextBasedChannel;
       if (channel == null) {
         return;
@@ -67,8 +67,8 @@ export class ReasonOption extends InteractionHandler {
       await MutexManager.getUserMutex(targetUser.id).runExclusive(async () => {
         const logMessage = await TryVal(
           (interaction.channel as TextChannel).messages.fetch(
-            (interaction.message as Message).id
-          )
+            (interaction.message as Message).id,
+          ),
         );
         if (logMessage == null) {
           return;
@@ -79,7 +79,7 @@ export class ReasonOption extends InteractionHandler {
           interaction.member as GuildMember,
           parsedData.reason,
           interaction.channel as GuildTextBasedChannel,
-          channel
+          channel,
         );
         if (!result) {
           await replyInteractionError(interaction, "Error banning user.");
@@ -91,7 +91,7 @@ export class ReasonOption extends InteractionHandler {
           targetUser.id,
           interaction.member as GuildMember,
           logMessage,
-          "Banned"
+          "Banned",
         );
         await replyInteraction(interaction, "Successfully banned user.", {
           color: Constants.UNMUTE_COLOR,

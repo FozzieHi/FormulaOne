@@ -25,7 +25,7 @@ export async function getPermLevel(guild: Guild, user: User) {
     return 0;
   }
   const modRoles = Constants.MOD_ROLES.sort(
-    (a, b) => b.permissionLevel - a.permissionLevel
+    (a, b) => b.permissionLevel - a.permissionLevel,
   );
   const permLevel =
     modRoles.find((modRole) => member.roles.cache.has(modRole.id))?.permissionLevel ??
@@ -44,7 +44,7 @@ function getModerationQueueButtons(
   buttons: Array<ModerationQueueButtons>,
   targetUserId: Snowflake,
   targetChannelId: Snowflake,
-  targetMessageId: Snowflake | null
+  targetMessageId: Snowflake | null,
 ) {
   const returnButtons: Array<ButtonBuilder> = [];
   buttons.forEach((button) => {
@@ -55,7 +55,7 @@ function getModerationQueueButtons(
           customId: `showamountselect-${targetUserId}-${targetChannelId}-${targetMessageId}`,
           label: "Punish",
           style: ButtonStyle.Danger,
-        })
+        }),
       );
     } else if (button === "ESCALATE") {
       returnButtons.push(
@@ -63,7 +63,7 @@ function getModerationQueueButtons(
           customId: `escalate-${targetUserId}-${targetChannelId}-${targetChannelId}`,
           label: "Escalate",
           style: ButtonStyle.Primary,
-        })
+        }),
       );
     } else if (button === "BAN") {
       returnButtons.push(
@@ -71,7 +71,7 @@ function getModerationQueueButtons(
           customId: `showreasonoption-ban-${targetUserId}-${targetChannelId}`,
           label: "Ban",
           style: ButtonStyle.Danger,
-        })
+        }),
       );
     } else if (button === "UNMUTE") {
       returnButtons.push(
@@ -79,7 +79,7 @@ function getModerationQueueButtons(
           customId: `unmute-${targetUserId}`,
           label: "Unmute",
           style: ButtonStyle.Success,
-        })
+        }),
       );
     } else if (button === "IGNORE") {
       returnButtons.push(
@@ -87,7 +87,7 @@ function getModerationQueueButtons(
           customId: `ignore-${targetUserId}`,
           label: "Ignore",
           style: ButtonStyle.Secondary,
-        })
+        }),
       );
     }
   });
@@ -99,7 +99,7 @@ export async function genericLog(
   member: GuildMember,
   fieldsAndValues: Array<string>,
   color: number,
-  messageId?: string
+  messageId?: string,
 ) {
   const logChannel = await TryVal(guild.channels.fetch(Constants.CHANNELS.LOGS));
   if (logChannel == null) {
@@ -137,7 +137,7 @@ export async function genericLog(
         customId: `id-${messageId}`,
         label: `Message ID`,
         style: ButtonStyle.Secondary,
-      })
+      }),
     );
   }
   messageOptions.components = buttons.map((b) => ({
@@ -164,7 +164,7 @@ export async function genericLog(
     logChannel as GuildTextBasedChannel,
     undefined,
     embedOptions,
-    messageOptions
+    messageOptions,
   );
 }
 
@@ -173,7 +173,7 @@ export async function modLog(
   moderator: GuildMember | null,
   fieldsAndValues: Array<string>,
   color: number,
-  target?: User
+  target?: User,
 ) {
   const logChannel = await TryVal(guild.channels.fetch(Constants.CHANNELS.MOD_LOGS));
   if (logChannel == null) {
@@ -229,7 +229,7 @@ export async function modLog(
     logChannel as GuildTextBasedChannel,
     undefined,
     embedOptions,
-    messageOptions
+    messageOptions,
   );
 }
 
@@ -242,7 +242,7 @@ export async function modQueue(
   color: number,
   buttons: Array<ModerationQueueButtons>,
   mention = false,
-  timestamp: Date = new Date()
+  timestamp: Date = new Date(),
 ) {
   const logChannel = await TryVal(guild.channels.fetch(Constants.CHANNELS.MOD_QUEUE));
   if (logChannel == null) {
@@ -282,7 +282,7 @@ export async function modQueue(
     buttons,
     targetUser.id,
     targetChannelId,
-    targetMessageId
+    targetMessageId,
   ).forEach((button) => msgButtons.at(0)?.push(button));
   messageOptions.components = msgButtons.map((b) => ({
     type: ComponentType.ActionRow,
@@ -307,7 +307,7 @@ export async function modQueue(
     logChannel as GuildTextBasedChannel,
     undefined,
     embedOptions,
-    messageOptions
+    messageOptions,
   );
 }
 
@@ -318,10 +318,10 @@ export async function escalate(
   targetChannelId: Snowflake,
   targetMessageId: Snowflake,
   embed: APIEmbed,
-  buttons: Array<ModerationQueueButtons>
+  buttons: Array<ModerationQueueButtons>,
 ): Promise<Message | null> {
   const logChannel = await TryVal(
-    guild.channels.fetch(Constants.CHANNELS.STEWARDS_QUEUE)
+    guild.channels.fetch(Constants.CHANNELS.STEWARDS_QUEUE),
   );
   if (logChannel == null) {
     container.logger.error("STEWARDS_QUEUE is null or undefined.");
@@ -348,7 +348,7 @@ export async function escalate(
     buttons,
     target.id,
     targetChannelId,
-    targetMessageId
+    targetMessageId,
   ).forEach((button) => msgButtons.at(0)?.push(button));
   messageOptions.components = msgButtons.map((b) => ({
     type: ComponentType.ActionRow,

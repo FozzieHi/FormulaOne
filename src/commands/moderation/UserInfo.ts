@@ -28,7 +28,7 @@ export class UserInfoCommand extends Command {
   }
 
   public override registerApplicationCommands(
-    registry: ApplicationCommandRegistry
+    registry: ApplicationCommandRegistry,
   ): Awaitable<void> {
     registry.registerChatInputCommand(
       {
@@ -46,7 +46,7 @@ export class UserInfoCommand extends Command {
       {
         guildIds: Constants.GUILD_IDS,
         idHints: ["989262356037136404"],
-      }
+      },
     );
   }
 
@@ -75,7 +75,7 @@ export class UserInfoCommand extends Command {
       year: "numeric",
     };
     const member = (await TryVal(
-      interaction.guild.members.fetch(user.id)
+      interaction.guild.members.fetch(user.id),
     )) as GuildMember;
     if (member == null) {
       await replyInteractionPublicFields(
@@ -97,7 +97,7 @@ export class UserInfoCommand extends Command {
             type: ComponentType.ActionRow,
             components: b,
           })),
-        }
+        },
       );
     } else {
       const roles = member.roles.cache.map((role) => role.toString());
@@ -130,7 +130,7 @@ export class UserInfoCommand extends Command {
             type: ComponentType.ActionRow,
             components: b,
           })),
-        }
+        },
       );
     }
   }
