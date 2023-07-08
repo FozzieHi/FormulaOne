@@ -27,19 +27,19 @@ setInterval(() => {
           ) {
             // 20 minutes
             const guild = (await TryVal(
-              container.client.guilds.fetch(dbGuild.guildId)
+              container.client.guilds.fetch(dbGuild.guildId),
             )) as Guild;
             if (guild != null) {
               if (guild.verificationLevel !== GuildVerificationLevel.High) {
                 await guild.setVerificationLevel(
                   GuildVerificationLevel.High,
-                  `Protection deactivated at ${now}`
+                  `Protection deactivated at ${now}`,
                 );
                 await modLog(
                   guild,
                   null,
                   ["Action", "Protection Deactivated", "Verification Level", "HIGH"],
-                  Constants.UNMUTE_COLOR
+                  Constants.UNMUTE_COLOR,
                 );
               }
             }

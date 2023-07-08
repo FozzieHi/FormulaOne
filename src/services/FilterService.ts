@@ -33,7 +33,7 @@ export async function checkInvites(message: Message): Promise<boolean> {
   }
   await Try(message.delete());
   const messages = await TryVal(
-    (message.channel as GuildTextBasedChannel).messages.fetch({ limit: 2 })
+    (message.channel as GuildTextBasedChannel).messages.fetch({ limit: 2 }),
   );
   const aboveMessage = messages?.last()?.url;
   await modQueue(
@@ -60,7 +60,7 @@ export async function checkInvites(message: Message): Promise<boolean> {
       ModerationQueueButtons.PUNISH,
       ModerationQueueButtons.ESCALATE,
       ModerationQueueButtons.IGNORE,
-    ]
+    ],
   );
   return true;
 }
@@ -71,7 +71,7 @@ export async function checkEmotes(message: Message, reaction: MessageReaction) {
       ViolationService.reports.some(
         (report) =>
           report.channelId === reaction.message.channel.id &&
-          report.messageId === reaction.message.id
+          report.messageId === reaction.message.id,
       )
     ) {
       return;
@@ -79,7 +79,7 @@ export async function checkEmotes(message: Message, reaction: MessageReaction) {
     if (
       await isModerator(
         reaction.message.guild as Guild,
-        reaction.message.author as User
+        reaction.message.author as User,
       )
     ) {
       return;
@@ -126,7 +126,7 @@ export async function checkEmotes(message: Message, reaction: MessageReaction) {
             ModerationQueueButtons.ESCALATE,
             ModerationQueueButtons.IGNORE,
           ],
-          true
+          true,
         );
         ViolationService.reports.push({
           channelId: message.channel.id,

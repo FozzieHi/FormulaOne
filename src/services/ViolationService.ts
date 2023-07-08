@@ -33,7 +33,7 @@ export default new (class ViolationService {
           if (newViolations === 3) {
             await message.member.roles.add(
               Constants.ROLES.MUTED,
-              "Reaching three moderation-queue violations"
+              "Reaching three moderation-queue violations",
             );
             await modQueue(
               message.guild,
@@ -52,7 +52,7 @@ export default new (class ViolationService {
                 ModerationQueueButtons.BAN,
                 ModerationQueueButtons.UNMUTE,
                 ModerationQueueButtons.IGNORE,
-              ]
+              ],
             );
           }
         } else {

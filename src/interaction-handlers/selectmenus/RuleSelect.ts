@@ -29,14 +29,14 @@ export class RuleSelect extends InteractionHandler {
 
   public async run(
     interaction: SelectMenuInteraction,
-    parsedData: InteractionHandler.ParseResult<this>
+    parsedData: InteractionHandler.ParseResult<this>,
   ) {
     if (interaction.guild == null) {
       return;
     }
     if (parsedData.commandName === "banish") {
       const targetMember = (await TryVal(
-        interaction.guild.members.fetch(parsedData.targetMemberId)
+        interaction.guild.members.fetch(parsedData.targetMemberId),
       )) as GuildMember;
       if (targetMember == null) {
         await replyInteractionError(interaction, "Member not found.");
@@ -49,7 +49,7 @@ export class RuleSelect extends InteractionHandler {
         parsedData.targetRoleId as Snowflake,
         "add",
         "interaction",
-        reason
+        reason,
       );
     } else if (parsedData.commandName === "punish") {
       await MutexManager.getUserMutex(parsedData.targetMemberId).runExclusive(
@@ -58,31 +58,31 @@ export class RuleSelect extends InteractionHandler {
             parsedData.logMessageId != null
               ? await TryVal(
                   (interaction.channel as TextChannel).messages.fetch(
-                    parsedData.logMessageId
-                  )
+                    parsedData.logMessageId,
+                  ),
                 )
               : null;
           if (interaction.guild == null || interaction.member == null) {
             return;
           }
           const targetMember = (await TryVal(
-            interaction.guild.members.fetch(parsedData.targetMemberId)
+            interaction.guild.members.fetch(parsedData.targetMemberId),
           )) as GuildMember;
           if (targetMember == null) {
             await replyInteractionError(interaction, "Member not found.");
             return;
           }
           const channel = (await TryVal(
-            interaction.guild.channels.fetch(parsedData.channelId as Snowflake)
+            interaction.guild.channels.fetch(parsedData.channelId as Snowflake),
           )) as TextChannel;
           let message = null;
           if (channel != null) {
             message = (await TryVal(
-              channel.messages.fetch(parsedData.messageId as Snowflake)
+              channel.messages.fetch(parsedData.messageId as Snowflake),
             )) as Message;
           } else {
             this.container.logger.warn(
-              `Channel is null - Channel ID: ${parsedData.channelId as Snowflake}`
+              `Channel is null - Channel ID: ${parsedData.channelId as Snowflake}`,
             );
           }
           const reason = `${parsedData.rule} - ${Constants.RULES[parsedData.rule]}`;
@@ -94,7 +94,7 @@ export class RuleSelect extends InteractionHandler {
             reason,
             parsedData.amount as number,
             message,
-            channel
+            channel,
           )) as Message;
           if (logMessage != null) {
             await archiveLog(
@@ -103,12 +103,12 @@ export class RuleSelect extends InteractionHandler {
               targetMember.id,
               interaction.member as GuildMember,
               logMessage,
-              "Punished"
+              "Punished",
             );
             await setTimeout(10000, "result");
             await Try(messageSent.delete());
           }
-        }
+        },
       );
     }
   }

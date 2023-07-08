@@ -21,7 +21,7 @@ export class NewsCommand extends Command {
   }
 
   public override registerApplicationCommands(
-    registry: ApplicationCommandRegistry
+    registry: ApplicationCommandRegistry,
   ): Awaitable<void> {
     registry.registerChatInputCommand(
       {
@@ -39,7 +39,7 @@ export class NewsCommand extends Command {
       {
         guildIds: Constants.GUILD_IDS,
         idHints: ["977147657053167616"],
-      }
+      },
     );
   }
 
@@ -54,7 +54,7 @@ export class NewsCommand extends Command {
     }
 
     const newsChannel = (await TryVal(
-      interaction.guild.channels.fetch(Constants.CHANNELS.NEWS)
+      interaction.guild.channels.fetch(Constants.CHANNELS.NEWS),
     )) as TextBasedChannel;
     if (newsChannel == null) {
       return;
@@ -71,7 +71,7 @@ export class NewsCommand extends Command {
     ];
     await newsChannel.send({
       content: `${url} sent by ${boldify(
-        getDisplayTag(interaction.member as GuildMember)
+        getDisplayTag(interaction.member as GuildMember),
       )}`,
       components: buttons.map((button) => ({
         type: ComponentType.ActionRow,
@@ -80,7 +80,7 @@ export class NewsCommand extends Command {
     });
     await replyInteractionPublic(
       interaction,
-      `Successfully posted to ${newsChannel.toString()}.`
+      `Successfully posted to ${newsChannel.toString()}.`,
     );
   }
 }

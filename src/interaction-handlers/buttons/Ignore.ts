@@ -34,7 +34,7 @@ export class IgnoreInteraction extends InteractionHandler {
     }
     await MutexManager.getUserMutex(userId).runExclusive(async () => {
       const logMessage = await TryVal(
-        (interaction.channel as TextChannel).messages.fetch(interaction.message.id)
+        (interaction.channel as TextChannel).messages.fetch(interaction.message.id),
       );
       if (logMessage == null) {
         return;
@@ -45,7 +45,7 @@ export class IgnoreInteraction extends InteractionHandler {
         userId,
         interaction.member as GuildMember,
         logMessage,
-        "Ignored"
+        "Ignored",
       );
       if (messageSent) {
         await replyInteraction(interaction, "Successfully ignored log.", {

@@ -13,14 +13,14 @@ export async function addDiscussionEmotes(message: Message) {
 
 export async function checkDiscussionEmotes(
   message: Message,
-  reaction: MessageReaction
+  reaction: MessageReaction,
 ) {
   await MutexManager.getUserPublicMutex(message.author.id).runExclusive(async () => {
     if (
       ViolationService.reports.some(
         (report) =>
           report.channelId === reaction.message.channel?.id &&
-          report.messageId === reaction.message.id
+          report.messageId === reaction.message.id,
       )
     ) {
       return;
@@ -28,7 +28,7 @@ export async function checkDiscussionEmotes(
     if (
       await isModerator(
         reaction.message.guild as Guild,
-        reaction.message.author as User
+        reaction.message.author as User,
       )
     ) {
       return;
@@ -50,7 +50,7 @@ export async function checkDiscussionEmotes(
 
       const upvotes = upvoteUsers.filter((user) => user.id !== message.author.id).size;
       const downvotes = downvoteUsers.filter(
-        (user) => user.id !== message.author.id
+        (user) => user.id !== message.author.id,
       ).size;
       if (downvotes / upvotes >= 10) {
         const fieldsAndValues = [
@@ -83,7 +83,7 @@ export async function checkDiscussionEmotes(
             ModerationQueueButtons.ESCALATE,
             ModerationQueueButtons.IGNORE,
           ],
-          true
+          true,
         );
         ViolationService.reports.push({
           channelId: message.channel.id,

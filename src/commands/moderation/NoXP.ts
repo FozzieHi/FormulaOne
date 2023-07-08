@@ -30,7 +30,7 @@ export class NoXP extends Command {
   }
 
   public override registerApplicationCommands(
-    registry: ApplicationCommandRegistry
+    registry: ApplicationCommandRegistry,
   ): Awaitable<void> {
     registry.registerChatInputCommand(
       {
@@ -81,7 +81,7 @@ export class NoXP extends Command {
       {
         guildIds: Constants.GUILD_IDS,
         idHints: ["987430208762159134"],
-      }
+      },
     );
   }
 
@@ -114,7 +114,7 @@ export class NoXP extends Command {
         if (targetMember.roles.cache.has(Constants.ROLES.NOXP)) {
           await replyInteractionError(
             interaction,
-            `${boldify(getDisplayTag(targetMember))} already has the NoXP role.`
+            `${boldify(getDisplayTag(targetMember))} already has the NoXP role.`,
           );
           return;
         }
@@ -123,11 +123,11 @@ export class NoXP extends Command {
         await dm(
           targetMember.user,
           "A moderator has given you the NoXP role. You are now unable to gain XP.",
-          interaction.channel
+          interaction.channel,
         );
         await replyInteractionPublic(
           interaction,
-          `Successfully added NoXP to ${boldify(getDisplayTag(targetMember))}.`
+          `Successfully added NoXP to ${boldify(getDisplayTag(targetMember))}.`,
         );
         await modLog(
           interaction.guild,
@@ -143,7 +143,7 @@ export class NoXP extends Command {
             interaction.channel.toString(),
           ],
           Constants.BANISH_COLOR,
-          targetMember.user
+          targetMember.user,
         );
       } else if (subcommand === "remove") {
         reason = interaction.options.getString("reason");
@@ -154,7 +154,7 @@ export class NoXP extends Command {
         if (!targetMember.roles.cache.has(Constants.ROLES.NOXP)) {
           await replyInteractionError(
             interaction,
-            `${boldify(getDisplayTag(targetMember))} does not have the NoXP role.`
+            `${boldify(getDisplayTag(targetMember))} does not have the NoXP role.`,
           );
           return;
         }
@@ -163,11 +163,11 @@ export class NoXP extends Command {
         await dm(
           targetMember.user,
           "A moderator has removed the NoXP role from you. You are now able to gain XP.",
-          interaction.channel
+          interaction.channel,
         );
         await replyInteractionPublic(
           interaction,
-          `Successfully removed NoXP from ${boldify(getDisplayTag(targetMember))}.`
+          `Successfully removed NoXP from ${boldify(getDisplayTag(targetMember))}.`,
         );
         await modLog(
           interaction.guild,
@@ -183,7 +183,7 @@ export class NoXP extends Command {
             interaction.channel.toString(),
           ],
           Constants.UNMUTE_COLOR,
-          targetMember.user
+          targetMember.user,
         );
       }
     });

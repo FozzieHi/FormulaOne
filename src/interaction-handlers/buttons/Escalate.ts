@@ -27,14 +27,14 @@ export class Escalate extends InteractionHandler {
 
   public async run(
     interaction: ButtonInteraction,
-    parsedData: InteractionHandler.ParseResult<this>
+    parsedData: InteractionHandler.ParseResult<this>,
   ) {
     await MutexManager.getUserMutex(parsedData.targetUserId).runExclusive(async () => {
       if (interaction.member == null) {
         return;
       }
       const logMessage = await TryVal(
-        (interaction.channel as TextChannel).messages.fetch(interaction.message.id)
+        (interaction.channel as TextChannel).messages.fetch(interaction.message.id),
       );
       if (logMessage == null) {
         return;
@@ -44,7 +44,7 @@ export class Escalate extends InteractionHandler {
         return;
       }
       const targetUser = await TryVal(
-        container.client.users.fetch(parsedData.targetUserId)
+        container.client.users.fetch(parsedData.targetUserId),
       );
       if (targetUser == null) {
         return;
@@ -60,7 +60,7 @@ export class Escalate extends InteractionHandler {
           ModerationQueueButtons.PUNISH,
           ModerationQueueButtons.BAN,
           ModerationQueueButtons.IGNORE,
-        ]
+        ],
       );
       if (escalationSent == null) {
         await replyInteractionError(interaction, "Error escalating log.");
@@ -72,7 +72,7 @@ export class Escalate extends InteractionHandler {
         parsedData.targetUserId,
         interaction.member as GuildMember,
         logMessage,
-        "Escalated"
+        "Escalated",
       );
       if (messageSent) {
         await replyInteraction(interaction, "Successfully escalated log.", {

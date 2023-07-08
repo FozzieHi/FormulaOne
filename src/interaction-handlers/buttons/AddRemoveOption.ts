@@ -23,7 +23,7 @@ export class AddRemoveOption extends InteractionHandler {
 
   public async run(
     interaction: ButtonInteraction,
-    parsedData: InteractionHandler.ParseResult<this>
+    parsedData: InteractionHandler.ParseResult<this>,
   ) {
     if (parsedData.action === "add") {
       const ruleOptions: Array<SelectMenuComponentOptionData> = [];

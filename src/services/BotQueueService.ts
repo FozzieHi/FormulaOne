@@ -31,17 +31,17 @@ export async function archiveLog(
   targetUserId: string,
   moderator: GuildMember | null,
   message: Message,
-  action: string
+  action: string,
 ): Promise<Message | null> {
   const modQueueChannel = (await TryVal(
-    guild.channels.fetch(Constants.CHANNELS.MOD_QUEUE)
+    guild.channels.fetch(Constants.CHANNELS.MOD_QUEUE),
   )) as TextChannel;
   const EmbedBuilder = message.embeds.at(0);
   if (modQueueChannel == null || EmbedBuilder == null) {
     return null;
   }
   const archiveThread = (await TryVal(
-    modQueueChannel.threads.fetch(Constants.CHANNELS.MOD_QUEUE_ARCHIVE)
+    modQueueChannel.threads.fetch(Constants.CHANNELS.MOD_QUEUE_ARCHIVE),
   )) as ThreadChannel;
   if (archiveThread == null) {
     return null;

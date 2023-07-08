@@ -10,11 +10,11 @@ export class MessageDeleteListener extends Listener {
     const { member } = message;
     if (member != null && !member.user.bot && message.guild != null) {
       const auditLog = await TryVal(
-        message.guild.fetchAuditLogs({ type: AuditLogEvent.MessageDelete, limit: 1 })
+        message.guild.fetchAuditLogs({ type: AuditLogEvent.MessageDelete, limit: 1 }),
       );
       const auditMessage = auditLog?.entries.first();
       const messages = await TryVal(
-        (message.channel as GuildTextBasedChannel).messages.fetch({ limit: 2 })
+        (message.channel as GuildTextBasedChannel).messages.fetch({ limit: 2 }),
       );
       const aboveMessage = messages?.last()?.url;
 
@@ -37,7 +37,7 @@ export class MessageDeleteListener extends Listener {
         auditMessage.executor != null
       ) {
         const moderator = await TryVal(
-          message.guild.members.fetch(auditMessage.executor)
+          message.guild.members.fetch(auditMessage.executor),
         );
         if (moderator != null) {
           fieldsAndValues.push("Deleted By");
@@ -50,7 +50,7 @@ export class MessageDeleteListener extends Listener {
         member,
         fieldsAndValues,
         Constants.ORANGE_COLOR,
-        message.id
+        message.id,
       );
     }
   }

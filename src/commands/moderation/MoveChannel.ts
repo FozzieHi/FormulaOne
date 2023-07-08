@@ -23,7 +23,7 @@ export class MoveChannelCommand extends Command {
   }
 
   public override registerApplicationCommands(
-    registry: ApplicationCommandRegistry
+    registry: ApplicationCommandRegistry,
   ): Awaitable<void> {
     registry.registerChatInputCommand(
       {
@@ -49,7 +49,7 @@ export class MoveChannelCommand extends Command {
       {
         guildIds: Constants.GUILD_IDS,
         idHints: ["977147565327921152"],
-      }
+      },
     );
   }
 
@@ -67,7 +67,7 @@ export class MoveChannelCommand extends Command {
 
     await send(
       fromChannel as GuildTextBasedChannel,
-      `Please move to ${toChannel.toString()}.`
+      `Please move to ${toChannel.toString()}.`,
     );
     await replyInteraction(interaction, "Successfully sent the message.");
   }

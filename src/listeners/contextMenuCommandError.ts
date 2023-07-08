@@ -10,7 +10,7 @@ export class ContextMenuCommandErrorListener extends Listener {
     this.container.logger.error(
       `Unsuccessful (error) context menu result - ${getUserTag(interaction.user)} - ${
         interaction.commandName
-      } - ${error.message}`
+      } - ${error.message}`,
     );
     Sentry.captureException(error);
   }

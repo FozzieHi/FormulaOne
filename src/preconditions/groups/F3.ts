@@ -7,7 +7,7 @@ export class F3Precondition extends Precondition {
   public async chatInputRun(interaction: ChatInputCommandInteraction) {
     return (await getPermLevel(
       interaction.guild as Guild,
-      (interaction.member as GuildMember).user
+      (interaction.member as GuildMember).user,
     )) > 0 || (interaction.member as GuildMember).roles.cache.has(Constants.ROLES.F3)
       ? this.ok()
       : this.error({

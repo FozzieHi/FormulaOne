@@ -2,7 +2,7 @@ import { DiscordAPIError } from "discord.js";
 
 export default async <Type>(
   promise: Promise<Type>,
-  filterCode?: string
+  filterCode?: string,
 ): Promise<boolean> => {
   try {
     await promise;

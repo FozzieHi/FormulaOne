@@ -12,7 +12,7 @@ export class ContextMenuCommandDeniedListener extends Listener {
     this.container.logger.info(
       `Unsuccessful (denied) context menu result - ${getUserTag(interaction.user)} - ${
         interaction.commandName
-      } - ${error.message}`
+      } - ${error.message}`,
     );
   }
 }

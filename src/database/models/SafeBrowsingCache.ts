@@ -13,7 +13,7 @@ export class SafeBrowsingCache {
     hash: string,
     threatType: string,
     platformType: string,
-    cacheLength: number
+    cacheLength: number,
   ) {
     this.hash = hash;
     this.threatType = threatType;

@@ -6,7 +6,7 @@ export class ChatInputCommandSuccessListener extends Listener {
     this.container.logger.info(
       `Successful command result - ${getUserTag(interaction.user)} - ${
         context.commandName
-      }`
+      }`,
     );
   }
 }

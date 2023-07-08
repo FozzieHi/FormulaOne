@@ -25,7 +25,7 @@ export class ClearCommand extends Command {
   }
 
   public override registerApplicationCommands(
-    registry: ApplicationCommandRegistry
+    registry: ApplicationCommandRegistry,
   ): Awaitable<void> {
     registry.registerChatInputCommand(
       {
@@ -45,7 +45,7 @@ export class ClearCommand extends Command {
       {
         guildIds: Constants.GUILD_IDS,
         idHints: ["977147568360415242"],
-      }
+      },
     );
   }
 
@@ -65,7 +65,7 @@ export class ClearCommand extends Command {
       if (interaction.channel.id === Constants.CHANNELS.MOD_LOGS) {
         await replyInteractionError(
           interaction,
-          "You may not clear messages in the log channel."
+          "You may not clear messages in the log channel.",
         );
         return;
       }
@@ -73,7 +73,7 @@ export class ClearCommand extends Command {
       await (interaction.channel as GuildTextBasedChannel).bulkDelete(amount);
       await replyInteractionPublic(
         interaction,
-        `Successfully cleared ${amount} message${amount !== 1 ? "s" : ""}.`
+        `Successfully cleared ${amount} message${amount !== 1 ? "s" : ""}.`,
       );
       await modLog(
         interaction.guild,
@@ -86,7 +86,7 @@ export class ClearCommand extends Command {
           "Channel",
           interaction.channel.toString(),
         ],
-        Constants.WARN_COLOR
+        Constants.WARN_COLOR,
       );
     });
   }

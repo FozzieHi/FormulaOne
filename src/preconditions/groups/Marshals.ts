@@ -11,7 +11,7 @@ export class MarshalsPrecondition extends Precondition {
   public async chatInputRun(interaction: ChatInputCommandInteraction) {
     return (await getPermLevel(
       interaction.guild as Guild,
-      (interaction.member as GuildMember).user
+      (interaction.member as GuildMember).user,
     )) > 0
       ? this.ok()
       : this.error({ message: "You must be a Marshal in order to use this command." });
@@ -20,7 +20,7 @@ export class MarshalsPrecondition extends Precondition {
   public async contextMenuRun(interaction: ContextMenuCommandInteraction) {
     return (await getPermLevel(
       interaction.guild as Guild,
-      (interaction.member as GuildMember).user
+      (interaction.member as GuildMember).user,
     )) > 0
       ? this.ok()
       : this.error({ message: "You must be a Marshal in order to use this command." });

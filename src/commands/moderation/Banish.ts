@@ -32,11 +32,11 @@ export class BanishCommand extends Command {
   }
 
   public override registerApplicationCommands(
-    registry: ApplicationCommandRegistry
+    registry: ApplicationCommandRegistry,
   ): Awaitable<void> {
     const roleChoices: Array<ApplicationCommandOptionChoiceData<string>> = [];
     Constants.BANISH_ROLES.forEach((role) =>
-      roleChoices.push({ name: role.name, value: role.id })
+      roleChoices.push({ name: role.name, value: role.id }),
     );
 
     registry.registerChatInputCommand(
@@ -102,7 +102,7 @@ export class BanishCommand extends Command {
       {
         guildIds: Constants.GUILD_IDS,
         idHints: ["977147652972105748"],
-      }
+      },
     );
 
     registry.registerContextMenuCommand(
@@ -113,7 +113,7 @@ export class BanishCommand extends Command {
       {
         guildIds: Constants.GUILD_IDS,
         idHints: ["1062507523728478269"],
-      }
+      },
     );
   }
 
@@ -145,7 +145,7 @@ export class BanishCommand extends Command {
     }
     const moderator = interaction.member as GuildMember;
     const targetMember = (await TryVal(
-      interaction.guild.members.fetch(message.author.id)
+      interaction.guild.members.fetch(message.author.id),
     )) as GuildMember;
     if (moderator == null || targetMember == null) {
       return;
@@ -158,7 +158,7 @@ export class BanishCommand extends Command {
     ) {
       await replyInteractionError(
         interaction,
-        "You may not use this command on a moderator."
+        "You may not use this command on a moderator.",
       );
       return;
     }
@@ -166,7 +166,7 @@ export class BanishCommand extends Command {
     const roleOptions: Array<SelectMenuComponentOptionData> = [];
     if ((await getPermLevel(interaction.guild, moderator.user)) > 0) {
       Constants.BANISH_ROLES.forEach((role) =>
-        roleOptions.push({ label: role.name, value: role.id })
+        roleOptions.push({ label: role.name, value: role.id }),
       );
     } else {
       roleOptions.push({

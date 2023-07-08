@@ -24,7 +24,7 @@ export class EmojiCommand extends Command {
   }
 
   public override registerApplicationCommands(
-    registry: ApplicationCommandRegistry
+    registry: ApplicationCommandRegistry,
   ): Awaitable<void> {
     registry.registerChatInputCommand(
       {
@@ -48,7 +48,7 @@ export class EmojiCommand extends Command {
       {
         guildIds: Constants.GUILD_IDS,
         idHints: ["978981313354825778"],
-      }
+      },
     );
   }
 
@@ -66,13 +66,13 @@ export class EmojiCommand extends Command {
     if (attachment.height == null || attachment.width == null) {
       await replyInteractionError(
         interaction,
-        "That is not a valid file type, please make sure you upload an image or video."
+        "That is not a valid file type, please make sure you upload an image or video.",
       );
       return;
     }
 
     const emojiChannel = (await TryVal(
-      interaction.guild.channels.fetch(Constants.CHANNELS.EMOJIS)
+      interaction.guild.channels.fetch(Constants.CHANNELS.EMOJIS),
     )) as TextBasedChannel;
     if (emojiChannel == null) {
       return;
@@ -91,13 +91,13 @@ export class EmojiCommand extends Command {
     const sentMessage = await send(
       emojiChannel,
       `Proposed the emote :${name}:`,
-      options
+      options,
     );
     await sentMessage.react(Constants.EMOTES.UP);
     await sentMessage.react(Constants.EMOTES.DOWN);
     await replyInteractionPublic(
       interaction,
-      `Successfully proposed the emote :${name}:.`
+      `Successfully proposed the emote :${name}:.`,
     );
 
     await genericLog(
@@ -109,7 +109,7 @@ export class EmojiCommand extends Command {
         "Name",
         name,
       ],
-      Constants.LIGHT_ORANGE_COLOR
+      Constants.LIGHT_ORANGE_COLOR,
     );
   }
 }

@@ -21,7 +21,7 @@ export class AmountSelect extends InteractionHandler {
 
   public async run(
     interaction: SelectMenuInteraction,
-    parsedData: InteractionHandler.ParseResult<this>
+    parsedData: InteractionHandler.ParseResult<this>,
   ) {
     if (parsedData.amount == null) {
       return;

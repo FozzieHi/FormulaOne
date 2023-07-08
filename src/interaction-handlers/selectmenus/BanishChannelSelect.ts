@@ -23,13 +23,13 @@ export class BanishChannelSelect extends InteractionHandler {
 
   public async run(
     interaction: SelectMenuInteraction,
-    parsedData: InteractionHandler.ParseResult<this>
+    parsedData: InteractionHandler.ParseResult<this>,
   ) {
     if (parsedData.targetMemberId == null || parsedData.targetRoleId == null) {
       return;
     }
     const member = (await TryVal(
-      (interaction.guild as Guild).members.fetch(parsedData.targetMemberId)
+      (interaction.guild as Guild).members.fetch(parsedData.targetMemberId),
     )) as GuildMember;
     if (member == null) {
       return;

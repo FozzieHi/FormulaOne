@@ -24,13 +24,13 @@ export async function showAmountSelect(
   interaction: ButtonInteraction | ContextMenuCommandInteraction,
   targetMemberId: Snowflake,
   channelId: Snowflake,
-  messageId: Snowflake
+  messageId: Snowflake,
 ) {
   if (interaction.guild == null) {
     return;
   }
   const targetMember = (await TryVal(
-    interaction.guild.members.fetch(targetMemberId)
+    interaction.guild.members.fetch(targetMemberId),
   )) as GuildMember;
   if (targetMember == null) {
     await replyInteractionError(interaction, "Member not found.");
@@ -39,7 +39,7 @@ export async function showAmountSelect(
   if (await isModerator(interaction.guild, targetMember.user)) {
     await replyInteractionError(
       interaction,
-      "You may not use this command on a moderator."
+      "You may not use this command on a moderator.",
     );
     return;
   }
@@ -52,8 +52,8 @@ export async function showAmountSelect(
     await replyInteractionError(
       interaction,
       `${boldify(
-        getDisplayTag(targetMember)
-      )} has exceeded 5 punishments in the last 30 days, escalate their punishment manually.`
+        getDisplayTag(targetMember),
+      )} has exceeded 5 punishments in the last 30 days, escalate their punishment manually.`,
     );
     return;
   }
@@ -65,7 +65,7 @@ export async function showAmountSelect(
   const options: Array<SelectMenuComponentOptionData> = [];
   amounts.forEach((amount) => {
     const punishment = Constants.PUNISHMENTS.at(
-      dbUser.currentPunishment + parseInt(amount, 10) - 1
+      dbUser.currentPunishment + parseInt(amount, 10) - 1,
     );
     if (punishment != null) {
       options.push({
@@ -107,13 +107,13 @@ export class ShowAmountSelect extends InteractionHandler {
 
   public async run(
     interaction: ButtonInteraction,
-    parsedData: InteractionHandler.ParseResult<this>
+    parsedData: InteractionHandler.ParseResult<this>,
   ) {
     await showAmountSelect(
       interaction,
       parsedData.targetMemberId,
       parsedData.channelId,
-      parsedData.messageId
+      parsedData.messageId,
     );
   }
 

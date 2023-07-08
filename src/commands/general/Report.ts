@@ -18,7 +18,7 @@ export class ReportCommand extends Command {
   }
 
   public override registerApplicationCommands(
-    registry: ApplicationCommandRegistry
+    registry: ApplicationCommandRegistry,
   ): Awaitable<void> {
     registry.registerContextMenuCommand(
       {
@@ -28,7 +28,7 @@ export class ReportCommand extends Command {
       {
         guildIds: Constants.GUILD_IDS,
         idHints: ["1062507633812197386"],
-      }
+      },
     );
   }
 
@@ -50,7 +50,7 @@ export class ReportCommand extends Command {
       if (await isModerator(interaction.guild, message.author)) {
         await replyInteractionError(
           interaction,
-          "You may not use this command on a moderator."
+          "You may not use this command on a moderator.",
         );
         return;
       }
@@ -58,7 +58,7 @@ export class ReportCommand extends Command {
         !ViolationService.reports.some(
           (report) =>
             report.channelId === interaction.channel?.id &&
-            report.messageId === message.id
+            report.messageId === message.id,
         )
       ) {
         const fieldsAndValues = [
@@ -96,7 +96,7 @@ export class ReportCommand extends Command {
             ModerationQueueButtons.IGNORE,
           ],
           true,
-          message.createdAt
+          message.createdAt,
         );
         ViolationService.reports.push({
           channelId: interaction.channel.id,

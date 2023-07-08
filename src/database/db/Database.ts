@@ -32,10 +32,10 @@ export class Database {
     this.punRepo = new PunishmentRepository(db.collection("punishments"));
     this.banRepo = new BanRepository(db.collection("bans"));
     this.safeBrowsingCacheRepo = new SafeBrowsingCacheRepository(
-      db.collection("safeBrowsingCache")
+      db.collection("safeBrowsingCache"),
     );
     this.youtubeChannelCacheRepo = new YouTubeChannelCacheRepository(
-      db.collection("youtubeChannelCache")
+      db.collection("youtubeChannelCache"),
     );
 
     // Indexes on first creation:

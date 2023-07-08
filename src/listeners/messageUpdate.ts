@@ -26,7 +26,7 @@ export class MessageUpdateListener extends Listener {
             newMessage.channel.toString(),
           ],
           Constants.LIGHT_ORANGE_COLOR,
-          newMessage.id
+          newMessage.id,
         );
       }
     }
