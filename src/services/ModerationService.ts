@@ -1,16 +1,16 @@
 import {
+  APIEmbed,
+  BaseMessageOptions,
+  ButtonBuilder,
   ButtonStyle,
+  ComponentType,
   Guild,
   GuildMember,
   GuildTextBasedChannel,
   Message,
-  ButtonBuilder,
-  APIEmbed,
-  BaseMessageOptions,
   PermissionsBitField,
   Snowflake,
   User,
-  ComponentType,
 } from "discord.js";
 import { container } from "@sapphire/framework";
 import { Constants, ModerationQueueButtons } from "../utility/Constants.js";
@@ -48,7 +48,7 @@ function getModerationQueueButtons(
 ) {
   const returnButtons: Array<ButtonBuilder> = [];
   buttons.forEach((button) => {
-    if (button === "PUNISH") {
+    if (button === ModerationQueueButtons.PUNISH) {
       returnButtons.push(
         new ButtonBuilder({
           // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
@@ -57,7 +57,7 @@ function getModerationQueueButtons(
           style: ButtonStyle.Danger,
         }),
       );
-    } else if (button === "ESCALATE") {
+    } else if (button === ModerationQueueButtons.ESCALATE) {
       returnButtons.push(
         new ButtonBuilder({
           customId: `escalate-${targetUserId}-${targetChannelId}-${targetChannelId}`,
@@ -65,7 +65,7 @@ function getModerationQueueButtons(
           style: ButtonStyle.Primary,
         }),
       );
-    } else if (button === "BAN") {
+    } else if (button === ModerationQueueButtons.BAN) {
       returnButtons.push(
         new ButtonBuilder({
           customId: `showreasonoption-ban-${targetUserId}-${targetChannelId}`,
@@ -73,7 +73,7 @@ function getModerationQueueButtons(
           style: ButtonStyle.Danger,
         }),
       );
-    } else if (button === "UNMUTE") {
+    } else if (button === ModerationQueueButtons.UNMUTE) {
       returnButtons.push(
         new ButtonBuilder({
           customId: `unmute-${targetUserId}`,
@@ -81,7 +81,7 @@ function getModerationQueueButtons(
           style: ButtonStyle.Success,
         }),
       );
-    } else if (button === "IGNORE") {
+    } else if (button === ModerationQueueButtons.IGNORE) {
       returnButtons.push(
         new ButtonBuilder({
           customId: `ignore-${targetUserId}`,
