@@ -18,7 +18,7 @@ import TryVal from "../../utility/TryVal.js";
 import { getPunishmentDisplay } from "../../utility/PunishUtil.js";
 import { Constants } from "../../utility/Constants.js";
 import { boldify, getDisplayTag } from "../../utility/StringUtil.js";
-import { isModerator } from "../../services/ModerationService.js";
+import { getPermLevel, isModerator } from "../../services/ModerationService.js";
 
 export async function showAmountSelect(
   interaction: ButtonInteraction | ContextMenuCommandInteraction,
@@ -26,7 +26,24 @@ export async function showAmountSelect(
   channelId: Snowflake,
   messageId: Snowflake,
 ) {
-  if (interaction.guild == null) {
+  if (interaction.guild == null || interaction.channel == null) {
+    return;
+  }
+  if (!(await isModerator(interaction.guild, interaction.user))) {
+    await replyInteractionError(
+      interaction,
+      "You must be a Marshal in order to use this command.",
+    );
+    return;
+  }
+  if (
+    interaction.channel.id === Constants.CHANNELS.STEWARDS_QUEUE &&
+    (await getPermLevel(interaction.guild, interaction.user)) < 2
+  ) {
+    await replyInteractionError(
+      interaction,
+      "You must be a Steward in order to use this command.",
+    );
     return;
   }
   const targetMember = (await TryVal(

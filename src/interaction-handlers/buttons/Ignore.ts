@@ -15,6 +15,7 @@ import MutexManager from "../../managers/MutexManager.js";
 import { replyInteraction, replyInteractionError } from "../../utility/Sender.js";
 import TryVal from "../../utility/TryVal.js";
 import { archiveLog } from "../../services/BotQueueService.js";
+import { getPermLevel, isModerator } from "../../services/ModerationService.js";
 
 export class IgnoreInteraction extends InteractionHandler {
   public constructor(context: PieceContext) {
@@ -30,6 +31,23 @@ export class IgnoreInteraction extends InteractionHandler {
       interaction.channel == null ||
       interaction.message == null
     ) {
+      return;
+    }
+    if (!(await isModerator(interaction.guild, interaction.user))) {
+      await replyInteractionError(
+        interaction,
+        "You must be a Marshal in order to use this command.",
+      );
+      return;
+    }
+    if (
+      interaction.channel.id === Constants.CHANNELS.STEWARDS_QUEUE &&
+      (await getPermLevel(interaction.guild, interaction.user)) < 2
+    ) {
+      await replyInteractionError(
+        interaction,
+        "You must be a Steward in order to use this command.",
+      );
       return;
     }
     await MutexManager.getUserMutex(userId).runExclusive(async () => {

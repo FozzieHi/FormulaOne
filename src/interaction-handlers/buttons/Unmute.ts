@@ -11,10 +11,11 @@ import {
   TextChannel,
 } from "discord.js";
 import { Constants } from "../../utility/Constants.js";
-import { replyInteraction } from "../../utility/Sender.js";
+import { replyInteraction, replyInteractionError } from "../../utility/Sender.js";
 import { archiveLog } from "../../services/BotQueueService.js";
 import MutexManager from "../../managers/MutexManager.js";
 import TryVal from "../../utility/TryVal.js";
+import { getPermLevel, isModerator } from "../../services/ModerationService.js";
 
 export class UnmuteInteraction extends InteractionHandler {
   public constructor(context: PieceContext) {
@@ -24,7 +25,28 @@ export class UnmuteInteraction extends InteractionHandler {
   }
 
   public async run(interaction: ButtonInteraction, memberId: Snowflake) {
-    if (interaction.guild == null || interaction.member == null) {
+    if (
+      interaction.guild == null ||
+      interaction.member == null ||
+      interaction.channel == null
+    ) {
+      return;
+    }
+    if (!(await isModerator(interaction.guild, interaction.user))) {
+      await replyInteractionError(
+        interaction,
+        "You must be a Marshal in order to use this command.",
+      );
+      return;
+    }
+    if (
+      interaction.channel.id === Constants.CHANNELS.STEWARDS_QUEUE &&
+      (await getPermLevel(interaction.guild, interaction.user)) < 2
+    ) {
+      await replyInteractionError(
+        interaction,
+        "You must be a Steward in order to use this command.",
+      );
       return;
     }
     const member = (await TryVal(

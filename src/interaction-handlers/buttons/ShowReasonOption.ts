@@ -17,6 +17,8 @@ import Try from "../../utility/Try.js";
 import { replyInteractionError } from "../../utility/Sender.js";
 import { archiveLog } from "../../services/BotQueueService.js";
 import MutexManager from "../../managers/MutexManager.js";
+import { getPermLevel, isModerator } from "../../services/ModerationService.js";
+import { Constants } from "../../utility/Constants.js";
 
 export class ShowReasonOptionInteraction extends InteractionHandler {
   public constructor(context: PieceContext) {
@@ -29,7 +31,24 @@ export class ShowReasonOptionInteraction extends InteractionHandler {
     interaction: ButtonInteraction,
     parsedData: InteractionHandler.ParseResult<this>,
   ) {
-    if (interaction.guild == null) {
+    if (interaction.guild == null || interaction.channel == null) {
+      return;
+    }
+    if (!(await isModerator(interaction.guild, interaction.user))) {
+      await replyInteractionError(
+        interaction,
+        "You must be a Marshal in order to use this command.",
+      );
+      return;
+    }
+    if (
+      interaction.channel.id === Constants.CHANNELS.STEWARDS_QUEUE &&
+      (await getPermLevel(interaction.guild, interaction.user)) < 2
+    ) {
+      await replyInteractionError(
+        interaction,
+        "You must be a Steward in order to use this command.",
+      );
       return;
     }
     if (

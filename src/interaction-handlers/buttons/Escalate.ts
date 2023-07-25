@@ -11,7 +11,7 @@ import {
   APIEmbed,
   GuildMember,
 } from "discord.js";
-import { escalate } from "../../services/ModerationService.js";
+import { escalate, isModerator } from "../../services/ModerationService.js";
 import TryVal from "../../utility/TryVal.js";
 import { Constants, ModerationQueueButtons } from "../../utility/Constants.js";
 import MutexManager from "../../managers/MutexManager.js";
@@ -29,6 +29,16 @@ export class Escalate extends InteractionHandler {
     interaction: ButtonInteraction,
     parsedData: InteractionHandler.ParseResult<this>,
   ) {
+    if (interaction.guild == null) {
+      return;
+    }
+    if (!(await isModerator(interaction.guild, interaction.user))) {
+      await replyInteractionError(
+        interaction,
+        "You must be a Marshal in order to use this command.",
+      );
+      return;
+    }
     await MutexManager.getUserMutex(parsedData.targetUserId).runExclusive(async () => {
       if (interaction.member == null) {
         return;
