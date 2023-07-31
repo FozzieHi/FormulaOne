@@ -1,3 +1,4 @@
+import { setTimeout } from "timers/promises";
 import {
   InteractionHandler,
   InteractionHandlerTypes,
@@ -10,7 +11,6 @@ import {
   Snowflake,
   TextChannel,
 } from "discord.js";
-import { setTimeout } from "timers/promises";
 import { banish } from "../../utility/BanishUtil.js";
 import { Constants } from "../../utility/Constants.js";
 import { punish } from "../../utility/PunishUtil.js";
