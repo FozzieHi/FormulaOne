@@ -9,6 +9,7 @@ import {
 import { Constants } from "./Constants.js";
 import {
   dm,
+  replyInteraction,
   replyInteractionError,
   replyInteractionPublic,
   send,
@@ -80,7 +81,7 @@ export async function banish(
       const logAction = `${helper ? "Helper " : ""}${banishedRole.name} Banish`;
       await targetMember.roles.add(targetRoleId);
       if (handler === "command") {
-        await replyInteractionPublic(
+        await replyInteraction(
           interaction,
           `Successfully banished ${boldify(getDisplayTag(targetMember))} from ${
             banishedRole.name
@@ -93,13 +94,13 @@ export async function banish(
           { color: Constants.UNMUTE_COLOR },
           { content: null, components: [] },
         );
-        await send(
-          interaction.channel,
-          `Successfully banished ${boldify(getDisplayTag(targetMember))} from ${
-            banishedRole.name
-          }.`,
-        );
       }
+      await send(
+        interaction.channel,
+        `Successfully banished ${boldify(getDisplayTag(targetMember))} from ${
+          banishedRole.name
+        }.`,
+      );
       await db.userRepo?.upsertUser(
         targetMember.id,
         interaction.guild.id,

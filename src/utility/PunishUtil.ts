@@ -13,7 +13,6 @@ import {
   dm,
   replyInteraction,
   replyInteractionError,
-  replyInteractionPublic,
   send,
   updateInteraction,
 } from "./Sender.js";
@@ -319,7 +318,7 @@ export async function punish(
       new PopUpdate("punishments", 1),
     );
 
-    await replyInteractionPublic(
+    await replyInteraction(
       interaction,
       `Successfully unpunished ${boldify(getDisplayTag(targetMember))}.`,
     );

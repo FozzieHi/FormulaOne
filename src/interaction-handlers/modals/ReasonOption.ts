@@ -51,7 +51,6 @@ export class ReasonOption extends InteractionHandler {
         parsedData.reason,
       );
     } else if (parsedData.commandName === "ban") {
-      await interaction.deferReply({ ephemeral: true });
       const targetUser = await TryVal(
         container.client.users.fetch(parsedData.targetMemberId),
       );
