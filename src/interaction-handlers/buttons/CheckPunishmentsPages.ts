@@ -13,7 +13,7 @@ import {
 } from "discord.js";
 import { getHistory } from "../../utility/PunishmentUtil.js";
 import { Embed } from "../../structures/Embed.js";
-import { getFields } from "../../utility/Sender.js";
+import { getFields, updateInteraction } from "../../utility/Sender.js";
 import TryVal from "../../utility/TryVal.js";
 import { getUserTag } from "../../utility/StringUtil.js";
 
@@ -78,7 +78,7 @@ export class CheckPunishmentsPagesInteraction extends InteractionHandler {
       ],
     ];
 
-    await interaction.update({
+    await updateInteraction(interaction, undefined, null, {
       embeds: [new Embed(embedOptions)],
       components: buttons.map((button) => ({
         type: ComponentType.ActionRow,
