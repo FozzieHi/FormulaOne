@@ -4,6 +4,7 @@ import {
   PieceContext,
 } from "@sapphire/framework";
 import { ButtonInteraction, Snowflake } from "discord.js";
+import { replyInteraction } from "../../utility/Sender.js";
 
 export class IDInteraction extends InteractionHandler {
   public constructor(context: PieceContext) {
@@ -13,7 +14,7 @@ export class IDInteraction extends InteractionHandler {
   }
 
   public async run(interaction: ButtonInteraction, userId: Snowflake) {
-    await interaction.reply({ content: userId, ephemeral: true });
+    await replyInteraction(interaction, undefined, null, { content: userId });
   }
 
   public parse(interaction: ButtonInteraction) {

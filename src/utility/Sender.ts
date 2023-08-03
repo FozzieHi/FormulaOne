@@ -107,10 +107,12 @@ async function replyInteractionHandler(
   if (newEmbedOptions != null) {
     newBaseMessageOptions.embeds = [new Embed(newEmbedOptions)];
   }
-  if (interaction.deferred) {
-    return interaction.followUp(newBaseMessageOptions);
-  }
-  return interaction.reply(newBaseMessageOptions);
+  await MutexManager.getInteractionMutex(interaction.id).runExclusive(async () => {
+    if (interaction.deferred) {
+      return interaction.followUp(newBaseMessageOptions);
+    }
+    return interaction.reply(newBaseMessageOptions);
+  });
 }
 
 export async function replyInteraction(

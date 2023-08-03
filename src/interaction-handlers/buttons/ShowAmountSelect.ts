@@ -13,7 +13,7 @@ import {
   ContextMenuCommandInteraction,
 } from "discord.js";
 import { getDBUser } from "../../utility/DatabaseUtil.js";
-import { replyInteractionError } from "../../utility/Sender.js";
+import { replyInteraction, replyInteractionError } from "../../utility/Sender.js";
 import TryVal from "../../utility/TryVal.js";
 import { getPunishmentDisplay } from "../../utility/PunishUtil.js";
 import { Constants } from "../../utility/Constants.js";
@@ -105,7 +105,7 @@ export async function showAmountSelect(
       }),
     ],
   ];
-  await interaction.reply({
+  await replyInteraction(interaction, undefined, null, {
     content: "Please select a punishment amount.",
     components: amountSelect.map((selectmenu) => ({
       type: ComponentType.ActionRow,
