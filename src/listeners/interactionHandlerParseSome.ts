@@ -1,4 +1,5 @@
 import { InteractionHandlerParseSome, Listener, Option } from "@sapphire/framework";
+import MutexManager from "../managers/MutexManager.js";
 
 export class InteractionHandlerParseSomeListener extends Listener {
   public async run(
@@ -6,7 +7,13 @@ export class InteractionHandlerParseSomeListener extends Listener {
     { interaction }: InteractionHandlerParseSome,
   ) {
     if (interaction.isMessageComponent()) {
-      await interaction.deferReply({ ephemeral: true });
+      await MutexManager.getInteractionMutex(interaction.id).runExclusive(async () => {
+        if (this.container.client.user?.id === interaction.message.author.id) {
+          await interaction.deferUpdate();
+        } else {
+          await interaction.deferReply({ ephemeral: true });
+        }
+      });
     }
   }
 }

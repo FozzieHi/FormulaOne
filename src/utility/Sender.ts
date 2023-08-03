@@ -19,6 +19,7 @@ import { Constants } from "./Constants.js";
 import Try from "./Try.js";
 import { isEven } from "./NumberUtil.js";
 import { boldify, getUserTag } from "./StringUtil.js";
+import MutexManager from "../managers/MutexManager.js";
 
 export function getFields(fieldsAndValues: Array<string>): Array<APIEmbedField> {
   const fields = [];
@@ -202,7 +203,12 @@ async function updateInteractionHandler(
   if (newEmbedOptions != null) {
     newBaseMessageOptions.embeds = [new Embed(newEmbedOptions)];
   }
-  return interaction.update(newBaseMessageOptions);
+  await MutexManager.getInteractionMutex(interaction.id).runExclusive(async () => {
+    if (interaction.deferred) {
+      return interaction.editReply(newBaseMessageOptions);
+    }
+    return interaction.update(newBaseMessageOptions);
+  });
 }
 
 export async function updateInteraction(

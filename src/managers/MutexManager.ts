@@ -20,11 +20,14 @@ export default new (class MutexManager {
 
   userPublicMutexes: MutexMap;
 
+  interactionMutexes: MutexMap;
+
   guildMutex: Mutex;
 
   constructor() {
     this.userMutexes = new Map();
     this.userPublicMutexes = new Map();
+    this.interactionMutexes = new Map();
     this.guildMutex = new Mutex();
   }
 
@@ -34,6 +37,10 @@ export default new (class MutexManager {
 
   public getUserPublicMutex(id: Snowflake) {
     return getMutex(id, this.userPublicMutexes);
+  }
+
+  public getInteractionMutex(id: Snowflake) {
+    return getMutex(id, this.interactionMutexes);
   }
 
   public getGuildMutex() {
