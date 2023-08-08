@@ -7,6 +7,12 @@ export class InteractionHandlerParseSomeListener extends Listener {
     { interaction }: InteractionHandlerParseSome,
   ) {
     if (interaction.isMessageComponent()) {
+      if (
+        interaction.customId.startsWith("showreasonoption-") ||
+        interaction.customId.startsWith("addremoveoption-")
+      ) {
+        return;
+      }
       await MutexManager.getInteractionMutex(interaction.id).runExclusive(async () => {
         if (this.container.client.user?.id === interaction.message.author.id) {
           await interaction.deferUpdate();
