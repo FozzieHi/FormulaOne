@@ -65,8 +65,13 @@ export class ReasonOption extends InteractionHandler {
         return;
       }
       await MutexManager.getUserMutex(targetUser.id).runExclusive(async () => {
-        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-        infoLog(`ReasonOption - ${interaction.message}`);
+        if (interaction.message == null) {
+          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+          infoLog(`ReasonOption - ${interaction}`);
+        } else {
+          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+          infoLog(`ReasonOption - ${interaction.message}`);
+        }
         const logMessage = await TryVal(
           (interaction.channel as TextChannel).messages.fetch(
             (interaction.message as Message).id,
