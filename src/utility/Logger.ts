@@ -6,6 +6,6 @@ export function handleError(error: unknown) {
   Sentry.captureException(error);
 }
 
-export function debugLog(debugMessage: string) {
-  container.logger.debug(debugMessage);
+export function infoLog(debugMessage: unknown) {
+  container.logger.info(debugMessage);
 }

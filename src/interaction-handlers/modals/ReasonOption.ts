@@ -20,6 +20,7 @@ import { Constants } from "../../utility/Constants.js";
 import TryVal from "../../utility/TryVal.js";
 import { archiveLog } from "../../services/BotQueueService.js";
 import { replyInteraction, replyInteractionError } from "../../utility/Sender.js";
+import { infoLog } from "../../utility/Logger.js";
 
 export class ReasonOption extends InteractionHandler {
   public constructor(context: PieceContext) {
@@ -64,6 +65,8 @@ export class ReasonOption extends InteractionHandler {
         return;
       }
       await MutexManager.getUserMutex(targetUser.id).runExclusive(async () => {
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+        infoLog(`ReasonOption - ${interaction.message}`);
         const logMessage = await TryVal(
           (interaction.channel as TextChannel).messages.fetch(
             (interaction.message as Message).id,
