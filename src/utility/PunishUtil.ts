@@ -230,7 +230,9 @@ export async function punish(
       punishmentDisplay.displayPastTense
     } ${boldify(getDisplayTag(targetMember))}${
       punishment.length != null ? ` for ${punishmentDisplay.displayCurrent}` : ""
-    } for the reason ${reason}.\n\nThey have ${currentPun} punishments in the last 30 days.`;
+    } for the reason ${reason}.\n\nThey have ${currentPun} other punishment${
+      currentPun !== 1 ? "s" : ""
+    } in the last 30 days.`;
     if (channel != null && interaction.channel.id !== channel.id) {
       await send(channel, messageDescription);
     }
