@@ -6,7 +6,7 @@ export class InteractionHandlerParseSomeListener extends Listener {
     option: Option.Some<unknown>,
     { interaction }: InteractionHandlerParseSome,
   ) {
-    if (interaction.isMessageComponent()) {
+    if (interaction.isMessageComponent() || interaction.isModalSubmit()) {
       if (
         interaction.customId.startsWith("showreasonoption-") ||
         interaction.customId.startsWith("addremoveoption-")
@@ -14,7 +14,7 @@ export class InteractionHandlerParseSomeListener extends Listener {
         return;
       }
       await MutexManager.getInteractionMutex(interaction.id).runExclusive(async () => {
-        if (this.container.client.user?.id === interaction.message.author.id) {
+        if (this.container.client.user?.id === interaction.message?.author.id) {
           await interaction.deferUpdate();
         } else {
           await interaction.deferReply({ ephemeral: true });
