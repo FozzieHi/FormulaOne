@@ -6,6 +6,11 @@ export class InteractionHandlerParseSomeListener extends Listener {
     option: Option.Some<unknown>,
     { interaction }: InteractionHandlerParseSome,
   ) {
+    if (interaction.isCommand()) {
+      await MutexManager.getInteractionMutex(interaction.id).runExclusive(async () => {
+        await interaction.deferReply({ ephemeral: true });
+      });
+    }
     if (interaction.isMessageComponent() || interaction.isModalSubmit()) {
       if (
         interaction.customId.startsWith("showreasonoption-") ||
