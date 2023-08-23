@@ -17,7 +17,7 @@
   "license": "AGPL-3.0",
   "dependencies": {
     "@sapphire/framework": "^4.5.2",
-    "@sapphire/plugin-logger": "^3.0.4",
+    "@sapphire/plugin-logger": "^3.0.6",
     "@sentry/integrations": "^7.64.0",
     "@sentry/node": "^7.64.0",
     "@sentry/tracing": "^7.64.0",
