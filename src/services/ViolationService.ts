@@ -8,9 +8,12 @@ export default new (class ViolationService {
 
   public reports: Array<{ channelId: Snowflake; messageId: Snowflake }>;
 
+  public handled: Array<Snowflake>;
+
   constructor() {
     this.violations = new Map();
     this.reports = [];
+    this.handled = [];
   }
 
   public async checkViolations(message: Message) {

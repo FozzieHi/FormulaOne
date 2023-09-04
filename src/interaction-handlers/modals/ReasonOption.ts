@@ -8,7 +8,6 @@ import {
   Guild,
   GuildMember,
   GuildTextBasedChannel,
-  Message,
   ModalSubmitInteraction,
   Snowflake,
   TextChannel,
@@ -20,7 +19,7 @@ import { Constants } from "../../utility/Constants.js";
 import TryVal from "../../utility/TryVal.js";
 import { archiveLog } from "../../services/BotQueueService.js";
 import { replyInteraction, replyInteractionError } from "../../utility/Sender.js";
-import { infoLog } from "../../utility/Logger.js";
+import ViolationService from "../../services/ViolationService.js";
 
 export class ReasonOption extends InteractionHandler {
   public constructor(context: PieceContext) {
@@ -66,16 +65,14 @@ export class ReasonOption extends InteractionHandler {
       }
       await MutexManager.getUserMutex(targetUser.id).runExclusive(async () => {
         if (interaction.message == null) {
-          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-          infoLog(`ReasonOption - ${interaction}`);
-        } else {
-          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-          infoLog(`ReasonOption - ${interaction.message}`);
+          return;
+        }
+        if (ViolationService.handled.includes(interaction.message.id)) {
+          await replyInteractionError(interaction, "Log has already been handled.");
+          return;
         }
         const logMessage = await TryVal(
-          (interaction.channel as TextChannel).messages.fetch(
-            (interaction.message as Message).id,
-          ),
+          (interaction.channel as TextChannel).messages.fetch(interaction.message.id),
         );
         if (logMessage == null) {
           return;
@@ -103,6 +100,7 @@ export class ReasonOption extends InteractionHandler {
         await replyInteraction(interaction, "Successfully banned user.", {
           color: Constants.UNMUTE_COLOR,
         });
+        ViolationService.handled.push(interaction.message.id);
       });
     }
   }

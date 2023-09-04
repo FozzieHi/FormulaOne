@@ -19,6 +19,7 @@ import TryVal from "../../utility/TryVal.js";
 import { replyInteractionError } from "../../utility/Sender.js";
 import { archiveLog } from "../../services/BotQueueService.js";
 import MutexManager from "../../managers/MutexManager.js";
+import ViolationService from "../../services/ViolationService.js";
 
 export class RuleSelect extends InteractionHandler {
   public constructor(context: PieceContext) {
@@ -62,6 +63,12 @@ export class RuleSelect extends InteractionHandler {
                   ),
                 )
               : null;
+          if (logMessage != null) {
+            if (ViolationService.handled.includes(logMessage.id)) {
+              await replyInteractionError(interaction, "Log has already been handled.");
+              return;
+            }
+          }
           if (interaction.guild == null || interaction.member == null) {
             return;
           }
@@ -107,6 +114,7 @@ export class RuleSelect extends InteractionHandler {
             );
             await setTimeout(10000, "result");
             await Try(messageSent.delete());
+            ViolationService.handled.push(logMessage.id);
           }
         },
       );

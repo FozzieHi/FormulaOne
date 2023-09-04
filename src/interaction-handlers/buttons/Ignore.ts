@@ -16,6 +16,7 @@ import { replyInteraction, replyInteractionError } from "../../utility/Sender.js
 import TryVal from "../../utility/TryVal.js";
 import { archiveLog } from "../../services/BotQueueService.js";
 import { getPermLevel, isModerator } from "../../services/ModerationService.js";
+import ViolationService from "../../services/ViolationService.js";
 
 export class IgnoreInteraction extends InteractionHandler {
   public constructor(context: PieceContext) {
@@ -51,6 +52,10 @@ export class IgnoreInteraction extends InteractionHandler {
       return;
     }
     await MutexManager.getUserMutex(userId).runExclusive(async () => {
+      if (ViolationService.handled.includes(interaction.message.id)) {
+        await replyInteractionError(interaction, "Log has already been handled.");
+        return;
+      }
       const logMessage = await TryVal(
         (interaction.channel as TextChannel).messages.fetch(interaction.message.id),
       );
@@ -69,6 +74,7 @@ export class IgnoreInteraction extends InteractionHandler {
         await replyInteraction(interaction, "Successfully ignored log.", {
           color: Constants.UNMUTE_COLOR,
         });
+        ViolationService.handled.push(interaction.message.id);
       } else {
         await replyInteractionError(interaction, "Error ignoring log.");
       }
