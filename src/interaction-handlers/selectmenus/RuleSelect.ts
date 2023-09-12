@@ -55,6 +55,12 @@ export class RuleSelect extends InteractionHandler {
     } else if (parsedData.commandName === "punish") {
       await MutexManager.getUserMutex(parsedData.targetMemberId).runExclusive(
         async () => {
+          if (parsedData.logMessageId != null) {
+            if (ViolationService.handled.includes(parsedData.logMessageId)) {
+              await replyInteractionError(interaction, "Log has already been handled.");
+              return;
+            }
+          }
           const logMessage =
             parsedData.logMessageId != null
               ? await TryVal(
@@ -63,12 +69,6 @@ export class RuleSelect extends InteractionHandler {
                   ),
                 )
               : null;
-          if (logMessage != null) {
-            if (ViolationService.handled.includes(logMessage.id)) {
-              await replyInteractionError(interaction, "Log has already been handled.");
-              return;
-            }
-          }
           if (interaction.guild == null || interaction.member == null) {
             return;
           }
