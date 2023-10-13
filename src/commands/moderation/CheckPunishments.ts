@@ -24,7 +24,7 @@ import { boldify, getUserTag } from "../../utility/StringUtil.js";
 export class CheckPunishmentsCommand extends Command {
   public constructor(context: Command.Context) {
     super(context, {
-      runIn: CommandOptionsRunTypeEnum.GuildText,
+      runIn: CommandOptionsRunTypeEnum.GuildAny,
       preconditions: ["Marshals"],
     });
   }

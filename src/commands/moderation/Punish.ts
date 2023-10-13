@@ -20,7 +20,7 @@ import { showAmountSelect } from "../../interaction-handlers/buttons/ShowAmountS
 export class PunishCommand extends Command {
   public constructor(context: Command.Context) {
     super(context, {
-      runIn: CommandOptionsRunTypeEnum.GuildText,
+      runIn: CommandOptionsRunTypeEnum.GuildAny,
       preconditions: ["Marshals", "MemberValidation", "NoModerator"],
     });
   }

@@ -24,7 +24,7 @@ import TryVal from "../../utility/TryVal.js";
 export class NoXP extends Command {
   public constructor(context: Command.Context) {
     super(context, {
-      runIn: CommandOptionsRunTypeEnum.GuildText,
+      runIn: CommandOptionsRunTypeEnum.GuildAny,
       preconditions: ["Marshals", "MemberValidation", "NoModerator"],
     });
   }

@@ -26,7 +26,7 @@ export class BanishCommand extends Command {
   public constructor(context: Command.Context) {
     super(context, {
       // requiredClientPermissions: ["MANAGE_ROLES"],
-      runIn: CommandOptionsRunTypeEnum.GuildText,
+      runIn: CommandOptionsRunTypeEnum.GuildAny,
       preconditions: ["Helpers", "MemberValidation"],
     });
   }

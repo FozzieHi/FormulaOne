@@ -25,7 +25,7 @@ export class BanCommand extends Command {
   public constructor(context: Command.Context) {
     super(context, {
       requiredClientPermissions: ["BanMembers"],
-      runIn: CommandOptionsRunTypeEnum.GuildText,
+      runIn: CommandOptionsRunTypeEnum.GuildAny,
       preconditions: ["Stewards", "BannedUser", "NoModerator"],
     });
   }

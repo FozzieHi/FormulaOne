@@ -23,7 +23,7 @@ export class FilterCommand extends Command {
   public constructor(context: Command.Context) {
     super(context, {
       requiredClientPermissions: ["ManageChannels"],
-      runIn: CommandOptionsRunTypeEnum.GuildText,
+      runIn: CommandOptionsRunTypeEnum.GuildAny,
       preconditions: ["Marshals"],
     });
   }

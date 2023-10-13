@@ -17,7 +17,7 @@ import { Constants } from "../../utility/Constants.js";
 export class MoveChannelCommand extends Command {
   public constructor(context: Command.Context) {
     super(context, {
-      runIn: CommandOptionsRunTypeEnum.GuildText,
+      runIn: CommandOptionsRunTypeEnum.GuildAny,
       preconditions: ["Marshals"],
     });
   }
