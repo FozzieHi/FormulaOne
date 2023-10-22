@@ -237,7 +237,7 @@ export async function punish(
     if (channel != null && interaction.channel.id !== channel.id) {
       await Try(send(channel, messageDescription));
     }
-    messageSent = await send(interaction.channel, messageDescription);
+    messageSent = await TryVal(send(interaction.channel, messageDescription));
 
     const punishData: Punishment = {
       date: Date.now(),
