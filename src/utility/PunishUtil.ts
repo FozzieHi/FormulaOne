@@ -26,6 +26,7 @@ import { Punishment } from "../database/models/User.js";
 import { Pun } from "../database/models/Pun.js";
 import { boldify, getDisplayTag, getUserTag, maxLength } from "./StringUtil.js";
 import TryVal from "./TryVal.js";
+import Try from "./Try.js";
 
 async function increasePunishment(
   memberId: Snowflake,
@@ -234,7 +235,7 @@ export async function punish(
       currentPun !== 1 ? "s" : ""
     } in the last 30 days.`;
     if (channel != null && interaction.channel.id !== channel.id) {
-      await send(channel, messageDescription);
+      await Try(send(channel, messageDescription));
     }
     messageSent = await send(interaction.channel, messageDescription);
 
