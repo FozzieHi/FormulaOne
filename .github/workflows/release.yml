@@ -1,13 +1,19 @@
-name: Release
+name: Release and Deploy
 
 on:
-  workflow_run:
-    workflows: [Lint]
+  push:
     branches: [main]
-    types: [completed]
+    paths:
+      - "package.json"
+      - "package-lock.json"
+      - "tsconfig.json"
+      - "src/**"
+      - "Dockerfile"
+      - ".github/workflows/**"
 
 jobs:
   release:
+    name: Release
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -44,3 +50,31 @@ jobs:
           environment: production
           sourcemaps: "./target"
           url_prefix: "~/target"
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+      - name: Build container image
+        run: docker build -t registry.digitalocean.com/fozzie/formula-one:$(echo $GITHUB_SHA | head -c7) .
+      - name: Log in to registry
+        run: doctl registry login --expiry-seconds 1200
+      - name: Push image to registry
+        run: docker push registry.digitalocean.com/fozzie/formula-one:$(echo $GITHUB_SHA | head -c7)
+      - name: Update deployment file
+        run: TAG=$(echo $GITHUB_SHA | head -c7) && sed -i 's|<IMAGE>|registry.digitalocean.com/fozzie/formula-one:'${TAG}'|' $GITHUB_WORKSPACE/deployment.yml
+      - name: Save kubeconfig
+        run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 ${{ secrets.DIGITALOCEAN_CLUSTER_NAME }}
+      - name: Deploy using kubectl
+        run: kubectl apply -f $GITHUB_WORKSPACE/deployment.yml
+      - name: Verify deployment
+        run: kubectl rollout status deployment/formula-one
+      - name: Remove old images from registry
+        uses: ripplr-io/docr-image-remove@73f900f94464879edf44ba8d0a75d596d826ad7f
+        with:
+          image_repository: formula-one
+          buffer_size: 3
