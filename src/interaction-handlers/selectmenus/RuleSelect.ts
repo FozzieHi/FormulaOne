@@ -1,9 +1,5 @@
 import { setTimeout } from "timers/promises";
-import {
-  InteractionHandler,
-  InteractionHandlerTypes,
-  PieceContext,
-} from "@sapphire/framework";
+import { InteractionHandler, InteractionHandlerTypes } from "@sapphire/framework";
 import {
   GuildMember,
   Message,
@@ -22,7 +18,7 @@ import MutexManager from "../../managers/MutexManager.js";
 import ViolationService from "../../services/ViolationService.js";
 
 export class RuleSelect extends InteractionHandler {
-  public constructor(context: PieceContext) {
+  public constructor(context: never) {
     super(context, {
       interactionHandlerType: InteractionHandlerTypes.SelectMenu,
     });

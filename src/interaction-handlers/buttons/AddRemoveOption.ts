@@ -1,8 +1,4 @@
-import {
-  InteractionHandler,
-  InteractionHandlerTypes,
-  PieceContext,
-} from "@sapphire/framework";
+import { InteractionHandler, InteractionHandlerTypes } from "@sapphire/framework";
 import {
   ButtonInteraction,
   StringSelectMenuBuilder,
@@ -15,7 +11,7 @@ import { Constants } from "../../utility/Constants.js";
 import { updateInteraction } from "../../utility/Sender.js";
 
 export class AddRemoveOption extends InteractionHandler {
-  public constructor(context: PieceContext) {
+  public constructor(context: never) {
     super(context, {
       interactionHandlerType: InteractionHandlerTypes.Button,
     });

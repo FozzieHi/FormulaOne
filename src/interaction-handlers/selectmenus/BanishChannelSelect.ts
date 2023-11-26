@@ -1,8 +1,4 @@
-import {
-  InteractionHandler,
-  InteractionHandlerTypes,
-  PieceContext,
-} from "@sapphire/framework";
+import { InteractionHandler, InteractionHandlerTypes } from "@sapphire/framework";
 import {
   Guild,
   GuildMember,
@@ -15,7 +11,7 @@ import { updateInteraction } from "../../utility/Sender.js";
 import TryVal from "../../utility/TryVal.js";
 
 export class BanishChannelSelect extends InteractionHandler {
-  public constructor(context: PieceContext) {
+  public constructor(context: never) {
     super(context, {
       interactionHandlerType: InteractionHandlerTypes.SelectMenu,
     });

@@ -2,7 +2,6 @@ import {
   container,
   InteractionHandler,
   InteractionHandlerTypes,
-  PieceContext,
 } from "@sapphire/framework";
 import {
   ButtonInteraction,
@@ -20,7 +19,7 @@ import { archiveLog } from "../../services/BotQueueService.js";
 import ViolationService from "../../services/ViolationService.js";
 
 export class Escalate extends InteractionHandler {
-  public constructor(context: PieceContext) {
+  public constructor(context: never) {
     super(context, {
       interactionHandlerType: InteractionHandlerTypes.Button,
     });

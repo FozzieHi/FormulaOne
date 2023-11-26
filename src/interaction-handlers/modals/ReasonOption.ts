@@ -2,7 +2,6 @@ import {
   container,
   InteractionHandler,
   InteractionHandlerTypes,
-  PieceContext,
 } from "@sapphire/framework";
 import {
   Guild,
@@ -22,7 +21,7 @@ import { replyInteraction, replyInteractionError } from "../../utility/Sender.js
 import ViolationService from "../../services/ViolationService.js";
 
 export class ReasonOption extends InteractionHandler {
-  public constructor(context: PieceContext) {
+  public constructor(context: never) {
     super(context, {
       interactionHandlerType: InteractionHandlerTypes.ModalSubmit,
     });
