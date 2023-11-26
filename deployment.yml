@@ -6,6 +6,8 @@ metadata:
     app: formula-one
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: formula-one
