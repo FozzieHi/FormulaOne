@@ -1,6 +1,6 @@
 /* eslint-disable no-await-in-loop */
 import { container } from "@sapphire/framework";
-import { Guild, GuildVerificationLevel } from "discord.js";
+import { GuildVerificationLevel } from "discord.js";
 import db from "../database/index.js";
 import { Constants } from "../utility/Constants.js";
 import { modLog } from "../services/ModerationService.js";
@@ -26,9 +26,7 @@ setInterval(() => {
             Date.now() - dbGuild.protectionActivatedAt > 1.2e6
           ) {
             // 20 minutes
-            const guild = (await TryVal(
-              container.client.guilds.fetch(dbGuild.guildId),
-            )) as Guild;
+            const guild = await TryVal(container.client.guilds.fetch(dbGuild.guildId));
             if (guild != null) {
               if (guild.verificationLevel !== GuildVerificationLevel.High) {
                 await guild.setVerificationLevel(
