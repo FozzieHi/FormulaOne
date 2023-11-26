@@ -36,3 +36,8 @@ jobs:
         run: kubectl apply -f $GITHUB_WORKSPACE/deployment.yml
       - name: Verify deployment
         run: kubectl rollout status deployment/formula-one
+      - name: Remove old images from registry
+        uses: ripplr-io/docr-image-remove@73f900f94464879edf44ba8d0a75d596d826ad7f
+        with:
+          image_repository: formula-one
+          buffer_size: 3
