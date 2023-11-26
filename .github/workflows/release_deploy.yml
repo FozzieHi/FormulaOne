@@ -56,13 +56,13 @@ jobs:
         with:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
       - name: Build container image
-        run: docker build -t registry.digitalocean.com/fozzie/formula-one:$(echo $GITHUB_SHA | head -c7) .
+        run: docker build -t ${{ secrets.DIGITALOCEAN_IMAGE_URL }}:$(echo $GITHUB_SHA | head -c7) .
       - name: Log in to registry
         run: doctl registry login --expiry-seconds 1200
       - name: Push image to registry
-        run: docker push registry.digitalocean.com/fozzie/formula-one:$(echo $GITHUB_SHA | head -c7)
+        run: docker push ${{ secrets.DIGITALOCEAN_IMAGE_URL }}:$(echo $GITHUB_SHA | head -c7)
       - name: Update deployment file
-        run: TAG=$(echo $GITHUB_SHA | head -c7) && sed -i 's|<IMAGE>|registry.digitalocean.com/fozzie/formula-one:'${TAG}'|' $GITHUB_WORKSPACE/deployment.yml
+        run: TAG=$(echo $GITHUB_SHA | head -c7) && sed -i 's|<IMAGE>|${{ secrets.DIGITALOCEAN_IMAGE_URL }}:'${TAG}'|' $GITHUB_WORKSPACE/deployment.yml
       - name: Save kubeconfig
         run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 ${{ secrets.DIGITALOCEAN_CLUSTER_NAME }}
       - name: Deploy using kubectl
