@@ -2,7 +2,7 @@ name: Deploy
 
 on:
   workflow_run:
-    workflows: [Lint, Release]
+    workflows: [Release]
     branches: [main]
     types: [completed]
     paths:
