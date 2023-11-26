@@ -1,4 +1,6 @@
-FROM node:18-slim
+FROM node:18-alpine AS build
+
+RUN apk add --no-cache python3 make gcc g++
 
 WORKDIR /app
 
@@ -11,6 +13,11 @@ COPY src/ src/
 COPY tsconfig.json ./
 
 RUN npm run build
+
+FROM node:18-alpine AS run
+
+COPY --from=build /app /app
+WORKDIR /app
 
 COPY .git/ .git/
 
