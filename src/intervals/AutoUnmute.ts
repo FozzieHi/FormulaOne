@@ -6,7 +6,7 @@ import db from "../database/index.js";
 import { Constants } from "../utility/Constants.js";
 import { handleError } from "../utility/Logger.js";
 import { modLog } from "../services/ModerationService.js";
-import { getDisplayTag } from "../utility/StringUtil.js";
+import { getDisplayTag, getUserTag } from "../utility/StringUtil.js";
 import TryVal from "../utility/TryVal.js";
 
 setInterval(() => {
@@ -22,12 +22,17 @@ setInterval(() => {
         );
 
         if (guild != null) {
-          const targetMember = await TryVal(
-            guild.members.fetch(mute.userId as Snowflake),
+          const targetUser = await TryVal(
+            container.client.users.fetch(mute.userId as Snowflake),
           );
+          if (targetUser != null) {
+            const targetMember = await TryVal(
+              guild.members.fetch(mute.userId as Snowflake),
+            );
 
-          if (targetMember != null) {
-            await targetMember.roles.remove(Constants.ROLES.MUTED);
+            if (targetMember != null) {
+              await targetMember.roles.remove(Constants.ROLES.MUTED);
+            }
             await db.muteRepo?.deleteById(mute._id as ObjectId);
             await modLog(
               guild,
@@ -35,11 +40,13 @@ setInterval(() => {
               [
                 "Action",
                 "Automatic Unmute",
-                "User",
-                `${getDisplayTag(targetMember)} (${targetMember.user.id})`,
+                targetMember == null ? "User" : "Member",
+                targetMember == null
+                  ? `${getUserTag(targetUser)} (${targetUser.id})`
+                  : `${getDisplayTag(targetMember)} (${targetMember.user.id})`,
               ],
               Constants.UNMUTE_COLOR,
-              targetMember.user,
+              targetUser,
             );
           }
         }
