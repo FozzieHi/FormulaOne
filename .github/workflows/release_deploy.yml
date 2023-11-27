@@ -79,6 +79,7 @@ jobs:
         run: |
           JSON_STRING=$(jq -n \
                   --arg title "Deployment for $(echo $GITHUB_SHA | head -c7)" \
+                  --arg status "${{ job.status }}"
                   --arg embed_color $([ ${{ job.status }} == "success" ] && echo 59432 || echo 16711680) \
-                  '{ embeds: [{ title: $title, color: $embed_color|tonumber, fields: [{ name: "Commit message", value: "${{ github.event.head_commit.message }}" }, { name: "Status", value: "${{ job.status }}" }] }] }') \
+                  '{ embeds: [{ title: $title, color: $embed_color|tonumber, fields: [{ name: "Commit message", value: "${{ github.event.head_commit.message }}" }, { name: "Status", value: ${status^} }] }] }') \
           && curl -H "Content-Type: application/json" -d "$JSON_STRING" "${{ secrets.DISCORD_WEBHOOK_URL }}"
