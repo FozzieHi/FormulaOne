@@ -4,7 +4,6 @@ import {
   MessageComponentInteraction,
   ModalSubmitInteraction,
   SelectMenuInteraction,
-  Snowflake,
 } from "discord.js";
 import { Constants } from "./Constants.js";
 import {
@@ -24,8 +23,7 @@ import { boldify, getDisplayTag, getUserTag } from "./StringUtil.js";
 export async function banish(
   interaction: CommandInteraction | SelectMenuInteraction | ModalSubmitInteraction,
   targetMember: GuildMember,
-  targetRoleId: Snowflake,
-  action: string,
+  action: "add" | "remove",
   handler: string,
   reason: string,
 ) {
@@ -35,15 +33,6 @@ export async function banish(
       interaction.channel == null ||
       interaction.member == null
     ) {
-      return;
-    }
-
-    const helper = (await getPermLevel(interaction.guild, interaction.user)) === 0;
-    if (helper && targetRoleId !== Constants.ROLES.BEGINNERS_QUESTIONS) {
-      await replyInteractionError(
-        interaction,
-        "Helpers may only banish members from the f1-beginner-questions channel.",
-      );
       return;
     }
 
@@ -59,33 +48,22 @@ export async function banish(
       return;
     }
 
-    const banishedRole = Constants.BANISH_ROLES.find(
-      (banishRole) => banishRole.id === targetRoleId,
-    );
-    if (banishedRole == null) {
-      await replyInteractionError(interaction, "Could not fetch target role.");
-      return;
-    }
-
+    const helper = (await getPermLevel(interaction.guild, interaction.user)) === 0;
     if (action === "add") {
-      if (targetMember.roles.cache.has(targetRoleId)) {
+      if (targetMember.roles.cache.has(Constants.ROLES.BANISHED)) {
         await replyInteractionError(
           interaction,
-          `${boldify(getDisplayTag(targetMember))} is already banished from ${
-            banishedRole.name
-          }.`,
+          `${boldify(getDisplayTag(targetMember))} is already banished.`,
         );
         return;
       }
 
-      const logAction = `${helper ? "Helper " : ""}${banishedRole.name} Banish`;
-      await targetMember.roles.add(targetRoleId);
+      const logAction = `${helper ? "Helper " : ""}Banish`;
+      await targetMember.roles.add(Constants.ROLES.BANISHED);
       if (handler === "command") {
         await replyInteraction(
           interaction,
-          `Successfully banished ${boldify(getDisplayTag(targetMember))} from ${
-            banishedRole.name
-          }.`,
+          `Successfully banished ${boldify(getDisplayTag(targetMember))}.`,
         );
       } else {
         await updateInteraction(
@@ -97,9 +75,7 @@ export async function banish(
       }
       await send(
         interaction.channel,
-        `Successfully banished ${boldify(getDisplayTag(targetMember))} from ${
-          banishedRole.name
-        }.`,
+        `Successfully banished ${boldify(getDisplayTag(targetMember))}.`,
       );
       await db.userRepo?.upsertUser(
         targetMember.id,
@@ -130,27 +106,23 @@ export async function banish(
       );
       await dm(
         targetMember.user,
-        `A moderator has banished you from the ${banishedRole.name} channel.`,
+        `A moderator has banished you from discussion channels.`,
         interaction.channel,
       );
     } else if (action === "remove") {
-      if (!targetMember.roles.cache.has(targetRoleId)) {
+      if (!targetMember.roles.cache.has(Constants.ROLES.BANISHED)) {
         await replyInteractionError(
           interaction,
-          `${boldify(getDisplayTag(targetMember))} is not banished from ${
-            banishedRole.name
-          }.`,
+          `${boldify(getDisplayTag(targetMember))} is not banished.`,
         );
         return;
       }
-      const logAction = `${helper ? "Helper " : ""}${banishedRole.name} Unbanish`;
-      await targetMember.roles.remove(targetRoleId);
+      const logAction = `${helper ? "Helper " : ""}Unbanish`;
+      await targetMember.roles.remove(Constants.ROLES.BANISHED);
       if (handler === "command") {
         await replyInteractionPublic(
           interaction,
-          `Successfully unbanished ${boldify(getDisplayTag(targetMember))} from ${
-            banishedRole.name
-          }.`,
+          `Successfully unbanished ${boldify(getDisplayTag(targetMember))}.`,
         );
       } else {
         await updateInteraction(
@@ -161,9 +133,7 @@ export async function banish(
         );
         await send(
           interaction.channel,
-          `Successfully unbanished ${boldify(getDisplayTag(targetMember))} from ${
-            banishedRole.name
-          }.`,
+          `Successfully unbanished ${boldify(getDisplayTag(targetMember))}.`,
         );
       }
       await modLog(
@@ -184,7 +154,7 @@ export async function banish(
       );
       await dm(
         targetMember.user,
-        `A moderator has unbanished you from the ${banishedRole.name} channel.`,
+        `A moderator has unbanished you from discussion channels.`,
         interaction.channel,
       );
     }

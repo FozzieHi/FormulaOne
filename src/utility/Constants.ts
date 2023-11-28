@@ -126,6 +126,7 @@ export class Constants {
     BEGINNERS_QUESTIONS: "941602889221165066",
     MUTED: "292105874158256128",
     NOXP: "314910227306643457",
+    BANISHED: "411950549064482823",
   };
 
   static readonly MOD_ROLES: Array<{ id: Snowflake; permissionLevel: number }> = [
@@ -133,28 +134,6 @@ export class Constants {
     { id: this.ROLES.ADMIN, permissionLevel: 3 },
     { id: this.ROLES.STEWARDS, permissionLevel: 2 },
     { id: this.ROLES.MARSHALS, permissionLevel: 1 },
-  ];
-
-  static readonly BANISH_ROLES: Array<{
-    name: string;
-    id: Snowflake;
-  }> = [
-    {
-      name: "f1-beginner-questions",
-      id: "941602889221165066",
-    },
-    {
-      name: "f1-discussion",
-      id: "821253279937462283",
-    },
-    {
-      name: "f1-serious",
-      id: "411950549064482823",
-    },
-    {
-      name: "f1-technical",
-      id: "433240749216104459",
-    },
   ];
 
   static readonly CHANNELS = {

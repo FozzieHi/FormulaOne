@@ -40,14 +40,7 @@ export class RuleSelect extends InteractionHandler {
         return;
       }
       const reason = `${parsedData.rule} - ${Constants.RULES[parsedData.rule]}`;
-      await banish(
-        interaction,
-        targetMember,
-        parsedData.targetRoleId as Snowflake,
-        "add",
-        "interaction",
-        reason,
-      );
+      await banish(interaction, targetMember, "add", "interaction", reason);
     } else if (parsedData.commandName === "punish") {
       await MutexManager.getUserMutex(parsedData.targetMemberId).runExclusive(
         async () => {
@@ -130,11 +123,10 @@ export class RuleSelect extends InteractionHandler {
       return this.none();
     }
     if (commandName === "banish") {
-      const [targetMemberId, targetRoleId] = split;
+      const [targetMemberId] = split;
       return this.some({
         commandName,
         targetMemberId,
-        targetRoleId,
         rule,
         channelId: null,
         messageId: null,
@@ -152,7 +144,6 @@ export class RuleSelect extends InteractionHandler {
         logMessageId,
         amount: parseInt(amount, 10),
         rule,
-        targetRoleId: null,
       });
     }
     return this.none();

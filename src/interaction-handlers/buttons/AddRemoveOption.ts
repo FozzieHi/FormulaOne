@@ -33,7 +33,7 @@ export class AddRemoveOption extends InteractionHandler {
       const optionSelect: Array<Array<StringSelectMenuBuilder>> = [
         [
           new StringSelectMenuBuilder({
-            customId: `ruleselect-${parsedData.commandName}-${parsedData.targetMemberId}-${parsedData.targetRoleId}`,
+            customId: `ruleselect-${parsedData.commandName}-${parsedData.targetMemberId}`,
             placeholder: "Select rule",
             options: ruleOptions,
           }),
@@ -59,7 +59,7 @@ export class AddRemoveOption extends InteractionHandler {
         ],
       ];
       await interaction.showModal({
-        customId: `reasonoption-${parsedData.commandName}-${parsedData.targetMemberId}-${parsedData.targetRoleId}-${parsedData.action}`,
+        customId: `reasonoption-${parsedData.commandName}-${parsedData.targetMemberId}-${parsedData.action}`,
         title: "Reason",
         components: inputs.map((input) => ({
           type: ComponentType.ActionRow,
@@ -75,12 +75,11 @@ export class AddRemoveOption extends InteractionHandler {
     }
     const split = interaction.customId.split("-");
     split.shift();
-    const [action, commandName, targetMemberId, targetRoleId] = split;
+    const [action, commandName, targetMemberId] = split;
     return this.some({
       action,
       commandName,
       targetMemberId,
-      targetRoleId,
     });
   }
 }
