@@ -16,23 +16,15 @@ export function upperFirstChar(str: string) {
 
 export function maxLength(str: string) {
   if (str != null) {
-    let cleanStr = str.replaceAll(Constants.GLOBAL_REGEXES.ZERO_WIDTH, "");
-    cleanStr = cleanStr.replaceAll(new RE2(/\|{10,}/g), ""); // Replace 10 or more consecutive markdown spoiler characters
+    let cleanStr = str.replace(Constants.GLOBAL_REGEXES.ZERO_WIDTH, "");
+    cleanStr = cleanStr.replace(new RE2(/\|{10,}/g), ""); // Replace 10 or more consecutive markdown spoiler characters
     return cleanStr.length > 500 ? `${cleanStr.substring(0, 500)}...` : cleanStr;
   }
   return str;
 }
 
 export function removeClickableLinks(str: string) {
-  const pattern = Constants.GLOBAL_REGEXES.URL;
-  const urls = str.match(pattern);
-  let returnVal = str;
-  if (urls != null) {
-    urls.forEach((url) => {
-      returnVal = returnVal.replace(url, unlinkify(url));
-    });
-  }
-  return returnVal;
+  return str.replace(Constants.GLOBAL_REGEXES.URL, (url) => unlinkify(url));
 }
 
 export function getDisplayTag(member: GuildMember) {
