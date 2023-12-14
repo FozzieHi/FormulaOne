@@ -14,7 +14,8 @@ export function upperFirstChar(str: string) {
 }
 
 export function maxLength(str: string) {
-  const cleanStr = str.replaceAll(Constants.GLOBAL_REGEXES.ZERO_WIDTH, "");
+  let cleanStr = str.replaceAll(Constants.GLOBAL_REGEXES.ZERO_WIDTH, "");
+  cleanStr = cleanStr.replace(/\|{10,}/, ""); // Replace 10 or more consecutive markdown spoiler characters
   if (cleanStr?.length > 500) {
     return `${cleanStr.substring(0, 500)}...`;
   }
