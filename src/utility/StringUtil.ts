@@ -1,4 +1,5 @@
 import { GuildMember, User } from "discord.js";
+import RE2 from "re2";
 import { Constants } from "./Constants.js";
 
 export function boldify(str: string) {
@@ -15,7 +16,7 @@ export function upperFirstChar(str: string) {
 
 export function maxLength(str: string) {
   let cleanStr = str.replaceAll(Constants.GLOBAL_REGEXES.ZERO_WIDTH, "");
-  cleanStr = cleanStr.replace(/\|{10,}/, ""); // Replace 10 or more consecutive markdown spoiler characters
+  cleanStr = cleanStr.replaceAll(new RE2(/\|{10,}/g), ""); // Replace 10 or more consecutive markdown spoiler characters
   if (cleanStr?.length > 500) {
     return `${cleanStr.substring(0, 500)}...`;
   }
