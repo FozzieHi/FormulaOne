@@ -15,12 +15,15 @@ export function upperFirstChar(str: string) {
 }
 
 export function maxLength(str: string) {
-  let cleanStr = str.replaceAll(Constants.GLOBAL_REGEXES.ZERO_WIDTH, "");
-  cleanStr = cleanStr.replaceAll(new RE2(/\|{10,}/g), ""); // Replace 10 or more consecutive markdown spoiler characters
-  if (cleanStr?.length > 500) {
-    return `${cleanStr.substring(0, 500)}...`;
+  if (str != null) {
+    let cleanStr = str.replaceAll(Constants.GLOBAL_REGEXES.ZERO_WIDTH, "");
+    cleanStr = cleanStr.replaceAll(new RE2(/\|{10,}/g), ""); // Replace 10 or more consecutive markdown spoiler characters
+    if (cleanStr.length > 500) {
+      return `${cleanStr.substring(0, 500)}...`;
+    }
+    return cleanStr;
   }
-  return cleanStr;
+  return str;
 }
 
 export function removeClickableLinks(str: string) {
