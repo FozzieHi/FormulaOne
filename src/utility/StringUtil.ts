@@ -14,10 +14,11 @@ export function upperFirstChar(str: string) {
 }
 
 export function maxLength(str: string) {
-  if (str?.length > 500) {
-    return `${str.substring(0, 500)}...`;
+  const cleanStr = str.replaceAll(Constants.GLOBAL_REGEXES.ZERO_WIDTH, "");
+  if (cleanStr?.length > 500) {
+    return `${cleanStr.substring(0, 500)}...`;
   }
-  return str;
+  return cleanStr;
 }
 
 export function removeClickableLinks(str: string) {
