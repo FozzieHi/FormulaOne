@@ -1,7 +1,6 @@
 name: Registry clean
 
 on:
-  workflow_dispatch:
   schedule:
     - cron: "0 2 * * *"
 
@@ -16,4 +15,4 @@ jobs:
         with:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
       - name: Run garbage collection
-        run: doctl registry garbage-collection start -f --include-untagged-manifests
+        run: doctl registry garbage-collection start -f --include-untagged-manifests --no-header --format Status
