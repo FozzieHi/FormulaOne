@@ -10,7 +10,7 @@ on:
       - "src/**"
       - "deployment.yml"
       - "Dockerfile"
-      - ".github/workflows/**"
+      - ".github/workflows/release_deploy.yml"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
