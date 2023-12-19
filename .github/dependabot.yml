@@ -11,3 +11,5 @@ updates:
     groups:
       sentry:
         patterns: ["@sentry/*"]
+      typescript-eslint:
+        patterns: ["@typescript-eslint/*"]
