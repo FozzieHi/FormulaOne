@@ -18,8 +18,8 @@
   "dependencies": {
     "@sapphire/framework": "^5.0.4",
     "@sapphire/plugin-logger": "^4.0.1",
-    "@sentry/integrations": "^7.90.0",
-    "@sentry/node": "^7.90.0",
+    "@sentry/integrations": "^7.91.0",
+    "@sentry/node": "^7.91.0",
     "@tsconfig/node18": "^18.2.2",
     "async-mutex": "^0.4.0",
     "bufferutil": "^4.0.8",
