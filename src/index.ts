@@ -9,6 +9,7 @@ import Sentry from "@sentry/node";
 import { RewriteFrames } from "@sentry/integrations";
 import db from "./database/index.js";
 import { Constants } from "./utility/Constants.js";
+import "./intervals/AutoPunishmentRemoval.js";
 import "./intervals/AutoUnmute.js";
 import "./intervals/MutexClear.js";
 import "./intervals/Protection.js";
