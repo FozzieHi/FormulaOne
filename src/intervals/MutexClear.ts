@@ -7,4 +7,4 @@ setInterval(() => {
       ([, value]) => Date.now() - value.lastUsed > 120000 && !value.mutex.isLocked(),
     )
     .forEach(([key]) => MutexManager.userMutexes.delete(key));
-}, Constants.INTERVALS.MUTEXES);
+}, Constants.INTERVALS.MUTEX_CLEAR);
