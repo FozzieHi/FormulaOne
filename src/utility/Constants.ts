@@ -160,7 +160,7 @@ export class Constants {
     GatewayIntentBits.AutoModerationConfiguration,
     GatewayIntentBits.AutoModerationExecution,
     GatewayIntentBits.Guilds,
-    GatewayIntentBits.GuildBans,
+    GatewayIntentBits.GuildModeration,
     GatewayIntentBits.GuildMembers,
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.GuildMessageReactions,
