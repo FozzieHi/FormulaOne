@@ -56,4 +56,4 @@ setInterval(() => {
       }
     }
   })().catch((err) => handleError(err));
-}, Constants.INTERVALS.REMOVE_PUNISHMENTS);
+}, Constants.INTERVALS.AUTO_PUNISHMENT_REMOVAL);
