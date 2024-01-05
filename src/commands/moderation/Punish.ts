@@ -82,7 +82,7 @@ export class PunishCommand extends Command {
 
     registry.registerContextMenuCommand(
       {
-        name: "Punish (Dev)",
+        name: "Punish",
         type: ApplicationCommandType.Message,
       },
       {
