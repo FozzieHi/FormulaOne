@@ -14,6 +14,6 @@
     "inlineSources": true,
     "sourceRoot": "/",
     "noEmitHelpers": true,
-    "importHelpers": true
-  }
+    "importHelpers": true,
+  },
 }
