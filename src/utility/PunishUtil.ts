@@ -58,7 +58,7 @@ async function decreasePunishment(memberId: Snowflake, guildId: Snowflake) {
 
 async function mute(
   moderator: GuildMember,
-  targetMember: GuildMember,
+  targetUser: User,
   guild: Guild,
   reason: string,
   displayLog: string,
@@ -69,10 +69,12 @@ async function mute(
     return;
   }
   const role = await TryVal(guild.roles.fetch(Constants.ROLES.MUTED));
-  if (await db.muteRepo?.anyMute(targetMember.id, guild.id)) {
-    await db.muteRepo?.deleteMute(targetMember.id, guild.id);
+  if (await db.muteRepo?.anyMute(targetUser.id, guild.id)) {
+    await db.muteRepo?.deleteMute(targetUser.id, guild.id);
   }
-  if (role == null) {
+  await db.muteRepo?.insertMute(targetUser.id, guild.id, length);
+  const targetMember = await TryVal(guild.members.fetch(targetUser.id));
+  if (role == null || targetMember == null) {
     return;
   }
 
@@ -81,7 +83,6 @@ async function mute(
     `(${getDisplayTag(moderator)}) ${displayLog} - ${reason}`,
   );
   await targetMember.roles.add(role);
-  await db.muteRepo?.insertMute(targetMember.id, guild.id, length);
 }
 
 async function ban(
@@ -189,28 +190,20 @@ export async function punish(
 
     let color = Constants.WARN_COLOR;
     if (punishment.type === PunishmentType.WARN) {
-      if (targetMember == null) {
-        await replyInteractionError(interaction, "Member not found.");
-        return null;
-      }
       await db.userRepo?.upsertUser(targetUser.id, interaction.guild.id, {
         $inc: { warnings: 1 },
       });
       color = Constants.WARN_COLOR;
     } else if (punishment.type === PunishmentType.MUTE) {
-      if (targetMember == null) {
-        await replyInteractionError(interaction, "Member not found.");
-        return null;
-      }
       await mute(
         moderator,
-        targetMember,
+        targetUser,
         interaction.guild,
         reason,
         punishmentDisplay.displayLog,
         punishment.length as number,
       );
-      await db.userRepo?.upsertUser(targetMember.id, interaction.guild.id, {
+      await db.userRepo?.upsertUser(targetUser.id, interaction.guild.id, {
         $inc: { mutes: 1 },
       });
       color = Constants.MUTE_COLOR;
