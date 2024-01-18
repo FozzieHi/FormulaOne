@@ -1,4 +1,4 @@
-FROM node:18-alpine AS build
+FROM node:20-alpine AS build
 
 RUN apk add --no-cache python3 make gcc g++
 
@@ -14,7 +14,7 @@ COPY tsconfig.json ./
 
 RUN npm run build
 
-FROM node:18-alpine AS run
+FROM node:20-alpine AS run
 
 COPY --from=build /app /app
 WORKDIR /app
