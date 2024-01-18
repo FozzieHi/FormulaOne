@@ -20,7 +20,6 @@
     "@sapphire/plugin-logger": "^4.0.1",
     "@sentry/integrations": "^7.93.0",
     "@sentry/node": "^7.93.0",
-    "@tsconfig/node18": "^18.2.2",
     "async-mutex": "^0.4.1",
     "bufferutil": "^4.0.8",
     "discord.js": "^14.13.0",
@@ -32,6 +31,7 @@
     "utf-8-validate": "^6.0.3"
   },
   "devDependencies": {
+    "@tsconfig/node20": "^20.1.2",
     "@typescript-eslint/eslint-plugin": "^6.19.0",
     "@typescript-eslint/parser": "^6.19.0",
     "eslint": "^8.56.0",
