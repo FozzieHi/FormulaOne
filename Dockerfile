@@ -7,7 +7,7 @@ WORKDIR /app
 COPY package.json ./
 COPY package-lock.json ./
 
-RUN npm install -g typescript @tsconfig/node20 && npm ci --omit=dev
+RUN npm ci --omit=dev && npm install typescript @tsconfig/node20 --no-save
 
 COPY src/ src/
 COPY tsconfig.json ./
