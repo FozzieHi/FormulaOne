@@ -13,7 +13,7 @@
     "build": "rm -rf target/ && tsc",
     "start": "node target/index.js"
   },
-  "author": "Fozzie#0001",
+  "author": "fozzie",
   "license": "AGPL-3.0",
   "dependencies": {
     "@sapphire/framework": "^5.0.6",
