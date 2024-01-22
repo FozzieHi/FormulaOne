@@ -16,7 +16,7 @@
   "author": "fozzie",
   "license": "AGPL-3.0",
   "dependencies": {
-    "@sapphire/framework": "^5.0.6",
+    "@sapphire/framework": "^5.0.7",
     "@sapphire/plugin-logger": "^4.0.1",
     "@sentry/integrations": "^7.94.1",
     "@sentry/node": "^7.94.1",
