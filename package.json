@@ -23,7 +23,7 @@
     "async-mutex": "^0.4.1",
     "bufferutil": "^4.0.8",
     "discord.js": "^14.13.0",
-    "dotenv": "^16.3.1",
+    "dotenv": "^16.3.2",
     "erlpack": "github:discord/erlpack",
     "mongodb": "^6.3.0",
     "re2": "^1.20.9",
