@@ -5,7 +5,7 @@
   "main": "target/index.js",
   "type": "module",
   "scripts": {
-    "prepare": "if [ \"$NODE_ENV\" != \"production\" ]; then husky install; fi",
+    "prepare": "if [ \"$NODE_ENV\" != \"production\" ]; then husky; fi",
     "prettier:write": "prettier --cache --write .",
     "prettier:check": "prettier --cache --check .",
     "eslint:write": "eslint . --fix",
