@@ -82,6 +82,7 @@ export class ReasonOption extends InteractionHandler {
           parsedData.reason,
           interaction.channel as GuildTextBasedChannel,
           channel,
+          Constants.SECONDS_PER_DAY,
         );
         if (!result) {
           await replyInteractionError(interaction, "Error banning user.");
