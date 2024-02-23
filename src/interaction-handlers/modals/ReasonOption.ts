@@ -2,7 +2,6 @@ import {
   container,
   InteractionHandler,
   InteractionHandlerTypes,
-  PieceContext,
 } from "@sapphire/framework";
 import {
   Guild,
@@ -22,7 +21,7 @@ import { replyInteraction, replyInteractionError } from "../../utility/Sender.js
 import ViolationService from "../../services/ViolationService.js";
 
 export class ReasonOption extends InteractionHandler {
-  public constructor(context: PieceContext) {
+  public constructor(context: never) {
     super(context, {
       interactionHandlerType: InteractionHandlerTypes.ModalSubmit,
     });
@@ -45,8 +44,7 @@ export class ReasonOption extends InteractionHandler {
       await banish(
         interaction,
         targetMember,
-        parsedData.targetRoleId as Snowflake,
-        parsedData.action as string,
+        parsedData.action as "add" | "remove",
         "interaction",
         parsedData.reason,
       );
@@ -115,11 +113,10 @@ export class ReasonOption extends InteractionHandler {
     split.shift();
     const reason = interaction.fields.getTextInputValue("reason");
     if (commandName === "banish") {
-      const [targetMemberId, targetRoleId, action] = split;
+      const [targetMemberId, action] = split;
       return this.some({
         commandName,
         targetMemberId,
-        targetRoleId,
         action,
         channelId: null,
         reason,
@@ -130,7 +127,6 @@ export class ReasonOption extends InteractionHandler {
       return this.some({
         commandName,
         targetMemberId,
-        targetRoleId: null,
         action: null,
         channelId,
         reason,

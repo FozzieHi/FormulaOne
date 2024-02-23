@@ -126,6 +126,7 @@ export class Constants {
     BEGINNERS_QUESTIONS: "941602889221165066",
     MUTED: "292105874158256128",
     NOXP: "314910227306643457",
+    BANISHED: "411950549064482823",
   };
 
   static readonly MOD_ROLES: Array<{ id: Snowflake; permissionLevel: number }> = [
@@ -135,34 +136,11 @@ export class Constants {
     { id: this.ROLES.MARSHALS, permissionLevel: 1 },
   ];
 
-  static readonly BANISH_ROLES: Array<{
-    name: string;
-    id: Snowflake;
-  }> = [
-    {
-      name: "f1-beginner-questions",
-      id: "941602889221165066",
-    },
-    {
-      name: "f1-discussion",
-      id: "821253279937462283",
-    },
-    {
-      name: "f1-serious",
-      id: "411950549064482823",
-    },
-    {
-      name: "f1-technical",
-      id: "433240749216104459",
-    },
-  ];
-
   static readonly CHANNELS = {
     WELCOME: "435404097055883265",
     RULES: "177387572505346048",
     NEWS: "335167453350854666",
     F1_GENERAL: "876046265111167016",
-    F1_DISCUSSION: "432208507073331201",
     OFF_TOPIC: "242392969213247500",
     EMOJIS: "639401538485485569",
     MOD_QUEUE: "920333278593024071",
@@ -182,7 +160,7 @@ export class Constants {
     GatewayIntentBits.AutoModerationConfiguration,
     GatewayIntentBits.AutoModerationExecution,
     GatewayIntentBits.Guilds,
-    GatewayIntentBits.GuildBans,
+    GatewayIntentBits.GuildModeration,
     GatewayIntentBits.GuildMembers,
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.GuildMessageReactions,
@@ -213,10 +191,13 @@ export class Constants {
   static readonly GLOBAL_REGEXES = {
     MARKDOWN: new RE2(/([*~`_])+/g),
     URL: new RE2(/https?:\/\/([\w[\]:.-]+)\.([A-Za-z\d-]+)(:\d*)?([/#?]\S*)?/g),
+    ZERO_WIDTH: new RE2(/[\u200B-\u200D\uFEFF]/g),
   };
 
   static readonly INTERVALS = {
     PROTECTION: 60000,
-    MUTEXES: 60000,
+    MUTEX_CLEAR: 60000,
+    AUTO_UNMUTE: 30000,
+    AUTO_PUNISHMENT_REMOVAL: 600000,
   };
 }

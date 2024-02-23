@@ -16,7 +16,7 @@ import { Constants } from "../../utility/Constants.js";
 export class SayCommand extends Command {
   public constructor(context: Command.Context) {
     super(context, {
-      runIn: CommandOptionsRunTypeEnum.GuildText,
+      runIn: CommandOptionsRunTypeEnum.GuildAny,
       preconditions: ["Stewards"],
     });
   }

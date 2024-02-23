@@ -1,8 +1,4 @@
-import {
-  InteractionHandler,
-  InteractionHandlerTypes,
-  PieceContext,
-} from "@sapphire/framework";
+import { InteractionHandler, InteractionHandlerTypes } from "@sapphire/framework";
 import {
   ButtonInteraction,
   ButtonBuilder,
@@ -18,7 +14,7 @@ import TryVal from "../../utility/TryVal.js";
 import { getUserTag } from "../../utility/StringUtil.js";
 
 export class CheckPunishmentsPagesInteraction extends InteractionHandler {
-  public constructor(context: PieceContext) {
+  public constructor(context: never) {
     super(context, {
       interactionHandlerType: InteractionHandlerTypes.Button,
     });

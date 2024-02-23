@@ -10,6 +10,7 @@ import {
   ChatInputCommandInteraction,
   ContextMenuCommandInteraction,
   GuildMember,
+  User,
 } from "discord.js";
 import { getRuleChoices } from "../../utility/CommandUtil.js";
 import { Constants } from "../../utility/Constants.js";
@@ -20,8 +21,8 @@ import { showAmountSelect } from "../../interaction-handlers/buttons/ShowAmountS
 export class PunishCommand extends Command {
   public constructor(context: Command.Context) {
     super(context, {
-      runIn: CommandOptionsRunTypeEnum.GuildText,
-      preconditions: ["Marshals", "MemberValidation", "NoModerator"],
+      runIn: CommandOptionsRunTypeEnum.GuildAny,
+      preconditions: ["Marshals", "NoModerator"],
     });
   }
 
@@ -31,16 +32,16 @@ export class PunishCommand extends Command {
     registry.registerChatInputCommand(
       {
         name: this.name,
-        description: "Adjust a member's punishments.",
+        description: "Adjust a user's punishments.",
         options: [
           {
             name: "add",
-            description: "Add a punishment to a member",
+            description: "Add a punishment to a user",
             type: ApplicationCommandOptionType.Subcommand,
             options: [
               {
-                name: "member",
-                description: "The member to punish",
+                name: "user",
+                description: "The user to punish",
                 type: ApplicationCommandOptionType.User,
                 required: true,
               },
@@ -55,12 +56,12 @@ export class PunishCommand extends Command {
           },
           {
             name: "remove",
-            description: "Remove a punishment from a member",
+            description: "Remove a punishment from a user",
             type: ApplicationCommandOptionType.Subcommand,
             options: [
               {
-                name: "member",
-                description: "The member to unpunish",
+                name: "user",
+                description: "The user to unpunish",
                 type: ApplicationCommandOptionType.User,
                 required: true,
               },
@@ -82,7 +83,7 @@ export class PunishCommand extends Command {
 
     registry.registerContextMenuCommand(
       {
-        name: "Punish (Dev)",
+        name: "Punish",
         type: ApplicationCommandType.Message,
       },
       {
@@ -94,7 +95,7 @@ export class PunishCommand extends Command {
 
   public async chatInputRun(interaction: ChatInputCommandInteraction) {
     const subcommand = interaction.options.getSubcommand();
-    const targetMember = interaction.options.getMember("member") as GuildMember;
+    const targetUser = interaction.options.getUser("user") as User;
     let reason: string | null;
     if (subcommand === "add") {
       const rule = interaction.options.getString("reason");
@@ -105,14 +106,14 @@ export class PunishCommand extends Command {
     } else if (subcommand === "remove") {
       reason = interaction.options.getString("reason");
     }
-    await MutexManager.getUserMutex(targetMember.id).runExclusive(async () => {
+    await MutexManager.getUserMutex(targetUser.id).runExclusive(async () => {
       if (reason == null) {
         return;
       }
       await punish(
         interaction,
         interaction.member as GuildMember,
-        targetMember,
+        targetUser,
         subcommand,
         reason,
         1,

@@ -1,0 +1,88 @@
+name: Release and Deploy
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "package.json"
+      - "package-lock.json"
+      - "tsconfig.json"
+      - "src/**"
+      - "deployment.yml"
+      - "Dockerfile"
+      - ".github/workflows/release_deploy.yml"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Cache node modules
+        uses: actions/cache@v4
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+      - name: Install dependencies
+        run: "npm ci --ignore-scripts"
+      - name: Build
+        run: "tsc"
+      - name: Release
+        uses: getsentry/action-release@v1
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+        with:
+          environment: production
+          sourcemaps: "./target"
+          url_prefix: "~/target"
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+      - name: Build container image
+        run: docker build -t ${{ secrets.DIGITALOCEAN_IMAGE_URL }}:$(echo $GITHUB_SHA | head -c7) .
+      - name: Log in to registry
+        run: doctl registry login --expiry-seconds 1200
+      - name: Push image to registry
+        run: docker push ${{ secrets.DIGITALOCEAN_IMAGE_URL }}:$(echo $GITHUB_SHA | head -c7)
+      - name: Update deployment file
+        run: TAG=$(echo $GITHUB_SHA | head -c7) && sed -i 's|<IMAGE>|${{ secrets.DIGITALOCEAN_IMAGE_URL }}:'${TAG}'|' $GITHUB_WORKSPACE/deployment.yml
+      - name: Save kubeconfig
+        run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 ${{ secrets.DIGITALOCEAN_CLUSTER_NAME }}
+      - name: Deploy using kubectl
+        run: kubectl apply -f $GITHUB_WORKSPACE/deployment.yml
+      - name: Verify deployment
+        run: kubectl rollout status deployment/formula-one
+      - name: Remove old images from registry
+        uses: ripplr-io/docr-image-remove@73f900f94464879edf44ba8d0a75d596d826ad7f
+        with:
+          image_repository: formula-one
+          buffer_size: 3
+      - name: Post notification
+        run: |
+          JSON_STRING=$(jq -n \
+                  --arg title "Deployment for $(echo $GITHUB_SHA | head -c7)" \
+                  --arg embed_color $([ ${{ job.status }} == "success" ] && echo 59432 || echo 16711680) \
+                  '{ embeds: [{ title: $title, url: "${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}", color: $embed_color|tonumber, fields: [{ name: "Commit message", value: "${{ github.event.head_commit.message }}" }, { name: "Status", value: "${{ job.status }}" }] }] }') \
+          && curl -H "Content-Type: application/json" -d "$JSON_STRING" "${{ secrets.DISCORD_WEBHOOK_URL }}"

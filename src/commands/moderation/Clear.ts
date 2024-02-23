@@ -19,7 +19,7 @@ export class ClearCommand extends Command {
   public constructor(context: Command.Context) {
     super(context, {
       requiredClientPermissions: ["ManageMessages"],
-      runIn: CommandOptionsRunTypeEnum.GuildText,
+      runIn: CommandOptionsRunTypeEnum.GuildAny,
       preconditions: ["Marshals"],
     });
   }

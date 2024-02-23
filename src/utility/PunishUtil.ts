@@ -7,6 +7,7 @@ import {
   ModalSubmitInteraction,
   SelectMenuInteraction,
   Snowflake,
+  User,
 } from "discord.js";
 import { Constants, PunishmentLevel, PunishmentType } from "./Constants.js";
 import {
@@ -26,6 +27,7 @@ import { Punishment } from "../database/models/User.js";
 import { Pun } from "../database/models/Pun.js";
 import { boldify, getDisplayTag, getUserTag, maxLength } from "./StringUtil.js";
 import TryVal from "./TryVal.js";
+import Try from "./Try.js";
 
 async function increasePunishment(
   memberId: Snowflake,
@@ -56,7 +58,7 @@ async function decreasePunishment(memberId: Snowflake, guildId: Snowflake) {
 
 async function mute(
   moderator: GuildMember,
-  targetMember: GuildMember,
+  targetUser: User,
   guild: Guild,
   reason: string,
   displayLog: string,
@@ -67,10 +69,12 @@ async function mute(
     return;
   }
   const role = await TryVal(guild.roles.fetch(Constants.ROLES.MUTED));
-  if (await db.muteRepo?.anyMute(targetMember.id, guild.id)) {
-    await db.muteRepo?.deleteMute(targetMember.id, guild.id);
+  if (await db.muteRepo?.anyMute(targetUser.id, guild.id)) {
+    await db.muteRepo?.deleteMute(targetUser.id, guild.id);
   }
-  if (role == null) {
+  await db.muteRepo?.insertMute(targetUser.id, guild.id, length);
+  const targetMember = await TryVal(guild.members.fetch(targetUser.id));
+  if (role == null || targetMember == null) {
     return;
   }
 
@@ -79,12 +83,11 @@ async function mute(
     `(${getDisplayTag(moderator)}) ${displayLog} - ${reason}`,
   );
   await targetMember.roles.add(role);
-  await db.muteRepo?.insertMute(targetMember.id, guild.id, length);
 }
 
 async function ban(
   moderator: GuildMember,
-  targetMember: GuildMember,
+  targetUser: User,
   guild: Guild,
   reason: string,
   displayLog: string,
@@ -94,14 +97,14 @@ async function ban(
   if (dbGuild == null) {
     return;
   }
-  if (await db.banRepo?.anyBan(targetMember.id, guild.id)) {
-    await db.banRepo?.deleteBan(targetMember.id, guild.id);
+  if (await db.banRepo?.anyBan(targetUser.id, guild.id)) {
+    await db.banRepo?.deleteBan(targetUser.id, guild.id);
   }
 
-  await guild.members.ban(targetMember.user, {
+  await guild.members.ban(targetUser, {
     reason: `(${getDisplayTag(moderator)}) ${displayLog} - ${reason}`,
   });
-  await db.banRepo?.insertBan(targetMember.id, guild.id, length);
+  await db.banRepo?.insertBan(targetUser.id, guild.id, length);
 }
 
 export function getPunishmentDisplay(punishment: PunishmentLevel) {
@@ -137,7 +140,7 @@ export function getPunishmentDisplay(punishment: PunishmentLevel) {
 export async function punish(
   interaction: CommandInteraction | SelectMenuInteraction | ModalSubmitInteraction,
   moderator: GuildMember,
-  targetMember: GuildMember,
+  targetUser: User,
   action: string,
   reason: string,
   amount: number,
@@ -149,7 +152,7 @@ export async function punish(
     return null;
   }
 
-  const dbUser = await getDBUser(targetMember.id, interaction.guild.id);
+  const dbUser = await getDBUser(targetUser.id, interaction.guild.id);
   if (dbUser == null) {
     return null;
   }
@@ -159,7 +162,7 @@ export async function punish(
     if (currentPun > Constants.PUNISHMENTS.length - 1) {
       await replyInteractionError(
         interaction,
-        `${boldify(getDisplayTag(targetMember))} has exceeded ${
+        `${boldify(getUserTag(targetUser))} has exceeded ${
           Constants.PUNISHMENTS.length
         } punishments in the last 30 days, escalate their punishment manually.`,
       );
@@ -174,43 +177,46 @@ export async function punish(
     }
     const punishmentDisplay = getPunishmentDisplay(punishment);
 
-    await dm(
-      targetMember.user,
-      `A moderator has ${punishmentDisplay.displayPastTense} you${
-        punishment.length != null ? ` for ${punishmentDisplay.displayCurrent}` : ""
-      } for the reason: ${reason}.`,
-      interaction.channel,
-    );
+    const targetMember = await TryVal(interaction.guild.members.fetch(targetUser.id));
+    if (targetMember != null) {
+      await dm(
+        targetUser,
+        `A moderator has ${punishmentDisplay.displayPastTense} you${
+          punishment.length != null ? ` for ${punishmentDisplay.displayCurrent}` : ""
+        } for the reason: ${reason}.`,
+        interaction.channel,
+      );
+    }
 
     let color = Constants.WARN_COLOR;
     if (punishment.type === PunishmentType.WARN) {
-      await db.userRepo?.upsertUser(targetMember.id, interaction.guild.id, {
+      await db.userRepo?.upsertUser(targetUser.id, interaction.guild.id, {
         $inc: { warnings: 1 },
       });
       color = Constants.WARN_COLOR;
     } else if (punishment.type === PunishmentType.MUTE) {
       await mute(
         moderator,
-        targetMember,
+        targetUser,
         interaction.guild,
         reason,
         punishmentDisplay.displayLog,
         punishment.length as number,
       );
-      await db.userRepo?.upsertUser(targetMember.id, interaction.guild.id, {
+      await db.userRepo?.upsertUser(targetUser.id, interaction.guild.id, {
         $inc: { mutes: 1 },
       });
       color = Constants.MUTE_COLOR;
     } else if (punishment.type === PunishmentType.BAN) {
       await ban(
         moderator,
-        targetMember,
+        targetUser,
         interaction.guild,
         reason,
         punishmentDisplay.displayLog,
         punishment.length as number,
       );
-      await db.userRepo?.upsertUser(targetMember.id, interaction.guild.id, {
+      await db.userRepo?.upsertUser(targetUser.id, interaction.guild.id, {
         $inc: { bans: 1 },
       });
       color = Constants.BAN_COLOR;
@@ -219,24 +225,24 @@ export async function punish(
     if (interaction.isStringSelectMenu()) {
       await updateInteraction(
         interaction,
-        `Successfully punished member.`,
+        `Successfully punished user.`,
         {},
         { content: null, components: [] },
       );
     } else {
-      await replyInteraction(interaction, `Successfully punished member.`);
+      await replyInteraction(interaction, `Successfully punished user.`);
     }
     const messageDescription = `Successfully ${
       punishmentDisplay.displayPastTense
-    } ${boldify(getDisplayTag(targetMember))}${
+    } ${boldify(getUserTag(targetUser))}${
       punishment.length != null ? ` for ${punishmentDisplay.displayCurrent}` : ""
     } for the reason ${reason}.\n\nThey have ${currentPun} other punishment${
       currentPun !== 1 ? "s" : ""
     } in the last 30 days.`;
     if (channel != null && interaction.channel.id !== channel.id) {
-      await send(channel, messageDescription);
+      await Try(send(channel, messageDescription));
     }
-    messageSent = await send(interaction.channel, messageDescription);
+    messageSent = await TryVal(send(interaction.channel, messageDescription));
 
     const punishData: Punishment = {
       date: Date.now(),
@@ -251,18 +257,18 @@ export async function punish(
       punishData.messageContent = message.content;
     }
     await db.userRepo?.upsertUser(
-      targetMember.id,
+      targetUser.id,
       interaction.guild.id,
       new PushUpdate("punishments", punishData),
     );
-    await increasePunishment(targetMember.id, interaction.guild.id, escalations);
+    await increasePunishment(targetUser.id, interaction.guild.id, escalations);
     const modLogFieldAndValues = [
       "Action",
       `${punishmentDisplay.displayLog}${
         escalations > 1 ? ` (${escalations} punishments)` : ""
       }`,
-      "Member",
-      `${getDisplayTag(targetMember)} (${targetMember.id})`,
+      "User",
+      `${getUserTag(targetUser)} (${targetUser.id})`,
       "Reason",
       reason,
       "Channel",
@@ -271,58 +277,55 @@ export async function punish(
     if (message != null) {
       modLogFieldAndValues.push("Content", maxLength(message.content));
     }
-    await modLog(
-      interaction.guild,
-      moderator,
-      modLogFieldAndValues,
-      color,
-      targetMember.user,
-    );
+    await modLog(interaction.guild, moderator, modLogFieldAndValues, color, targetUser);
   } else if (action === "remove") {
     const role = await TryVal(interaction.guild.roles.fetch(Constants.ROLES.MUTED));
     if (role == null) {
       return null;
     }
-    if (db.muteRepo?.anyMute(targetMember.id, interaction.guild.id)) {
-      await targetMember.roles.remove(role);
-      await targetMember.disableCommunicationUntil(
-        null,
-        `Unpunished by ${getDisplayTag(moderator)}`,
-      );
-      await db.muteRepo?.deleteMute(targetMember.id, interaction.guild.id);
+    if (db.muteRepo?.anyMute(targetUser.id, interaction.guild.id)) {
+      const targetMember = await TryVal(interaction.guild.members.fetch(targetUser.id));
+      if (targetMember != null) {
+        await targetMember.roles.remove(role);
+        await targetMember.disableCommunicationUntil(
+          null,
+          `Unpunished by ${getDisplayTag(moderator)}`,
+        );
+        await db.muteRepo?.deleteMute(targetMember.id, interaction.guild.id);
+      }
     }
 
     if (currentPun === 0) {
-      await replyInteractionError(interaction, "Member has no active punishments.");
+      await replyInteractionError(interaction, "User has no active punishments.");
       return null;
     }
 
-    await decreasePunishment(targetMember.id, interaction.guild.id);
+    await decreasePunishment(targetUser.id, interaction.guild.id);
     await modLog(
       interaction.guild,
       moderator,
       [
         "Action",
         "Unpunish",
-        "Member",
-        `${getDisplayTag(targetMember)} (${targetMember.id})`,
+        "User",
+        `${getUserTag(targetUser)} (${targetUser.id})`,
         "Reason",
         reason,
         "Channel",
         interaction.channel.toString(),
       ],
       Constants.UNMUTE_COLOR,
-      targetMember.user,
+      targetUser,
     );
     await db.userRepo?.upsertUser(
-      targetMember.id,
+      targetUser.id,
       interaction.guild.id,
       new PopUpdate("punishments", 1),
     );
 
     await replyInteraction(
       interaction,
-      `Successfully unpunished ${boldify(getDisplayTag(targetMember))}.`,
+      `Successfully unpunished ${boldify(getUserTag(targetUser))}.`,
     );
   }
   if (messageSent != null) {

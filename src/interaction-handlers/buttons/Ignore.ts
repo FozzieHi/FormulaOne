@@ -1,8 +1,4 @@
-import {
-  InteractionHandler,
-  InteractionHandlerTypes,
-  PieceContext,
-} from "@sapphire/framework";
+import { InteractionHandler, InteractionHandlerTypes } from "@sapphire/framework";
 import {
   ButtonInteraction,
   Guild,
@@ -19,7 +15,7 @@ import { getPermLevel, isModerator } from "../../services/ModerationService.js";
 import ViolationService from "../../services/ViolationService.js";
 
 export class IgnoreInteraction extends InteractionHandler {
-  public constructor(context: PieceContext) {
+  public constructor(context: never) {
     super(context, {
       interactionHandlerType: InteractionHandlerTypes.Button,
     });

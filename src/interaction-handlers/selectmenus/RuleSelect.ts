@@ -1,15 +1,12 @@
 import { setTimeout } from "timers/promises";
-import {
-  InteractionHandler,
-  InteractionHandlerTypes,
-  PieceContext,
-} from "@sapphire/framework";
+import { InteractionHandler, InteractionHandlerTypes } from "@sapphire/framework";
 import {
   GuildMember,
   Message,
   SelectMenuInteraction,
   Snowflake,
   TextChannel,
+  User,
 } from "discord.js";
 import { banish } from "../../utility/BanishUtil.js";
 import { Constants } from "../../utility/Constants.js";
@@ -22,7 +19,7 @@ import MutexManager from "../../managers/MutexManager.js";
 import ViolationService from "../../services/ViolationService.js";
 
 export class RuleSelect extends InteractionHandler {
-  public constructor(context: PieceContext) {
+  public constructor(context: never) {
     super(context, {
       interactionHandlerType: InteractionHandlerTypes.SelectMenu,
     });
@@ -44,14 +41,7 @@ export class RuleSelect extends InteractionHandler {
         return;
       }
       const reason = `${parsedData.rule} - ${Constants.RULES[parsedData.rule]}`;
-      await banish(
-        interaction,
-        targetMember,
-        parsedData.targetRoleId as Snowflake,
-        "add",
-        "interaction",
-        reason,
-      );
+      await banish(interaction, targetMember, "add", "interaction", reason);
     } else if (parsedData.commandName === "punish") {
       await MutexManager.getUserMutex(parsedData.targetMemberId).runExclusive(
         async () => {
@@ -72,11 +62,11 @@ export class RuleSelect extends InteractionHandler {
           if (interaction.guild == null || interaction.member == null) {
             return;
           }
-          const targetMember = (await TryVal(
-            interaction.guild.members.fetch(parsedData.targetMemberId),
-          )) as GuildMember;
-          if (targetMember == null) {
-            await replyInteractionError(interaction, "Member not found.");
+          const targetUser = (await TryVal(
+            interaction.client.users.fetch(parsedData.targetMemberId),
+          )) as User;
+          if (targetUser == null) {
+            await replyInteractionError(interaction, "User not found.");
             return;
           }
           const channel = (await TryVal(
@@ -96,7 +86,7 @@ export class RuleSelect extends InteractionHandler {
           const messageSent: Message = (await punish(
             interaction,
             interaction.member as GuildMember,
-            targetMember,
+            targetUser,
             "add",
             reason,
             parsedData.amount as number,
@@ -107,7 +97,7 @@ export class RuleSelect extends InteractionHandler {
             await archiveLog(
               interaction.guild,
               interaction.channel as TextChannel,
-              targetMember.id,
+              targetUser.id,
               interaction.member as GuildMember,
               logMessage,
               "Punished",
@@ -134,11 +124,10 @@ export class RuleSelect extends InteractionHandler {
       return this.none();
     }
     if (commandName === "banish") {
-      const [targetMemberId, targetRoleId] = split;
+      const [targetMemberId] = split;
       return this.some({
         commandName,
         targetMemberId,
-        targetRoleId,
         rule,
         channelId: null,
         messageId: null,
@@ -156,7 +145,6 @@ export class RuleSelect extends InteractionHandler {
         logMessageId,
         amount: parseInt(amount, 10),
         rule,
-        targetRoleId: null,
       });
     }
     return this.none();

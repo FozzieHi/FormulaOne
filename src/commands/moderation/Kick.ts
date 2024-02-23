@@ -21,7 +21,7 @@ export class KickCommand extends Command {
   public constructor(context: Command.Context) {
     super(context, {
       requiredClientPermissions: ["KickMembers"],
-      runIn: CommandOptionsRunTypeEnum.GuildText,
+      runIn: CommandOptionsRunTypeEnum.GuildAny,
       preconditions: ["Marshals", "MemberValidation", "NoModerator"],
     });
   }

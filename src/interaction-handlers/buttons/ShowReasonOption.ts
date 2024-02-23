@@ -1,8 +1,4 @@
-import {
-  InteractionHandler,
-  InteractionHandlerTypes,
-  PieceContext,
-} from "@sapphire/framework";
+import { InteractionHandler, InteractionHandlerTypes } from "@sapphire/framework";
 import {
   ButtonInteraction,
   ComponentType,
@@ -21,7 +17,7 @@ import { getPermLevel, isModerator } from "../../services/ModerationService.js";
 import { Constants } from "../../utility/Constants.js";
 
 export class ShowReasonOptionInteraction extends InteractionHandler {
-  public constructor(context: PieceContext) {
+  public constructor(context: never) {
     super(context, {
       interactionHandlerType: InteractionHandlerTypes.Button,
     });
