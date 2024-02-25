@@ -13,6 +13,7 @@ export async function ban(
   reason: string,
   originChannel: GuildTextBasedChannel,
   targetChannel?: GuildTextBasedChannel,
+  deleteMessageSeconds?: number,
 ): Promise<boolean> {
   if (
     reason == null ||
@@ -33,6 +34,7 @@ export async function ban(
   );
   await guild.members.ban(targetUser, {
     reason: `(${getDisplayTag(moderator)}) ${reason}`,
+    deleteMessageSeconds,
   });
   await db.userRepo?.upsertUser(targetUser.id, guild.id, {
     $inc: { bans: 1 },

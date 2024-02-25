@@ -200,4 +200,6 @@ export class Constants {
     AUTO_UNMUTE: 30000,
     AUTO_PUNISHMENT_REMOVAL: 600000,
   };
+
+  static readonly SECONDS_PER_DAY = 86400;
 }
