@@ -14,7 +14,7 @@
     "start": "node target/index.js"
   },
   "author": "fozzie",
-  "license": "AGPL-3.0",
+  "license": "AGPL-3.0-or-later",
   "dependencies": {
     "@sapphire/framework": "^5.0.7",
     "@sapphire/plugin-logger": "^4.0.2",
