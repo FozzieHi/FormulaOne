@@ -10,7 +10,7 @@ import { isModerator, modQueue } from "../../services/ModerationService.js";
 import { replyInteraction, replyInteractionError } from "../../utility/Sender.js";
 import MutexManager from "../../managers/MutexManager.js";
 import ViolationService from "../../services/ViolationService.js";
-import { getDisplayTag, maxLength } from "../../utility/StringUtil.js";
+import { getDisplayTag, getOverflowFields } from "../../utility/StringUtil.js";
 
 export class ReportCommand extends Command {
   public constructor(context: Command.Context) {
@@ -72,8 +72,7 @@ export class ReportCommand extends Command {
           interaction.channel.toString(),
         ];
         if (message.content.length > 0) {
-          fieldsAndValues.push("Content");
-          fieldsAndValues.push(maxLength(message.content));
+          fieldsAndValues.push(...getOverflowFields("Content", message.content));
         }
         const attachmentVals = [...message.attachments.values()];
         for (let i = 0; i < message.attachments.size; i += 1) {

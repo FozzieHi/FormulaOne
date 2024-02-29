@@ -11,7 +11,7 @@ import { Constants, ModerationQueueButtons } from "../utility/Constants.js";
 import { isModerator, modQueue } from "./ModerationService.js";
 import Try from "../utility/Try.js";
 import TryVal from "../utility/TryVal.js";
-import { maxLength, removeClickableLinks } from "../utility/StringUtil.js";
+import { getOverflowFields, removeClickableLinks } from "../utility/StringUtil.js";
 import ViolationService from "./ViolationService.js";
 import MutexManager from "../managers/MutexManager.js";
 
@@ -52,8 +52,7 @@ export async function checkInvites(message: Message): Promise<boolean> {
       `${invite.guild.name} (${invite.guild.id})`,
       "Channel",
       message.channel.toString(),
-      "Content",
-      removeClickableLinks(maxLength(message.content)),
+      ...getOverflowFields("Content", removeClickableLinks(message.content)),
     ],
     Constants.KICK_COLOR,
     [
@@ -103,8 +102,7 @@ export async function checkEmotes(message: Message, reaction: MessageReaction) {
           message.channel.toString(),
         ];
         if (message.content.length > 0) {
-          fieldsAndValues.push("Content");
-          fieldsAndValues.push(maxLength(message.content));
+          fieldsAndValues.push(...getOverflowFields("Content", message.content));
         }
         const attachmentVals = [...message.attachments.values()];
         for (let i = 0; i < message.attachments.size; i += 1) {

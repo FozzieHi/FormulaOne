@@ -25,7 +25,7 @@ import { millisecondsToUnits } from "./NumberUtil.js";
 import { PopUpdate } from "../database/updates/PopUpdate.js";
 import { Punishment } from "../database/models/User.js";
 import { Pun } from "../database/models/Pun.js";
-import { boldify, getDisplayTag, getUserTag, maxLength } from "./StringUtil.js";
+import { boldify, getDisplayTag, getOverflowFields, getUserTag } from "./StringUtil.js";
 import TryVal from "./TryVal.js";
 import Try from "./Try.js";
 
@@ -275,7 +275,7 @@ export async function punish(
       message?.channel.toString() ?? interaction.channel.toString(),
     ];
     if (message != null) {
-      modLogFieldAndValues.push("Content", maxLength(message.content));
+      modLogFieldAndValues.push(...getOverflowFields("Content", message.content));
     }
     await modLog(interaction.guild, moderator, modLogFieldAndValues, color, targetUser);
   } else if (action === "remove") {

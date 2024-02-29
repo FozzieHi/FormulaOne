@@ -6,7 +6,7 @@ import {
   GuildTextBasedChannel,
 } from "discord.js";
 import { Constants, ModerationQueueButtons } from "../utility/Constants.js";
-import { maxLength } from "../utility/StringUtil.js";
+import { getOverflowFields } from "../utility/StringUtil.js";
 import { modQueue } from "../services/ModerationService.js";
 import TryVal from "../utility/TryVal.js";
 
@@ -63,8 +63,7 @@ export class AutoModerationActionExecutionListener extends Listener {
       channel.toString(),
     );
     if (action.content.length > 0) {
-      fieldsAndValues.push("Content");
-      fieldsAndValues.push(maxLength(action.content));
+      fieldsAndValues.push(...getOverflowFields("Content", action.content));
     }
     if (action.matchedKeyword != null) {
       fieldsAndValues.push("Keyword");

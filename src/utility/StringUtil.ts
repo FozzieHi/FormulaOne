@@ -14,13 +14,29 @@ export function upperFirstChar(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-export function maxLength(str: string) {
+export function getOverflowFields(
+  titlePrefix: string,
+  str: string,
+  splitLength = 1000,
+) {
   if (str != null) {
     let cleanStr = str.replace(Constants.GLOBAL_REGEXES.ZERO_WIDTH, "");
     cleanStr = cleanStr.replace(new RE2(/\|{10,}/g), ""); // Replace 10 or more consecutive markdown spoiler characters
-    return cleanStr.length > 500 ? `${cleanStr.substring(0, 500)}...` : cleanStr;
+
+    const fieldsAndValues = [];
+    const count = Math.ceil(cleanStr.length / splitLength);
+    for (let i = 0; i < count; i += 1) {
+      const start = i * splitLength;
+      const end = start + splitLength;
+
+      fieldsAndValues.push(`${titlePrefix}${count > 1 ? ` (${i + 1})` : ""}`); // Only include the segment count if there are multiple segments
+      fieldsAndValues.push(
+        `${i > 0 ? "..." : ""}${cleanStr.substring(start, end)}${i < count - 1 ? "..." : ""}`, // Add ellipsis to the start and end of each segment if needed
+      );
+    }
+    return fieldsAndValues;
   }
-  return str;
+  return [titlePrefix, ""];
 }
 
 export function removeClickableLinks(str: string) {

@@ -1,7 +1,7 @@
 import { Guild, User } from "discord.js";
 import { getDBUser } from "./DatabaseUtil.js";
 import { isEven } from "./NumberUtil.js";
-import { boldify, maxLength } from "./StringUtil.js";
+import { boldify, getOverflowFields } from "./StringUtil.js";
 import TryVal from "./TryVal.js";
 
 export async function getHistory(
@@ -24,7 +24,7 @@ export async function getHistory(
         vals.push("Reason", pun.reason);
       }
       if (pun.messageContent != null) {
-        vals.push("Content", maxLength(pun.messageContent));
+        vals.push(...getOverflowFields("Content", pun.messageContent));
       }
       // eslint-disable-next-line no-await-in-loop
       const channel = await TryVal(guild.channels.fetch(pun.channelId));

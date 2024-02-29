@@ -3,7 +3,7 @@ import { GuildTextBasedChannel, Message, AuditLogEvent } from "discord.js";
 import { genericLog } from "../services/ModerationService.js";
 import { Constants } from "../utility/Constants.js";
 import TryVal from "../utility/TryVal.js";
-import { getDisplayTag, maxLength } from "../utility/StringUtil.js";
+import { getOverflowFields, getDisplayTag } from "../utility/StringUtil.js";
 
 export class MessageDeleteListener extends Listener {
   public async run(message: Message) {
@@ -23,8 +23,7 @@ export class MessageDeleteListener extends Listener {
         `Message Deletion${
           aboveMessage != null ? ` [Jump to message above](${aboveMessage})` : ""
         }`,
-        "Content",
-        maxLength(message.content),
+        ...getOverflowFields("Content", message.content),
         "Channel",
         message.channel.toString(),
       ];

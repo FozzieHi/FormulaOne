@@ -4,7 +4,7 @@ import Try from "./Try.js";
 import MutexManager from "../managers/MutexManager.js";
 import ViolationService from "../services/ViolationService.js";
 import { isModerator, modQueue } from "../services/ModerationService.js";
-import { maxLength } from "./StringUtil.js";
+import { getOverflowFields } from "./StringUtil.js";
 
 export async function addDiscussionEmotes(message: Message) {
   await Try(message.react(Constants.EMOTES.UP));
@@ -60,8 +60,7 @@ export async function checkDiscussionEmotes(
           `${(downvotes / upvotes).toString()} >= 10`,
         ];
         if (message.content.length > 0) {
-          fieldsAndValues.push("Content");
-          fieldsAndValues.push(maxLength(message.content));
+          fieldsAndValues.push(...getOverflowFields("Content", message.content));
         }
         const attachmentVals = [...message.attachments.values()];
         for (let i = 0; i < message.attachments.size; i += 1) {
