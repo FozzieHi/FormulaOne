@@ -13,6 +13,7 @@ import {
   GuildMember,
   ButtonBuilder,
   ButtonStyle,
+  GuildTextBasedChannel,
 } from "discord.js";
 import { replyInteraction, replyInteractionError } from "../../utility/Sender.js";
 import { Constants } from "../../utility/Constants.js";
@@ -98,6 +99,12 @@ export class BanishCommand extends Command {
   }
 
   public async chatInputRun(interaction: ChatInputCommandInteraction) {
+    if (
+      interaction.guild == null ||
+      (await getPermLevel(interaction.guild, interaction.user)) === 0
+    ) {
+      return;
+    }
     const subcommand = interaction.options.getSubcommand();
     const member = interaction.options.getMember("member") as GuildMember;
     let reason;
@@ -128,6 +135,18 @@ export class BanishCommand extends Command {
     if (interaction.guild == null || message == null) {
       return;
     }
+
+    if (
+      (await getPermLevel(interaction.guild, interaction.user)) === 0 &&
+      (interaction.channel as GuildTextBasedChannel).parent?.id !==
+        Constants.CHANNELS.F1_BEGINNER_QUESTIONS
+    ) {
+      await replyInteractionError(
+        interaction,
+        `You may only use this command in <#${Constants.CHANNELS.F1_BEGINNER_QUESTIONS}`,
+      );
+    }
+
     const moderator = interaction.member as GuildMember;
     const targetMember = (await TryVal(
       interaction.guild.members.fetch(message.author.id),
