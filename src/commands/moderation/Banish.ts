@@ -143,7 +143,7 @@ export class BanishCommand extends Command {
     ) {
       await replyInteractionError(
         interaction,
-        `You may only use this command in <#${Constants.CHANNELS.F1_BEGINNER_QUESTIONS}>`,
+        `You may only use this command in <#${Constants.CHANNELS.F1_BEGINNER_QUESTIONS}>.`,
       );
     }
 
