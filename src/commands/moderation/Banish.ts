@@ -145,6 +145,7 @@ export class BanishCommand extends Command {
         interaction,
         `You may only use this command in <#${Constants.CHANNELS.F1_BEGINNER_QUESTIONS}>.`,
       );
+      return;
     }
 
     const moderator = interaction.member as GuildMember;
