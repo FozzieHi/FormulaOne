@@ -17,6 +17,8 @@ import MutexManager from "../../managers/MutexManager.js";
 import { replyInteraction, replyInteractionError } from "../../utility/Sender.js";
 import { archiveLog } from "../../services/BotQueueService.js";
 import ViolationService from "../../services/ViolationService.js";
+import Try from "../../utility/Try.js";
+import db from "../../database/index.js";
 
 export class Escalate extends InteractionHandler {
   public constructor(context: never) {
@@ -63,6 +65,22 @@ export class Escalate extends InteractionHandler {
       if (targetUser == null) {
         return;
       }
+      if (
+        (await Try(interaction.guild!.bans.fetch(parsedData.targetUserId))) &&
+        !(await db.banRepo?.anyBan(parsedData.targetUserId, interaction.guild!.id))
+      ) {
+        await archiveLog(
+          interaction.guild as Guild,
+          interaction.channel as TextChannel,
+          parsedData.targetUserId,
+          null,
+          interaction.message,
+          "Already banned",
+        );
+        await replyInteractionError(interaction, "Member is already banned.");
+        return;
+      }
+
       const escalationSent = await escalate(
         interaction.guild as Guild,
         interaction.member as GuildMember,
