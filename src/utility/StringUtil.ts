@@ -2,12 +2,19 @@ import { GuildMember, User } from "discord.js";
 import RE2 from "re2";
 import { Constants } from "./Constants.js";
 
+export function escape(str: string) {
+  return str
+    .replace(Constants.GLOBAL_REGEXES.ESCAPED_MARKDOWN, "$1")
+    .replace(Constants.GLOBAL_REGEXES.MARKDOWN, "\\$1")
+    .replace(/\n/g, "");
+}
+
 export function boldify(str: string) {
-  return `**${str.replace(Constants.GLOBAL_REGEXES.MARKDOWN, "")}**`;
+  return `**${escape(str)}**`;
 }
 
 export function unlinkify(str: string) {
-  return `\`${str.replace(Constants.GLOBAL_REGEXES.MARKDOWN, "")}\``;
+  return `\`${escape(str)}\``;
 }
 
 export function upperFirstChar(str: string) {

@@ -190,7 +190,8 @@ export class Constants {
   };
 
   static readonly GLOBAL_REGEXES = {
-    MARKDOWN: new RE2(/([*~`_])+/g),
+    MARKDOWN: new RE2(/([*~`_])/g),
+    ESCAPED_MARKDOWN: new RE2(/\\([*~`_\\])/g),
     URL: new RE2(/https?:\/\/([\w[\]:.-]+)\.([A-Za-z\d-]+)(:\d*)?([/#?]\S*)?/g),
     ZERO_WIDTH: new RE2(/[\u200B-\u200D\uFEFF]/g),
   };
