@@ -27,8 +27,9 @@ export function getOverflowFields(
   splitLength = 1000,
 ) {
   if (str != null) {
-    let cleanStr = str.replace(Constants.GLOBAL_REGEXES.ZERO_WIDTH, "");
-    cleanStr = cleanStr.replace(new RE2(/\|{10,}/g), ""); // Replace 10 or more consecutive markdown spoiler characters
+    const cleanStr = str
+      .replace(Constants.GLOBAL_REGEXES.ZERO_WIDTH, "")
+      .replace(new RE2(/\|{10,}/g), ""); // Replace 10 or more consecutive markdown spoiler characters
 
     const fieldsAndValues = [];
     const count = Math.ceil(cleanStr.length / splitLength);
