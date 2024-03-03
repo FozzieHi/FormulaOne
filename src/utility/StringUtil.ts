@@ -6,7 +6,7 @@ export function escape(str: string) {
   return str
     .replace(Constants.GLOBAL_REGEXES.ESCAPED_MARKDOWN, "$1")
     .replace(Constants.GLOBAL_REGEXES.MARKDOWN, "\\$1")
-    .replace(/\n/g, "");
+    .replaceAll("\n", "");
 }
 
 export function boldify(str: string) {
