@@ -14,6 +14,7 @@ import {
   User,
   ContextMenuCommandInteraction,
 } from "discord.js";
+import Sentry from "@sentry/node";
 import { Embed } from "../structures/Embed.js";
 import { Constants } from "./Constants.js";
 import Try from "./Try.js";
@@ -108,6 +109,22 @@ async function replyInteractionHandler(
     newBaseMessageOptions.embeds = [new Embed(newEmbedOptions)];
   }
   await MutexManager.getInteractionMutex(interaction.id).runExclusive(async () => {
+    let message = "Replied to interaction";
+    if (interaction.isCommand()) {
+      message = `Replied to interaction command ID ${interaction.commandId}`;
+    } else if (
+      interaction.isButton() ||
+      interaction.isContextMenuCommand() ||
+      interaction.isStringSelectMenu() ||
+      interaction.isModalSubmit()
+    ) {
+      message = `Replied to interaction custom ID ${interaction.customId}`;
+    }
+    Sentry.addBreadcrumb({
+      category: "sender",
+      message,
+      level: "info",
+    });
     if (interaction.deferred) {
       return interaction.followUp(newBaseMessageOptions);
     }
@@ -206,6 +223,11 @@ async function updateInteractionHandler(
     newBaseMessageOptions.embeds = [new Embed(newEmbedOptions)];
   }
   await MutexManager.getInteractionMutex(interaction.id).runExclusive(async () => {
+    Sentry.addBreadcrumb({
+      category: "sender",
+      message: `Updated interaction custom ID: ${interaction.customId}`,
+      level: "info",
+    });
     if (interaction.deferred) {
       return interaction.editReply(newBaseMessageOptions);
     }
