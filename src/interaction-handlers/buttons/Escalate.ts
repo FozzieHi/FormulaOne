@@ -77,7 +77,7 @@ export class Escalate extends InteractionHandler {
           interaction.message,
           "Already banned",
         );
-        await replyInteractionError(interaction, "Member is already banned.");
+        await replyInteractionError(interaction, "User is already banned.");
         return;
       }
 
