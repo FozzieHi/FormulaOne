@@ -9,7 +9,7 @@ import {
   APIEmbedField,
   BaseMessageOptions,
   ModalSubmitInteraction,
-  SelectMenuInteraction,
+  StringSelectMenuInteraction,
   TextBasedChannel,
   User,
   ContextMenuCommandInteraction,
@@ -93,7 +93,7 @@ async function replyInteractionHandler(
     | CommandInteraction
     | ButtonInteraction
     | ContextMenuCommandInteraction
-    | SelectMenuInteraction
+    | StringSelectMenuInteraction
     | ModalSubmitInteraction,
   description: string | undefined,
   embedOptions: APIEmbed | null = {},
@@ -120,7 +120,7 @@ export async function replyInteraction(
     | CommandInteraction
     | ButtonInteraction
     | ContextMenuCommandInteraction
-    | SelectMenuInteraction
+    | StringSelectMenuInteraction
     | ModalSubmitInteraction,
   description: string | undefined,
   embedOptions: APIEmbed | null = {},
@@ -143,7 +143,7 @@ export async function replyInteractionPublic(
     | CommandInteraction
     | ButtonInteraction
     | ContextMenuCommandInteraction
-    | SelectMenuInteraction
+    | StringSelectMenuInteraction
     | ModalSubmitInteraction,
   description: string,
   embedOptions: APIEmbed = {},
@@ -176,7 +176,7 @@ export async function replyInteractionError(
     | CommandInteraction
     | ButtonInteraction
     | ContextMenuCommandInteraction
-    | SelectMenuInteraction
+    | StringSelectMenuInteraction
     | ModalSubmitInteraction,
   description: string,
   embedOptions: APIEmbed = {},
@@ -192,7 +192,7 @@ export async function replyInteractionError(
 }
 
 async function updateInteractionHandler(
-  interaction: SelectMenuInteraction | MessageComponentInteraction,
+  interaction: StringSelectMenuInteraction | MessageComponentInteraction,
   description: string | undefined,
   embedOptions: APIEmbed | null = {},
   messageOptions: InteractionUpdateOptions = {},
@@ -214,7 +214,7 @@ async function updateInteractionHandler(
 }
 
 export async function updateInteraction(
-  interaction: SelectMenuInteraction | MessageComponentInteraction,
+  interaction: StringSelectMenuInteraction | MessageComponentInteraction,
   description: string | undefined,
   embedOptions: APIEmbed | null = {},
   messageOptions: InteractionUpdateOptions = {},

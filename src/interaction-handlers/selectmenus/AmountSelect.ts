@@ -3,7 +3,7 @@ import {
   ComponentType,
   StringSelectMenuBuilder,
   SelectMenuComponentOptionData,
-  SelectMenuInteraction,
+  StringSelectMenuInteraction,
 } from "discord.js";
 import { Constants } from "../../utility/Constants.js";
 import { updateInteraction } from "../../utility/Sender.js";
@@ -16,7 +16,7 @@ export class AmountSelect extends InteractionHandler {
   }
 
   public async run(
-    interaction: SelectMenuInteraction,
+    interaction: StringSelectMenuInteraction,
     parsedData: InteractionHandler.ParseResult<this>,
   ) {
     if (parsedData.amount == null) {
@@ -49,7 +49,7 @@ export class AmountSelect extends InteractionHandler {
     });
   }
 
-  public parse(interaction: SelectMenuInteraction) {
+  public parse(interaction: StringSelectMenuInteraction) {
     if (!interaction.customId.startsWith("amountselect-")) {
       return this.none();
     }

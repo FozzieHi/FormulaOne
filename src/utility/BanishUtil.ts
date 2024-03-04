@@ -3,7 +3,7 @@ import {
   GuildMember,
   MessageComponentInteraction,
   ModalSubmitInteraction,
-  SelectMenuInteraction,
+  StringSelectMenuInteraction,
 } from "discord.js";
 import { Constants } from "./Constants.js";
 import {
@@ -21,7 +21,10 @@ import MutexManager from "../managers/MutexManager.js";
 import { boldify, getDisplayTag, getUserTag } from "./StringUtil.js";
 
 export async function banish(
-  interaction: CommandInteraction | SelectMenuInteraction | ModalSubmitInteraction,
+  interaction:
+    | CommandInteraction
+    | StringSelectMenuInteraction
+    | ModalSubmitInteraction,
   targetMember: GuildMember,
   action: "add" | "remove",
   handler: string,

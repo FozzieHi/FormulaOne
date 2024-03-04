@@ -3,7 +3,7 @@ import { InteractionHandler, InteractionHandlerTypes } from "@sapphire/framework
 import {
   GuildMember,
   Message,
-  SelectMenuInteraction,
+  StringSelectMenuInteraction,
   Snowflake,
   TextChannel,
   User,
@@ -26,7 +26,7 @@ export class RuleSelect extends InteractionHandler {
   }
 
   public async run(
-    interaction: SelectMenuInteraction,
+    interaction: StringSelectMenuInteraction,
     parsedData: InteractionHandler.ParseResult<this>,
   ) {
     if (interaction.guild == null) {
@@ -111,7 +111,7 @@ export class RuleSelect extends InteractionHandler {
     }
   }
 
-  public parse(interaction: SelectMenuInteraction) {
+  public parse(interaction: StringSelectMenuInteraction) {
     if (!interaction.customId.startsWith("ruleselect-")) {
       return this.none();
     }

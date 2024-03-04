@@ -5,7 +5,7 @@ import {
   GuildTextBasedChannel,
   Message,
   ModalSubmitInteraction,
-  SelectMenuInteraction,
+  StringSelectMenuInteraction,
   Snowflake,
   User,
 } from "discord.js";
@@ -138,7 +138,10 @@ export function getPunishmentDisplay(punishment: PunishmentLevel) {
 }
 
 export async function punish(
-  interaction: CommandInteraction | SelectMenuInteraction | ModalSubmitInteraction,
+  interaction:
+    | CommandInteraction
+    | StringSelectMenuInteraction
+    | ModalSubmitInteraction,
   moderator: GuildMember,
   targetUser: User,
   action: string,
