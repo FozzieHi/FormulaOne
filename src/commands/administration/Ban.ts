@@ -10,11 +10,7 @@ import {
   GuildMember,
   GuildTextBasedChannel,
 } from "discord.js";
-import {
-  dm,
-  replyInteractionError,
-  replyInteractionPublic,
-} from "../../utility/Sender.js";
+import { dm, replyInteractionPublic } from "../../utility/Sender.js";
 import { Constants } from "../../utility/Constants.js";
 import { modLog } from "../../services/ModerationService.js";
 import MutexManager from "../../managers/MutexManager.js";
@@ -104,6 +100,7 @@ export class BanCommand extends Command {
         return;
       }
       if (subcommand === "add") {
+        await interaction.deferReply();
         const result = await ban(
           interaction.guild,
           targetUser,
@@ -112,7 +109,6 @@ export class BanCommand extends Command {
           interaction.channel as GuildTextBasedChannel,
         );
         if (!result) {
-          await replyInteractionError(interaction, "Error banning user.");
           return;
         }
         await replyInteractionPublic(
