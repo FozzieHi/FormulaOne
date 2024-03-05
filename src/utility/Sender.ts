@@ -109,20 +109,20 @@ async function replyInteractionHandler(
     newBaseMessageOptions.embeds = [new Embed(newEmbedOptions)];
   }
   await MutexManager.getInteractionMutex(interaction.id).runExclusive(async () => {
-    let message = "Replied to interaction";
+    let message = "";
     if (interaction.isCommand()) {
-      message = `Replied to interaction command ID ${interaction.commandId}`;
+      message = `command ID ${interaction.commandId}`;
     } else if (
       interaction.isButton() ||
       interaction.isContextMenuCommand() ||
       interaction.isStringSelectMenu() ||
       interaction.isModalSubmit()
     ) {
-      message = `Replied to interaction custom ID ${interaction.customId}`;
+      message = `custom ID ${interaction.customId}`;
     }
     Sentry.addBreadcrumb({
       category: "sender",
-      message,
+      message: `Replied to interaction ${message} with description ${description}`,
       level: "info",
     });
     if (interaction.deferred) {
@@ -225,7 +225,7 @@ async function updateInteractionHandler(
   await MutexManager.getInteractionMutex(interaction.id).runExclusive(async () => {
     Sentry.addBreadcrumb({
       category: "sender",
-      message: `Updated interaction custom ID: ${interaction.customId}`,
+      message: `Updated interaction custom ID ${interaction.customId} with description ${description}`,
       level: "info",
     });
     if (interaction.deferred) {
