@@ -46,7 +46,7 @@ export class RuleSelect extends InteractionHandler {
       await MutexManager.getUserMutex(parsedData.targetMemberId).runExclusive(
         async () => {
           if (parsedData.logMessageId != null) {
-            if (ViolationService.handled.includes(parsedData.logMessageId)) {
+            if (ViolationService.handled.has(parsedData.logMessageId)) {
               await replyInteractionError(interaction, "Log has already been handled.");
               return;
             }
@@ -104,7 +104,7 @@ export class RuleSelect extends InteractionHandler {
             );
             await setTimeout(10000, "result");
             await Try(messageSent.delete());
-            ViolationService.handled.push(logMessage.id);
+            ViolationService.handled.add(logMessage.id);
           }
         },
       );

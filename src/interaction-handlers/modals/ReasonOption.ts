@@ -65,7 +65,7 @@ export class ReasonOption extends InteractionHandler {
         if (interaction.message == null) {
           return;
         }
-        if (ViolationService.handled.includes(interaction.message.id)) {
+        if (ViolationService.handled.has(interaction.message.id)) {
           await replyInteractionError(interaction, "Log has already been handled.");
           return;
         }
@@ -99,7 +99,7 @@ export class ReasonOption extends InteractionHandler {
         await replyInteraction(interaction, "Successfully banned user.", {
           color: Constants.UNMUTE_COLOR,
         });
-        ViolationService.handled.push(interaction.message.id);
+        ViolationService.handled.add(interaction.message.id);
       });
     }
   }
