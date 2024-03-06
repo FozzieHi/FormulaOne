@@ -3,12 +3,14 @@ import {
   AutoModerationActionExecution,
   AutoModerationActionType,
   ChannelType,
+  GuildMember,
   GuildTextBasedChannel,
 } from "discord.js";
 import { Constants, ModerationQueueButtons } from "../utility/Constants.js";
 import { getOverflowFields } from "../utility/StringUtil.js";
 import { modQueue } from "../services/ModerationService.js";
 import TryVal from "../utility/TryVal.js";
+import ViolationService from "../services/ViolationService.js";
 
 export class AutoModerationActionExecutionListener extends Listener {
   public async run(action: AutoModerationActionExecution) {
@@ -82,6 +84,12 @@ export class AutoModerationActionExecutionListener extends Listener {
         ModerationQueueButtons.IGNORE,
       ],
       action.messageId != null,
+    );
+    await ViolationService.checkViolations(
+      action.guild,
+      channel,
+      action.member as GuildMember,
+      action.messageId,
     );
   }
 }

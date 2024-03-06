@@ -7,6 +7,7 @@ import {
   ButtonStyle,
   ComponentType,
   GuildMember,
+  GuildTextBasedChannel,
 } from "discord.js";
 import { Constants } from "../utility/Constants.js";
 import { checkInvites } from "./FilterService.js";
@@ -21,7 +22,12 @@ export async function filterCheckMessage(message: Message) {
   }
   const result = await checkInvites(message);
   if (result) {
-    await ViolationService.checkViolations(message);
+    await ViolationService.checkViolations(
+      message.guild,
+      message.channel as GuildTextBasedChannel,
+      message.member as GuildMember,
+      message.id,
+    );
   }
 }
 

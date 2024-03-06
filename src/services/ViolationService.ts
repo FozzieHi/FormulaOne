@@ -1,4 +1,4 @@
-import { Message, Snowflake } from "discord.js";
+import { Guild, GuildMember, GuildTextBasedChannel, Snowflake } from "discord.js";
 import MutexManager from "../managers/MutexManager.js";
 import { Constants, ModerationQueueButtons } from "../utility/Constants.js";
 import { modQueue } from "./ModerationService.js";
@@ -16,33 +16,38 @@ export default new (class ViolationService {
     this.handled = [];
   }
 
-  public async checkViolations(message: Message) {
-    if (message.member == null) {
+  public async checkViolations(
+    guild: Guild,
+    channel: GuildTextBasedChannel,
+    member: GuildMember,
+    messageId: string | null,
+  ) {
+    if (member == null) {
       return;
     }
     const now = Date.now();
-    await MutexManager.getUserMutex(message.member.id).runExclusive(async () => {
-      if (message.guild == null || message.member == null) {
+    await MutexManager.getUserMutex(member.id).runExclusive(async () => {
+      if (guild == null || member == null) {
         return;
       }
-      const violation = this.violations.get(message.member.id);
+      const violation = this.violations.get(member.id);
       if (violation) {
         if (violation.violationStart + 300000 > now) {
           const newViolations = violation.violations + 1;
-          this.violations.set(message.member.id, {
+          this.violations.set(member.id, {
             violationStart: violation.violationStart,
             violations: newViolations,
           });
           if (newViolations === 3) {
-            await message.member.roles.add(
+            await member.roles.add(
               Constants.ROLES.MUTED,
               "Reaching three moderation-queue violations",
             );
             await modQueue(
-              message.guild,
-              message.member.user,
-              message.channel.id,
-              message.id,
+              guild,
+              member.user,
+              channel.id,
+              messageId,
               [
                 "Action",
                 "Reached 3 violations within 5 minutes",
@@ -59,13 +64,13 @@ export default new (class ViolationService {
             );
           }
         } else {
-          this.violations.set(message.member.id, {
+          this.violations.set(member.id, {
             violationStart: now,
             violations: 1,
           });
         }
       } else {
-        this.violations.set(message.member.id, {
+        this.violations.set(member.id, {
           violationStart: now,
           violations: 1,
         });
