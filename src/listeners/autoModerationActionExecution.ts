@@ -83,7 +83,9 @@ export class AutoModerationActionExecutionListener extends Listener {
         ModerationQueueButtons.ESCALATE,
         ModerationQueueButtons.IGNORE,
       ],
-      action.messageId != null,
+      !new Set(["Block Mention Spam", "Spam Rule", "Disguised URLs"]).has(
+        autoModerationRule.name,
+      ),
     );
     await ViolationService.checkViolations(
       action.guild,
