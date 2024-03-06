@@ -157,6 +157,12 @@ export class Constants {
     DOWN: "303230394008993793",
   };
 
+  static readonly NO_MENTION_AUTOMOD_RULES = new Set([
+    "Block Mention Spam",
+    "Spam Rule",
+    "Disguised URLs",
+  ]);
+
   static readonly INTENTS: Array<GatewayIntentBits> = [
     GatewayIntentBits.AutoModerationConfiguration,
     GatewayIntentBits.AutoModerationExecution,
