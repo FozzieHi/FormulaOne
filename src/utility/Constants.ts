@@ -179,7 +179,8 @@ export class Constants {
     activities: [
       {
         name: "slash commands",
-        type: ActivityType.Watching,
+        type: ActivityType.Custom,
+        state: "Now with slash commands",
       },
     ],
   };
