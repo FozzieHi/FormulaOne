@@ -61,6 +61,7 @@ export default new (class ViolationService {
                 ModerationQueueButtons.UNMUTE,
                 ModerationQueueButtons.IGNORE,
               ],
+              true,
             );
           }
         } else {
