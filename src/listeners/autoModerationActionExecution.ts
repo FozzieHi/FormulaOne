@@ -81,7 +81,7 @@ export class AutoModerationActionExecutionListener extends Listener {
         ModerationQueueButtons.ESCALATE,
         ModerationQueueButtons.IGNORE,
       ],
-      true,
+      action.messageId != null,
     );
   }
 }
