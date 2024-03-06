@@ -1,15 +1,9 @@
 import { Guild, Message, MessageReaction, User } from "discord.js";
 import { Constants, ModerationQueueButtons } from "./Constants.js";
-import Try from "./Try.js";
 import MutexManager from "../managers/MutexManager.js";
 import ViolationService from "../services/ViolationService.js";
 import { isModerator, modQueue } from "../services/ModerationService.js";
 import { getOverflowFields } from "./StringUtil.js";
-
-export async function addDiscussionEmotes(message: Message) {
-  await Try(message.react(Constants.EMOTES.UP));
-  await Try(message.react(Constants.EMOTES.DOWN));
-}
 
 export async function checkDiscussionEmotes(
   message: Message,
