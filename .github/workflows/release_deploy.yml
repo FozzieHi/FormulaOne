@@ -79,14 +79,3 @@ jobs:
         with:
           image_repository: formula-one
           buffer_size: 3
-      - name: Post notification
-        if: ${{ always() }}
-        run: |
-          JSON_STRING=$(jq -n \
-            --arg title "Deployment for $(echo $GITHUB_SHA | head -c7)" \
-            --arg embed_color "$([ "${{ job.status }}" == "success" ] && echo 59432 || echo 16711680)" \
-            --arg message "$(echo -n "${{ github.event.head_commit.message }}" | base64)" \
-            --arg url "${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}" \
-            --arg status "${{ job.status }}" \
-            '{ embeds: [{ title: $title, url: $url, color: $embed_color|tonumber, fields: [{ name: "Commit message", value: ($message|@base64d) }, { name: "Status", value: $status }] }] }') \
-          && curl -H "Content-Type: application/json" -d "$JSON_STRING" "${{ secrets.DISCORD_WEBHOOK_URL }}"
