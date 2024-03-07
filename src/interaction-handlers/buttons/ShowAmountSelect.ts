@@ -94,7 +94,6 @@ export async function showAmountSelect(
   const amountSelect = [
     [
       new StringSelectMenuBuilder({
-        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         customId: `amountselect-${targetUserId}-${channelId}-${messageId}-${logMessageId}`,
         placeholder: "Select amount",
         options,

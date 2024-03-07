@@ -36,7 +36,7 @@ export class ReasonOption extends InteractionHandler {
     }
     if (parsedData.commandName === "banish") {
       const targetMember = (await TryVal(
-        interaction.guild.members.fetch(parsedData.targetMemberId),
+        interaction.guild.members.fetch(parsedData.targetMemberId as Snowflake),
       )) as GuildMember;
       if (targetMember == null) {
         return;
@@ -50,7 +50,7 @@ export class ReasonOption extends InteractionHandler {
       );
     } else if (parsedData.commandName === "ban") {
       const targetUser = await TryVal(
-        container.client.users.fetch(parsedData.targetMemberId),
+        container.client.users.fetch(parsedData.targetUserId as Snowflake),
       );
       if (targetUser == null) {
         return;
@@ -121,16 +121,18 @@ export class ReasonOption extends InteractionHandler {
         action,
         channelId: null,
         reason,
+        targetUserId: null,
       });
     }
     if (commandName === "ban") {
-      const [targetMemberId, channelId] = split;
+      const [targetUserId, channelId] = split;
       return this.some({
         commandName,
-        targetMemberId,
+        targetUserId,
         action: null,
         channelId,
         reason,
+        targetMemberId: null,
       });
     }
     return this.none();
