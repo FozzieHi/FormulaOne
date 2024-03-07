@@ -33,7 +33,7 @@ export class AmountSelect extends InteractionHandler {
     const ruleSelect: Array<Array<StringSelectMenuBuilder>> = [
       [
         new StringSelectMenuBuilder({
-          customId: `ruleselect-punish-${parsedData.targetMemberId}-${parsedData.channelId}-${parsedData.messageId}-${parsedData.logMessageId}-${parsedData.amount}`,
+          customId: `ruleselect-punish-${parsedData.targetUserId}-${parsedData.channelId}-${parsedData.messageId}-${parsedData.logMessageId}-${parsedData.amount}`,
           placeholder: "Select rule",
           options: ruleOptions,
         }),
@@ -55,10 +55,10 @@ export class AmountSelect extends InteractionHandler {
     }
     const split = interaction.customId.split("-");
     split.shift();
-    const [targetMemberId, channelId, messageId, logMessageId] = split;
+    const [targetUserId, channelId, messageId, logMessageId] = split;
     const amount = interaction.values.at(0);
     return this.some({
-      targetMemberId,
+      targetUserId,
       channelId,
       messageId,
       logMessageId,

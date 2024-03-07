@@ -1,8 +1,11 @@
-import { InteractionHandler, InteractionHandlerTypes } from "@sapphire/framework";
+import {
+  container,
+  InteractionHandler,
+  InteractionHandlerTypes,
+} from "@sapphire/framework";
 import {
   ButtonInteraction,
   ComponentType,
-  GuildMember,
   StringSelectMenuBuilder,
   SelectMenuComponentOptionData,
   Snowflake,
@@ -13,12 +16,12 @@ import { replyInteraction, replyInteractionError } from "../../utility/Sender.js
 import TryVal from "../../utility/TryVal.js";
 import { getPunishmentDisplay } from "../../utility/PunishUtil.js";
 import { Constants } from "../../utility/Constants.js";
-import { boldify, getDisplayTag } from "../../utility/StringUtil.js";
+import { boldify, getUserTag } from "../../utility/StringUtil.js";
 import { getPermLevel, isModerator } from "../../services/ModerationService.js";
 
 export async function showAmountSelect(
   interaction: ButtonInteraction | ContextMenuCommandInteraction,
-  targetMemberId: Snowflake,
+  targetUserId: Snowflake,
   channelId: Snowflake,
   messageId: Snowflake,
 ) {
@@ -42,14 +45,11 @@ export async function showAmountSelect(
     );
     return;
   }
-  const targetMember = (await TryVal(
-    interaction.guild.members.fetch(targetMemberId),
-  )) as GuildMember;
-  if (targetMember == null) {
-    await replyInteractionError(interaction, "Member not found.");
+  const targetUser = await TryVal(container.client.users.fetch(targetUserId));
+  if (targetUser == null) {
     return;
   }
-  if (await isModerator(interaction.guild, targetMember.user)) {
+  if (await isModerator(interaction.guild, targetUser)) {
     await replyInteractionError(
       interaction,
       "You may not use this command on a moderator.",
@@ -57,16 +57,16 @@ export async function showAmountSelect(
     return;
   }
 
-  const dbUser = await getDBUser(targetMember.id, interaction.guild.id);
+  const dbUser = await getDBUser(targetUser.id, interaction.guild.id);
   if (dbUser == null) {
     return;
   }
-  if (dbUser.currentPunishment > 4) {
+  if (dbUser.currentPunishment > Constants.PUNISHMENTS.length - 1) {
     await replyInteractionError(
       interaction,
       `${boldify(
-        getDisplayTag(targetMember),
-      )} has exceeded 5 punishments in the last 30 days, escalate their punishment manually.`,
+        getUserTag(targetUser),
+      )} has exceeded ${Constants.PUNISHMENTS.length} punishments in the last 30 days, escalate their punishment manually.`,
     );
     return;
   }
@@ -95,7 +95,7 @@ export async function showAmountSelect(
     [
       new StringSelectMenuBuilder({
         // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-        customId: `amountselect-${targetMemberId}-${channelId}-${messageId}-${logMessageId}`,
+        customId: `amountselect-${targetUserId}-${channelId}-${messageId}-${logMessageId}`,
         placeholder: "Select amount",
         options,
       }),
@@ -124,7 +124,7 @@ export class ShowAmountSelect extends InteractionHandler {
   ) {
     await showAmountSelect(
       interaction,
-      parsedData.targetMemberId,
+      parsedData.targetUserId,
       parsedData.channelId,
       parsedData.messageId,
     );
@@ -136,9 +136,9 @@ export class ShowAmountSelect extends InteractionHandler {
     }
     const split = interaction.customId.split("-");
     split.shift();
-    const [targetMemberId, channelId, messageId] = split;
+    const [targetUserId, channelId, messageId] = split;
     return this.some({
-      targetMemberId,
+      targetUserId,
       channelId,
       messageId,
     });
