@@ -1,8 +1,8 @@
 import { Snowflake } from "discord.js";
-import { Document, WithId } from "mongodb";
+import { Document, ObjectId } from "mongodb";
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
-export interface Pun extends WithId<Document> {
+export interface PunInterface extends Document {
+  _id: ObjectId;
   userId: Snowflake;
   guildId: Snowflake;
   punLength: number;
@@ -10,8 +10,9 @@ export interface Pun extends WithId<Document> {
   amount: number;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
-export class Pun {
+export class Pun implements PunInterface {
+  _id!: ObjectId;
+
   userId: Snowflake;
 
   guildId: Snowflake;
