@@ -71,6 +71,7 @@ export class KickCommand extends Command {
         return;
       }
 
+      await interaction.deferReply();
       await dm(
         targetMember.user,
         `A moderator has kicked you for the reason: ${reason}.`,
@@ -78,6 +79,22 @@ export class KickCommand extends Command {
       );
       await targetMember.kick(
         `(${getDisplayTag(interaction.member as GuildMember)}) ${reason}`,
+      );
+      await modLog(
+        interaction.guild,
+        interaction.member as GuildMember,
+        [
+          "Action",
+          "Kick",
+          "Member",
+          `${getDisplayTag(targetMember)} (${targetMember.id})`,
+          "Reason",
+          reason,
+          "Channel",
+          interaction.channel.toString(),
+        ],
+        Constants.KICK_COLOR,
+        targetMember.user,
       );
       await replyInteractionPublic(
         interaction,
@@ -96,22 +113,6 @@ export class KickCommand extends Command {
           mod: getUserTag(interaction.user),
           channelId: interaction.channel.id,
         }),
-      );
-      await modLog(
-        interaction.guild,
-        interaction.member as GuildMember,
-        [
-          "Action",
-          "Kick",
-          "Member",
-          `${getDisplayTag(targetMember)} (${targetMember.id})`,
-          "Reason",
-          reason,
-          "Channel",
-          interaction.channel.toString(),
-        ],
-        Constants.KICK_COLOR,
-        targetMember.user,
       );
     });
   }
