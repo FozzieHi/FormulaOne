@@ -162,6 +162,7 @@ export async function punish(
   const currentPun = dbUser.currentPunishment;
 
   if (action === "add") {
+    await interaction.deferReply({ ephemeral: true });
     if (currentPun > Constants.PUNISHMENTS.length - 1) {
       await replyInteractionError(
         interaction,
