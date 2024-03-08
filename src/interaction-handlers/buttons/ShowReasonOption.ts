@@ -15,6 +15,7 @@ import { archiveLog } from "../../services/BotQueueService.js";
 import MutexManager from "../../managers/MutexManager.js";
 import { getPermLevel, isModerator } from "../../services/ModerationService.js";
 import { Constants } from "../../utility/Constants.js";
+import ViolationService from "../../services/ViolationService.js";
 
 export class ShowReasonOptionInteraction extends InteractionHandler {
   public constructor(context: never) {
@@ -54,6 +55,10 @@ export class ShowReasonOptionInteraction extends InteractionHandler {
     ) {
       await MutexManager.getUserMutex(parsedData.targetUserId).runExclusive(
         async () => {
+          if (ViolationService.handled.has(interaction.message.id)) {
+            await replyInteractionError(interaction, "Log has already been handled.");
+            return;
+          }
           await archiveLog(
             interaction.guild as Guild,
             interaction.channel as TextChannel,
