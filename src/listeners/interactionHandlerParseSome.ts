@@ -11,7 +11,11 @@ export class InteractionHandlerParseSomeListener extends Listener {
         await interaction.deferReply({ ephemeral: true });
       });
     }
-    if (interaction.isMessageComponent() || interaction.isModalSubmit()) {
+    if (
+      interaction.isMessageComponent() ||
+      interaction.isModalSubmit() ||
+      interaction.isStringSelectMenu()
+    ) {
       if (
         interaction.customId.startsWith("showreasonoption-") ||
         interaction.customId.startsWith("addremoveoption-")
