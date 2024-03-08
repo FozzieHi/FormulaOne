@@ -15,6 +15,7 @@ import ViolationService from "./ViolationService.js";
 import { boldify, getDisplayTag } from "../utility/StringUtil.js";
 import { isModerator } from "./ModerationService.js";
 import TryVal from "../utility/TryVal.js";
+import Try from "../utility/Try.js";
 
 export async function filterCheckMessage(message: Message) {
   if (message.guild == null || (await isModerator(message.guild, message.author))) {
@@ -74,7 +75,7 @@ export async function archiveLog(
     })),
   });
   if (messageSent) {
-    await message.delete();
+    await Try(message.delete());
   }
   return messageSent;
 }
