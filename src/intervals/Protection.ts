@@ -1,4 +1,3 @@
-/* eslint-disable no-await-in-loop */
 import { container } from "@sapphire/framework";
 import { GuildVerificationLevel } from "discord.js";
 import db from "../database/index.js";
@@ -18,8 +17,7 @@ setInterval(() => {
 
     const now = Date.now();
     await ProtectionService.mutex.runExclusive(async () => {
-      for (let i = 0; i < guilds.length; i += 1) {
-        const dbGuild = guilds.at(i);
+      const promises = guilds.map(async (dbGuild) => {
         if (dbGuild != null) {
           if (
             dbGuild.protectionActivatedAt !== 0 &&
@@ -48,7 +46,9 @@ setInterval(() => {
             });
           }
         }
-      }
+      });
+
+      await Promise.all(promises);
     });
   })().catch((err) => handleError(err));
 }, Constants.INTERVALS.PROTECTION);

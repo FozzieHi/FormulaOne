@@ -1,4 +1,3 @@
-/* eslint-disable no-await-in-loop */
 import { Document, ObjectId } from "mongodb";
 import { container } from "@sapphire/framework";
 import { Snowflake } from "discord.js";
@@ -13,9 +12,7 @@ setInterval(() => {
   (async function run() {
     const puns = (await db.punRepo?.findMany()) as Array<Document>;
 
-    for (let i = 0; i < puns.length; i += 1) {
-      const pun = puns[i];
-
+    const punsPromises = puns.map(async (pun) => {
       if (Date.now() > pun.punishedAt + pun.punLength) {
         const guild = await TryVal(
           container.client.guilds.fetch(pun.guildId as Snowflake),
@@ -54,6 +51,8 @@ setInterval(() => {
           }
         }
       }
-    }
+    });
+
+    await Promise.all(punsPromises);
   })().catch((err) => handleError(err));
 }, Constants.INTERVALS.AUTO_PUNISHMENT_REMOVAL);

@@ -1,4 +1,3 @@
-/* eslint-disable no-await-in-loop */
 import { Document, ObjectId } from "mongodb";
 import { container } from "@sapphire/framework";
 import { Snowflake } from "discord.js";
@@ -13,9 +12,7 @@ setInterval(() => {
   (async function run() {
     const mutes = (await db.muteRepo?.findMany()) as Array<Document>;
 
-    for (let i = 0; i < mutes.length; i += 1) {
-      const mute = mutes[i];
-
+    const mutesPromises = mutes.map(async (mute) => {
       if (Date.now() > mute.mutedAt + mute.muteLength) {
         const guild = await TryVal(
           container.client.guilds.fetch(mute.guildId as Snowflake),
@@ -51,6 +48,8 @@ setInterval(() => {
           }
         }
       }
-    }
+    });
+
+    await Promise.all(mutesPromises);
   })().catch((err) => handleError(err));
 }, Constants.INTERVALS.AUTO_UNMUTE);
