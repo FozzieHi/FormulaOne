@@ -14,7 +14,7 @@ export class ReadyListener extends Listener {
     if (client.user != null) {
       this.container.logger.info(`${client.user.username} has successfully connected.`);
       const healthCheckServer = http.createServer((req, res) => {
-        if (req.url === "/health" && req.method === "GET") {
+        if (req.url === "/healthz" && req.method === "GET") {
           res.writeHead(200);
           res.end("OK");
         } else {
