@@ -65,5 +65,6 @@ declare module "@sapphire/framework" {
     process.env.DB_NAME as string,
   );
   container.logger.info(`Database: Took ${Date.now() - start}ms to connect.`);
+
   await client.login(process.env.TOKEN);
 })().catch((err) => handleError(err));

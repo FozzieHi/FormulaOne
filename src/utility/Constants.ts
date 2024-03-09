@@ -27,6 +27,8 @@ export enum ModerationQueueButtons {
 }
 
 export class Constants {
+  static readonly HEALTH_CHECK_PORT = 8080;
+
   static readonly DEFAULT_COLORS: Array<number> = [
     0xff269a, 0x00ff00, 0x00e828, 0x08f8ff, 0xf226ff, 0xff1c8e, 0x68ff22, 0xffbe11,
     0x2954ff, 0x9624ed, 0xa8ed00,

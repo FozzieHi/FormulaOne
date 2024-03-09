@@ -41,3 +41,13 @@ spec:
                 secretKeyRef:
                   name: credentials
                   key: sentry-dsn
+          ports:
+            - containerPort: 8080
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
