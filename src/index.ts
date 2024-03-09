@@ -6,7 +6,7 @@ import {
   SapphireClient,
 } from "@sapphire/framework";
 import Sentry from "@sentry/node";
-import { RewriteFrames } from "@sentry/integrations";
+import { rewriteFramesIntegration } from "@sentry/integrations";
 import db from "./database/index.js";
 import { Constants } from "./utility/Constants.js";
 import "./intervals/AutoPunishmentRemoval.js";
@@ -48,11 +48,7 @@ declare module "@sapphire/framework" {
 
       return newEvent;
     },
-    integrations: [
-      new RewriteFrames({
-        root: process.cwd(),
-      }),
-    ],
+    integrations: [rewriteFramesIntegration({ root: process.cwd() })],
   });
   const client = new SapphireClient({
     intents: Constants.INTENTS,
