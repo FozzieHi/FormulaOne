@@ -206,6 +206,7 @@ export class Constants {
   static readonly INTERVALS = {
     PROTECTION: 60000,
     MUTEX_CLEAR: 60000,
+    AUTO_UNBAN: 30000,
     AUTO_UNMUTE: 30000,
     AUTO_PUNISHMENT_REMOVAL: 600000,
   };
