@@ -20,7 +20,7 @@
     "@sapphire/plugin-logger": "^4.0.2",
     "@sentry/integrations": "^7.106.1",
     "@sentry/node": "^7.106.1",
-    "async-mutex": "^0.4.1",
+    "async-mutex": "^0.5.0",
     "bufferutil": "^4.0.8",
     "discord.js": "^14.13.0",
     "dotenv": "^16.4.5",
