@@ -18,8 +18,8 @@
   "dependencies": {
     "@sapphire/framework": "^5.0.7",
     "@sapphire/plugin-logger": "^4.0.2",
-    "@sentry/integrations": "^7.106.1",
-    "@sentry/node": "^7.106.1",
+    "@sentry/integrations": "^7.107.0",
+    "@sentry/node": "^7.107.0",
     "async-mutex": "^0.5.0",
     "bufferutil": "^4.0.8",
     "discord.js": "^14.13.0",
