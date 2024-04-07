@@ -1,5 +1,5 @@
 import { Snowflake } from "discord.js";
-import { Document, WithId } from "mongodb";
+import { Binary, Document, WithId } from "mongodb";
 
 export interface DBGuild extends WithId<Document> {
   guildId: Snowflake;
@@ -8,6 +8,7 @@ export interface DBGuild extends WithId<Document> {
   enabledChannels: Array<Snowflake>;
   youtubeChannels: { blocklisted: Array<string> };
   protectionActivatedAt: number;
+  images: { guidelines: Binary | null };
 }
 
 export class Guild {
@@ -23,6 +24,8 @@ export class Guild {
 
   protectionActivatedAt: number;
 
+  images: { guidelines: Binary | null };
+
   constructor(guildId: Snowflake) {
     this.guildId = guildId;
     this.caseNumber = 1;
@@ -32,5 +35,6 @@ export class Guild {
       blocklisted: [],
     };
     this.protectionActivatedAt = 0;
+    this.images = { guidelines: null };
   }
 }
