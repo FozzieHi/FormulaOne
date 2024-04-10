@@ -162,13 +162,17 @@ export async function replyInteractionPublic(
     | ContextMenuCommandInteraction
     | StringSelectMenuInteraction
     | ModalSubmitInteraction,
-  description: string,
-  embedOptions: APIEmbed = {},
+  description: string | undefined,
+  embedOptions: APIEmbed | null = {},
+  messageOptions: InteractionReplyOptions = {},
 ) {
   return replyInteractionHandler(
     interaction,
-    `${boldify(getUserTag(interaction.user))}, ${description}`,
+    description != null
+      ? `${boldify(getUserTag(interaction.user))}, ${description}`
+      : undefined,
     embedOptions,
+    messageOptions,
   );
 }
 

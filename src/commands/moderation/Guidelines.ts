@@ -5,7 +5,7 @@ import {
   CommandOptionsRunTypeEnum,
 } from "@sapphire/framework";
 import { ChatInputCommandInteraction, AttachmentBuilder } from "discord.js";
-import { replyInteraction } from "../../utility/Sender.js";
+import { replyInteractionPublic } from "../../utility/Sender.js";
 import { Constants } from "../../utility/Constants.js";
 import { getDBGuild } from "../../utility/DatabaseUtil.js";
 
@@ -50,6 +50,6 @@ export class GuidelinesCommand extends Command {
     const attachment = new AttachmentBuilder(Buffer.from(image.buffer), {
       name: "guidelines.webp",
     });
-    await replyInteraction(interaction, undefined, null, { files: [attachment] });
+    await replyInteractionPublic(interaction, undefined, null, { files: [attachment] });
   }
 }
