@@ -62,7 +62,10 @@ export async function banish(
       }
 
       const logAction = `${helper ? "Helper " : ""}Banish`;
-      await targetMember.roles.add(Constants.ROLES.BANISHED);
+      await targetMember.roles.add(
+        Constants.ROLES.BANISHED,
+        `(${getDisplayTag(interaction.member as GuildMember)}) ${reason}`,
+      );
       if (handler === "command") {
         await replyInteraction(
           interaction,

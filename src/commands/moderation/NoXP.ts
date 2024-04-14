@@ -119,7 +119,10 @@ export class NoXP extends Command {
           return;
         }
 
-        await targetMember.roles.add(role);
+        await targetMember.roles.add(
+          role,
+          `(${getDisplayTag(interaction.member as GuildMember)}) ${reason}`,
+        );
         await dm(
           targetMember.user,
           "A moderator has given you the NoXP role. You are now unable to gain XP.",

@@ -82,7 +82,10 @@ async function mute(
     Date.now() + length,
     `(${getDisplayTag(moderator)}) ${displayLog} - ${reason}`,
   );
-  await targetMember.roles.add(role);
+  await targetMember.roles.add(
+    role,
+    `(${getDisplayTag(moderator)}) ${displayLog} - ${reason}`,
+  );
 }
 
 async function ban(
