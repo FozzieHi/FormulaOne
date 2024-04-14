@@ -23,7 +23,7 @@ setInterval(() => {
             container.client.users.fetch(ban.userId as Snowflake),
           );
           if (targetUser != null) {
-            await guild.members.unban(targetUser, `Automatic Unban`);
+            await guild.members.unban(targetUser, "Automatic Unban");
             await db.banRepo?.deleteById(ban._id as ObjectId);
             await modLog(
               guild,
