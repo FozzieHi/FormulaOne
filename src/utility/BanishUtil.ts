@@ -124,7 +124,10 @@ export async function banish(
         return;
       }
       const logAction = `${helper ? "Helper " : ""}Unbanish`;
-      await targetMember.roles.remove(Constants.ROLES.BANISHED);
+      await targetMember.roles.remove(
+        Constants.ROLES.BANISHED,
+        `(${getDisplayTag(interaction.member as GuildMember)}) ${reason}`,
+      );
       if (handler === "command") {
         await replyInteractionPublic(
           interaction,

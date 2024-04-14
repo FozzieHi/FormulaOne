@@ -11,7 +11,8 @@ import { replyInteraction, replyInteractionError } from "../../utility/Sender.js
 import { archiveLog } from "../../services/BotQueueService.js";
 import MutexManager from "../../managers/MutexManager.js";
 import TryVal from "../../utility/TryVal.js";
-import { getPermLevel, isModerator } from "../../services/ModerationService.js";
+import { getPermLevel, isModerator, modLog } from "../../services/ModerationService.js";
+import { getDisplayTag } from "../../utility/StringUtil.js";
 
 export class UnmuteInteraction extends InteractionHandler {
   public constructor(context: never) {
@@ -45,14 +46,33 @@ export class UnmuteInteraction extends InteractionHandler {
       );
       return;
     }
-    const member = (await TryVal(
+    const targetMember = (await TryVal(
       interaction.guild.members.fetch(memberId),
     )) as GuildMember;
-    await MutexManager.getUserMutex(member.id).runExclusive(async () => {
-      await member.roles.remove(Constants.ROLES.MUTED);
+    await MutexManager.getUserMutex(targetMember.id).runExclusive(async () => {
+      await targetMember.roles.remove(
+        Constants.ROLES.MUTED,
+        `(${getDisplayTag(interaction.member as GuildMember)}) moderation-queue Button Unmute`,
+      );
       await replyInteraction(interaction, "Successfully unmuted member.", {
         color: Constants.UNMUTE_COLOR,
       });
+      await modLog(
+        interaction.guild as Guild,
+        interaction.member as GuildMember,
+        [
+          "Action",
+          "Unmute",
+          "Member",
+          `${getDisplayTag(targetMember)} (${targetMember.id})`,
+          "Reason",
+          "moderation-queue Button Unmute",
+          "Channel",
+          (interaction.channel as TextChannel).toString(),
+        ],
+        Constants.UNMUTE_COLOR,
+        targetMember.user,
+      );
       await archiveLog(
         interaction.guild as Guild,
         interaction.channel as TextChannel,

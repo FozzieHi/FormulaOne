@@ -28,7 +28,10 @@ setInterval(() => {
             );
 
             if (targetMember != null) {
-              await targetMember.roles.remove(Constants.ROLES.MUTED);
+              await targetMember.roles.remove(
+                Constants.ROLES.MUTED,
+                "Automatic Unmute",
+              );
             }
             await db.muteRepo?.deleteById(mute._id as ObjectId);
             await modLog(

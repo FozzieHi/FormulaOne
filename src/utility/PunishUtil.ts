@@ -292,7 +292,10 @@ export async function punish(
     if (db.muteRepo?.anyMute(targetUser.id, interaction.guild.id)) {
       const targetMember = await TryVal(interaction.guild.members.fetch(targetUser.id));
       if (targetMember != null) {
-        await targetMember.roles.remove(role);
+        await targetMember.roles.remove(
+          role,
+          `Unpunished by ${getDisplayTag(moderator)}`,
+        );
         await targetMember.disableCommunicationUntil(
           null,
           `Unpunished by ${getDisplayTag(moderator)}`,

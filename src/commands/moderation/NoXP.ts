@@ -162,7 +162,10 @@ export class NoXP extends Command {
           return;
         }
 
-        await targetMember.roles.remove(role);
+        await targetMember.roles.remove(
+          role,
+          `(${getDisplayTag(interaction.member as GuildMember)}) ${reason}`,
+        );
         await dm(
           targetMember.user,
           "A moderator has removed the NoXP role from you. You are now able to gain XP.",
