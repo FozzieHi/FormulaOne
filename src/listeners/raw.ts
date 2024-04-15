@@ -50,10 +50,10 @@ export class RawListener extends Listener {
       }
 
       const contentToCheck = [
-        poll.question.text,
-        ...poll.answers.map((answer) => answer.poll_media.text),
+        `Title: ${poll.question.text}`,
+        ...poll.answers.map((answer) => `Option: ${answer.poll_media.text}`),
       ];
-      message.content = contentToCheck.join(", ");
+      message.content = `(Poll) ${contentToCheck.join(", ")}`;
       await filterCheckMessage(message);
     }
   }
