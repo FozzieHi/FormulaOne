@@ -2,6 +2,8 @@ import { container, Listener } from "@sapphire/framework";
 import { GuildTextBasedChannel, Snowflake } from "discord.js";
 import TryVal from "../utility/TryVal.js";
 import { filterCheckMessage } from "../services/BotQueueService.js";
+import { isModerator } from "../services/ModerationService.js";
+import Try from "../utility/Try.js";
 
 type Packet = {
   t: string;
@@ -49,12 +51,15 @@ export class RawListener extends Listener {
         return;
       }
 
-      const contentToCheck = [
-        `Title: ${poll.question.text}`,
-        ...poll.answers.map((answer) => `Option: ${answer.poll_media.text}`),
-      ];
-      message.content = `(Poll) ${contentToCheck.join(", ")}`;
-      await filterCheckMessage(message);
+      if (!(await isModerator(guild, message.author))) {
+        await Try(message.delete());
+        const contentToCheck = [
+          `Title: ${poll.question.text}`,
+          ...poll.answers.map((answer) => `Option: ${answer.poll_media.text}`),
+        ];
+        message.content = `(Poll) ${contentToCheck.join(", ")}`;
+        await filterCheckMessage(message);
+      }
     }
   }
 }
