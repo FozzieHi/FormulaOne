@@ -25,10 +25,6 @@ type Packet = {
 };
 
 export class RawListener extends Listener {
-  public constructor(context: Listener.Context) {
-    super(context);
-  }
-
   public async run(packet: Packet) {
     const { poll } = packet.d;
     if (packet.t === "MESSAGE_CREATE" && poll != null) {
