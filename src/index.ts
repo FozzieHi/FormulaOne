@@ -5,8 +5,7 @@ import {
   RegisterBehavior,
   SapphireClient,
 } from "@sapphire/framework";
-import Sentry from "@sentry/node";
-import { rewriteFramesIntegration } from "@sentry/integrations";
+import Sentry, { rewriteFramesIntegration } from "@sentry/node";
 import db from "./database/index.js";
 import { Constants } from "./utility/Constants.js";
 import "./intervals/AutoPunishmentRemoval.js";
