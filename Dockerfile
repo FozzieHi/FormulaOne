@@ -19,4 +19,4 @@ COPY --from=build /app/node_modules node_modules
 COPY --from=build /app/dist dist
 COPY .git/HEAD .git/HEAD
 
-CMD ["npm", "start"]
+CMD ["node", "dist/index.js"]
