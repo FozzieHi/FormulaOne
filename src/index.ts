@@ -15,7 +15,6 @@ import "./intervals/MutexClear.js";
 import "./intervals/Protection.js";
 import { handleError } from "./utility/Logger.js";
 import { getReleaseHash } from "./utility/ReleaseUtil.js";
-import "dotenv/config";
 
 declare module "@sapphire/framework" {
   interface Preconditions {
