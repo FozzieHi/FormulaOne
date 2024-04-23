@@ -2,7 +2,7 @@
   "name": "formula_one",
   "version": "1.0.0",
   "description": "The Formula One Discord Bot.",
-  "main": "target/index.js",
+  "main": "dist/index.js",
   "type": "module",
   "scripts": {
     "prepare": "if [ \"$NODE_ENV\" != \"production\" ]; then husky; fi",
@@ -10,8 +10,8 @@
     "prettier:check": "prettier --cache --check .",
     "eslint:write": "eslint . --fix",
     "eslint:check": "eslint .",
-    "build": "rm -rf target/ && tsc",
-    "start": "node target/index.js"
+    "build": "rm -rf dist/ && tsc",
+    "start": "node dist/index.js"
   },
   "author": "fozzie",
   "license": "AGPL-3.0-or-later",

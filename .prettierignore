@@ -1,6 +1,6 @@
 # Packages
 node_modules/
-target/
+dist/
 
 # Authentication
 .env
