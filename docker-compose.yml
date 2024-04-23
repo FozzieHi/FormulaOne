@@ -1,4 +1,5 @@
 services:
   bot:
+    container_name: formula-one
     build: .
     env_file: .env
