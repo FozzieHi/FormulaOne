@@ -9,7 +9,5 @@ updates:
     schedule:
       interval: daily
     groups:
-      sentry:
-        patterns: ["@sentry/*"]
       typescript-eslint:
         patterns: ["@typescript-eslint/*"]

@@ -18,7 +18,6 @@
   "dependencies": {
     "@sapphire/framework": "^5.1.0",
     "@sapphire/plugin-logger": "^4.0.2",
-    "@sentry/integrations": "^7.112.1",
     "@sentry/node": "^7.112.1",
     "async-mutex": "^0.5.0",
     "bufferutil": "^4.0.8",
