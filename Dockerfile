@@ -17,8 +17,6 @@ WORKDIR /app
 
 COPY --from=build /app/node_modules node_modules
 COPY --from=build /app/dist dist
-COPY .git/HEAD .git/HEAD
-COPY .git/refs/heads .git/refs/heads
 COPY package.json ./
 
 CMD ["node", "dist/index.js"]

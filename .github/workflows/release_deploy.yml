@@ -67,7 +67,7 @@ jobs:
       - name: Push image to registry
         run: docker push ${{ secrets.DIGITALOCEAN_IMAGE_URL }}:$(echo $GITHUB_SHA | head -c7)
       - name: Update deployment file
-        run: TAG=$(echo $GITHUB_SHA | head -c7) && sed -i 's|<IMAGE>|${{ secrets.DIGITALOCEAN_IMAGE_URL }}:'${TAG}'|' -e 's|<RELEASE_HASH>|'${GITHUB_SHA}'|' $GITHUB_WORKSPACE/deployment.yml
+        run: TAG=$(echo $GITHUB_SHA | head -c7) && sed -i -e 's|<IMAGE>|${{ secrets.DIGITALOCEAN_IMAGE_URL }}:'${TAG}'|' -e 's|<RELEASE_HASH>|'${GITHUB_SHA}'|' $GITHUB_WORKSPACE/deployment.yml
       - name: Save kubeconfig
         run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 ${{ secrets.DIGITALOCEAN_CLUSTER_NAME }}
       - name: Deploy using kubectl
