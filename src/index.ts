@@ -14,7 +14,6 @@ import "./intervals/AutoUnmute.js";
 import "./intervals/MutexClear.js";
 import "./intervals/Protection.js";
 import { handleError } from "./utility/Logger.js";
-import { getReleaseHash } from "./utility/ReleaseUtil.js";
 
 declare module "@sapphire/framework" {
   interface Preconditions {
@@ -32,7 +31,7 @@ declare module "@sapphire/framework" {
 (async () => {
   Sentry.init({
     dsn: process.env.SENTRY_DSN,
-    release: await getReleaseHash(),
+    release: process.env.RELEASE_HASH,
     beforeSend(event) {
       const newEvent = event;
 

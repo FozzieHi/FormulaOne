@@ -41,6 +41,8 @@ spec:
                 secretKeyRef:
                   name: credentials
                   key: sentry-dsn
+            - name: RELEASE_HASH
+              value: <RELEASE_HASH>
           ports:
             - containerPort: 8080
           livenessProbe:
