@@ -20,7 +20,7 @@ import { getDBGuild } from "../../utility/DatabaseUtil.js";
 import MutexManager from "../../managers/MutexManager.js";
 
 export class FilterCommand extends Command {
-  public constructor(context: Command.Context) {
+  public constructor(context: Command.LoaderContext) {
     super(context, {
       requiredClientPermissions: ["ManageChannels"],
       runIn: CommandOptionsRunTypeEnum.GuildAny,

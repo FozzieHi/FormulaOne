@@ -8,7 +8,7 @@ import { replyInteractionError, replyInteractionPublic } from "../../utility/Sen
 import { Constants } from "../../utility/Constants.js";
 
 export class FlairCommand extends Command {
-  public constructor(context: Command.Context) {
+  public constructor(context: Command.LoaderContext) {
     super(context, {
       requiredClientPermissions: ["ManageNicknames"],
     });

@@ -16,7 +16,7 @@ import TryVal from "../../utility/TryVal.js";
 import { getDisplayTag } from "../../utility/StringUtil.js";
 
 export class EmojiCommand extends Command {
-  public constructor(context: Command.Context) {
+  public constructor(context: Command.LoaderContext) {
     super(context, {
       requiredClientPermissions: ["AddReactions"],
       preconditions: ["F3"],

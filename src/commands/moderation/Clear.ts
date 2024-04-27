@@ -16,7 +16,7 @@ import { modLog } from "../../services/ModerationService.js";
 import MutexManager from "../../managers/MutexManager.js";
 
 export class ClearCommand extends Command {
-  public constructor(context: Command.Context) {
+  public constructor(context: Command.LoaderContext) {
     super(context, {
       requiredClientPermissions: ["ManageMessages"],
       runIn: CommandOptionsRunTypeEnum.GuildAny,

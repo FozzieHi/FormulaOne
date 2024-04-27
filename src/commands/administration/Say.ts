@@ -14,7 +14,7 @@ import { replyInteractionPublic, send } from "../../utility/Sender.js";
 import { Constants } from "../../utility/Constants.js";
 
 export class SayCommand extends Command {
-  public constructor(context: Command.Context) {
+  public constructor(context: Command.LoaderContext) {
     super(context, {
       runIn: CommandOptionsRunTypeEnum.GuildAny,
       preconditions: ["Stewards"],

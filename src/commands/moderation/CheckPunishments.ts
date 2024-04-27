@@ -22,7 +22,7 @@ import { getDBUser } from "../../utility/DatabaseUtil.js";
 import { boldify, getUserTag } from "../../utility/StringUtil.js";
 
 export class CheckPunishmentsCommand extends Command {
-  public constructor(context: Command.Context) {
+  public constructor(context: Command.LoaderContext) {
     super(context, {
       runIn: CommandOptionsRunTypeEnum.GuildAny,
       preconditions: ["Marshals"],

@@ -13,7 +13,7 @@ import ViolationService from "../../services/ViolationService.js";
 import { getDisplayTag, getOverflowFields } from "../../utility/StringUtil.js";
 
 export class ReportCommand extends Command {
-  public constructor(context: Command.Context) {
+  public constructor(context: Command.LoaderContext) {
     super(context);
   }
 

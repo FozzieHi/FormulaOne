@@ -18,7 +18,7 @@ import MutexManager from "../../managers/MutexManager.js";
 import { boldify, getDisplayTag, getUserTag } from "../../utility/StringUtil.js";
 
 export class KickCommand extends Command {
-  public constructor(context: Command.Context) {
+  public constructor(context: Command.LoaderContext) {
     super(context, {
       requiredClientPermissions: ["KickMembers"],
       runIn: CommandOptionsRunTypeEnum.GuildAny,

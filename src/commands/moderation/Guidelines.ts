@@ -10,7 +10,7 @@ import { Constants } from "../../utility/Constants.js";
 import { getDBGuild } from "../../utility/DatabaseUtil.js";
 
 export class GuidelinesCommand extends Command {
-  public constructor(context: Command.Context) {
+  public constructor(context: Command.LoaderContext) {
     super(context, {
       runIn: CommandOptionsRunTypeEnum.GuildAny,
       preconditions: ["Marshals"],
