@@ -23,8 +23,7 @@ export class NoModeratorPrecondition extends Precondition {
     if (interaction.guild == null) {
       return this.error({ message: "Guild is null or undefined." });
     }
-    return interaction.targetMessage.author == null ||
-      !(await isModerator(interaction.guild, interaction.targetMessage.author))
+    return !(await isModerator(interaction.guild, interaction.targetMessage.author))
       ? this.ok()
       : this.error({ message: "You may not use this command on a moderator." });
   }
