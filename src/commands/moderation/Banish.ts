@@ -9,11 +9,11 @@ import {
   ApplicationCommandType,
   ChatInputCommandInteraction,
   ComponentType,
-  ContextMenuCommandInteraction,
   GuildMember,
   ButtonBuilder,
   ButtonStyle,
   GuildTextBasedChannel,
+  MessageContextMenuCommandInteraction,
 } from "discord.js";
 import { replyInteraction, replyInteractionError } from "../../utility/Sender.js";
 import { Constants } from "../../utility/Constants.js";
@@ -130,9 +130,8 @@ export class BanishCommand extends Command {
     );
   }
 
-  public async contextMenuRun(interaction: ContextMenuCommandInteraction) {
-    const message = interaction.options.getMessage("message");
-    if (interaction.guild == null || message == null) {
+  public async contextMenuRun(interaction: MessageContextMenuCommandInteraction) {
+    if (interaction.guild == null || interaction.targetMessage == null) {
       return;
     }
 
@@ -150,7 +149,7 @@ export class BanishCommand extends Command {
 
     const moderator = interaction.member as GuildMember;
     const targetMember = (await TryVal(
-      interaction.guild.members.fetch(message.author.id),
+      interaction.guild.members.fetch(interaction.targetMessage.author.id),
     )) as GuildMember;
     if (moderator == null || targetMember == null) {
       return;

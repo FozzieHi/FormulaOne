@@ -8,8 +8,8 @@ import {
   ApplicationCommandOptionType,
   ApplicationCommandType,
   ChatInputCommandInteraction,
-  ContextMenuCommandInteraction,
   GuildMember,
+  MessageContextMenuCommandInteraction,
   User,
 } from "discord.js";
 import { getRuleChoices } from "../../utility/CommandUtil.js";
@@ -121,17 +121,16 @@ export class PunishCommand extends Command {
     });
   }
 
-  public async contextMenuRun(interaction: ContextMenuCommandInteraction) {
-    const message = interaction.options.getMessage("message");
-    if (interaction.channel == null || message == null) {
+  public async contextMenuRun(interaction: MessageContextMenuCommandInteraction) {
+    if (interaction.channel == null || interaction.targetMessage == null) {
       return;
     }
 
     await showAmountSelect(
       interaction,
-      message.author.id,
+      interaction.targetMessage.author.id,
       interaction.channel.id,
-      message.id,
+      interaction.targetMessage.id,
     );
   }
 }

@@ -1,9 +1,8 @@
 import { ApplicationCommandRegistry, Awaitable, Command } from "@sapphire/framework";
 import {
   ApplicationCommandType,
-  ContextMenuCommandInteraction,
   GuildMember,
-  Message,
+  MessageContextMenuCommandInteraction,
 } from "discord.js";
 import { Constants, ModerationQueueButtons } from "../../utility/Constants.js";
 import { isModerator, modQueue } from "../../services/ModerationService.js";
@@ -32,22 +31,23 @@ export class ReportCommand extends Command {
     );
   }
 
-  public async contextMenuRun(interaction: ContextMenuCommandInteraction) {
-    const message = interaction.options.getMessage("message") as Message;
-    await MutexManager.getUserPublicMutex(message.author.id).runExclusive(async () => {
+  public async contextMenuRun(interaction: MessageContextMenuCommandInteraction) {
+    await MutexManager.getUserPublicMutex(
+      interaction.targetMessage.author.id,
+    ).runExclusive(async () => {
       if (
         interaction.guild == null ||
         interaction.member == null ||
         interaction.channel == null ||
-        message == null
+        interaction.targetMessage == null
       ) {
         return;
       }
-      if (interaction.user.id === message.author.id) {
+      if (interaction.user.id === interaction.targetMessage.author.id) {
         await replyInteractionError(interaction, "You may not report yourself.");
         return;
       }
-      if (await isModerator(interaction.guild, message.author)) {
+      if (await isModerator(interaction.guild, interaction.targetMessage.author)) {
         await replyInteractionError(
           interaction,
           "You may not use this command on a moderator.",
@@ -58,12 +58,12 @@ export class ReportCommand extends Command {
         !ViolationService.reports.some(
           (report) =>
             report.channelId === interaction.channel?.id &&
-            report.messageId === message.id,
+            report.messageId === interaction.targetMessage.id,
         )
       ) {
         const fieldsAndValues = [
           "Action",
-          `Report [Jump to message](${message.url})`,
+          `Report [Jump to message](${interaction.targetMessage.url})`,
           "Reporter",
           `${getDisplayTag(interaction.member as GuildMember)} (${
             interaction.user.id
@@ -71,11 +71,13 @@ export class ReportCommand extends Command {
           "Channel",
           interaction.channel.toString(),
         ];
-        if (message.content.length > 0) {
-          fieldsAndValues.push(...getOverflowFields("Content", message.content));
+        if (interaction.targetMessage.content.length > 0) {
+          fieldsAndValues.push(
+            ...getOverflowFields("Content", interaction.targetMessage.content),
+          );
         }
-        const attachmentVals = [...message.attachments.values()];
-        for (let i = 0; i < message.attachments.size; i += 1) {
+        const attachmentVals = [...interaction.targetMessage.attachments.values()];
+        for (let i = 0; i < interaction.targetMessage.attachments.size; i += 1) {
           const attachment = attachmentVals.at(i);
           if (attachment != null) {
             fieldsAndValues.push(`Attachment ${i + 1}`);
@@ -84,9 +86,9 @@ export class ReportCommand extends Command {
         }
         await modQueue(
           interaction.guild,
-          message.author,
+          interaction.targetMessage.author,
           interaction.channel.id,
-          message.id,
+          interaction.targetMessage.id,
           fieldsAndValues,
           Constants.MUTE_COLOR,
           [
@@ -95,11 +97,11 @@ export class ReportCommand extends Command {
             ModerationQueueButtons.IGNORE,
           ],
           true,
-          message.createdAt,
+          interaction.targetMessage.createdAt,
         );
         ViolationService.reports.push({
           channelId: interaction.channel.id,
-          messageId: message.id,
+          messageId: interaction.targetMessage.id,
         });
       }
       await replyInteraction(interaction, "Successfully reported message.");

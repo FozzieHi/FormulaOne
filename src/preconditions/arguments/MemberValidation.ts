@@ -1,7 +1,10 @@
-import { Command, Precondition } from "@sapphire/framework";
-import { ChatInputCommandInteraction, Guild } from "discord.js";
+import { Precondition } from "@sapphire/framework";
+import {
+  ChatInputCommandInteraction,
+  Guild,
+  MessageContextMenuCommandInteraction,
+} from "discord.js";
 import Try from "../../utility/Try.js";
-import ContextMenuCommandInteraction = Command.ContextMenuCommandInteraction;
 
 export class MemberValidationPrecondition extends Precondition {
   public async chatInputRun(interaction: ChatInputCommandInteraction) {
@@ -9,10 +12,11 @@ export class MemberValidationPrecondition extends Precondition {
     return target != null ? this.ok() : this.error({ message: "Member not found." });
   }
 
-  public async contextMenuRun(interaction: ContextMenuCommandInteraction) {
-    const message = interaction.options.getMessage("message");
-    return message != null &&
-      (await Try((interaction.guild as Guild).members.fetch(message.author.id)))
+  public async contextMenuRun(interaction: MessageContextMenuCommandInteraction) {
+    return interaction.targetMessage != null &&
+      (await Try(
+        (interaction.guild as Guild).members.fetch(interaction.targetMessage.author.id),
+      ))
       ? this.ok()
       : this.error({ message: "Member not found." });
   }
