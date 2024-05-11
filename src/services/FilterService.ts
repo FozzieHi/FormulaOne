@@ -57,7 +57,7 @@ export async function checkInvites(message: Message): Promise<boolean> {
     Constants.KICK_COLOR,
     [
       ModerationQueueButtons.PUNISH,
-      ModerationQueueButtons.ESCALATE,
+      ModerationQueueButtons.BAN,
       ModerationQueueButtons.IGNORE,
     ],
   );

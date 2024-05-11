@@ -80,7 +80,9 @@ export class AutoModerationActionExecutionListener extends Listener {
       Constants.MUTE_COLOR,
       [
         ModerationQueueButtons.PUNISH,
-        ModerationQueueButtons.ESCALATE,
+        ...(Constants.BAN_BUTTON_AUTOMOD_RULES.has(autoModerationRule.name)
+          ? [ModerationQueueButtons.BAN]
+          : [ModerationQueueButtons.ESCALATE]),
         ModerationQueueButtons.IGNORE,
       ],
       !Constants.NO_MENTION_AUTOMOD_RULES.has(autoModerationRule.name),

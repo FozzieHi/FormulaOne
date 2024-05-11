@@ -159,6 +159,11 @@ export class Constants {
     DOWN: "303230394008993793",
   };
 
+  static readonly BAN_BUTTON_AUTOMOD_RULES = new Set([
+    "Block Mention Spam",
+    "Disguised URLs",
+  ]);
+
   static readonly NO_MENTION_AUTOMOD_RULES = new Set([
     "Block Mention Spam",
     "Spam Rule",
