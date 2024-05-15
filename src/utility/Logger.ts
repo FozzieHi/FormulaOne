@@ -1,9 +1,9 @@
 import { container } from "@sapphire/framework";
-import Sentry from "@sentry/node";
+import { captureException } from "@sentry/node";
 
 export function handleError(error: unknown) {
   container.logger.error(error);
-  Sentry.captureException(error);
+  captureException(error);
 }
 
 export function infoLog(debugMessage: unknown) {

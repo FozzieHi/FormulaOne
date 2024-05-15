@@ -5,7 +5,7 @@ import {
   RegisterBehavior,
   SapphireClient,
 } from "@sapphire/framework";
-import Sentry, { rewriteFramesIntegration } from "@sentry/node";
+import { init, rewriteFramesIntegration } from "@sentry/node";
 import db from "./database/index.js";
 import { Constants } from "./utility/Constants.js";
 import "./intervals/AutoPunishmentRemoval.js";
@@ -29,7 +29,7 @@ declare module "@sapphire/framework" {
 }
 
 (async () => {
-  Sentry.init({
+  init({
     dsn: process.env.SENTRY_DSN,
     release: process.env.RELEASE_HASH,
     beforeSend(event) {

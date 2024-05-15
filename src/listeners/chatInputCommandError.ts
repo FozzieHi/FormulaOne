@@ -1,5 +1,5 @@
 import { ChatInputCommandErrorPayload, Listener } from "@sapphire/framework";
-import Sentry from "@sentry/node";
+import { captureException } from "@sentry/node";
 import { replyInteractionError } from "../utility/Sender.js";
 import Try from "../utility/Try.js";
 import { getUserTag } from "../utility/StringUtil.js";
@@ -12,6 +12,6 @@ export class ChatInputCommandErrorListener extends Listener {
         interaction.commandName
       } - ${error.message}`,
     );
-    Sentry.captureException(error);
+    captureException(error);
   }
 }

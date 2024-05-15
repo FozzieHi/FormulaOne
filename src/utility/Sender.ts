@@ -14,7 +14,7 @@ import {
   User,
   ContextMenuCommandInteraction,
 } from "discord.js";
-import Sentry from "@sentry/node";
+import { addBreadcrumb } from "@sentry/node";
 import { Embed } from "../structures/Embed.js";
 import { Constants } from "./Constants.js";
 import Try from "./Try.js";
@@ -120,7 +120,7 @@ async function replyInteractionHandler(
     ) {
       message = `custom ID ${interaction.customId}`;
     }
-    Sentry.addBreadcrumb({
+    addBreadcrumb({
       category: "sender",
       message: `Replied to interaction ${message} with description ${description}`,
       level: "info",
@@ -227,7 +227,7 @@ async function updateInteractionHandler(
     newBaseMessageOptions.embeds = [new Embed(newEmbedOptions)];
   }
   await MutexManager.getInteractionMutex(interaction.id).runExclusive(async () => {
-    Sentry.addBreadcrumb({
+    addBreadcrumb({
       category: "sender",
       message: `Updated interaction custom ID ${interaction.customId} with description ${description}`,
       level: "info",
