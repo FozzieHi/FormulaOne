@@ -23,7 +23,7 @@
     "bufferutil": "^4.0.8",
     "discord.js": "^14.15.2",
     "mongodb": "^6.6.2",
-    "re2": "^1.20.11",
+    "re2": "^1.20.12",
     "tslib": "^2.6.2",
     "utf-8-validate": "^6.0.4",
     "zlib-sync": "^0.1.9"
