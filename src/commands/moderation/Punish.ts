@@ -19,7 +19,7 @@ import MutexManager from "../../managers/MutexManager.js";
 import { showAmountSelect } from "../../interaction-handlers/buttons/ShowAmountSelect.js";
 
 export class PunishCommand extends Command {
-  public constructor(context: Command.LoaderContext) {
+  public constructor(context: never) {
     super(context, {
       runIn: CommandOptionsRunTypeEnum.GuildAny,
       preconditions: ["Marshals", "NoModerator"],

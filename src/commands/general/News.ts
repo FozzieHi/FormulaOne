@@ -14,7 +14,7 @@ import { boldify, getDisplayTag } from "../../utility/StringUtil.js";
 import TryVal from "../../utility/TryVal.js";
 
 export class NewsCommand extends Command {
-  public constructor(context: Command.LoaderContext) {
+  public constructor(context: never) {
     super(context, {
       preconditions: ["F2"],
     });

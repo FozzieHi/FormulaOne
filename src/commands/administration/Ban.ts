@@ -18,7 +18,7 @@ import { ban } from "../../utility/BanUtil.js";
 import { boldify, getDisplayTag, getUserTag } from "../../utility/StringUtil.js";
 
 export class BanCommand extends Command {
-  public constructor(context: Command.LoaderContext) {
+  public constructor(context: never) {
     super(context, {
       requiredClientPermissions: ["BanMembers"],
       runIn: CommandOptionsRunTypeEnum.GuildAny,

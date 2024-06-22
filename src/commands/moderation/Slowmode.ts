@@ -17,7 +17,7 @@ import MutexManager from "../../managers/MutexManager.js";
 import { getDisplayTag } from "../../utility/StringUtil.js";
 
 export class SlowmodeCommand extends Command {
-  public constructor(context: Command.LoaderContext) {
+  public constructor(context: never) {
     super(context, {
       requiredClientPermissions: ["ManageChannels"],
       runIn: CommandOptionsRunTypeEnum.GuildAny,

@@ -15,7 +15,7 @@ import { replyInteraction, send } from "../../utility/Sender.js";
 import { Constants } from "../../utility/Constants.js";
 
 export class MoveChannelCommand extends Command {
-  public constructor(context: Command.LoaderContext) {
+  public constructor(context: never) {
     super(context, {
       runIn: CommandOptionsRunTypeEnum.GuildAny,
       preconditions: ["Marshals"],

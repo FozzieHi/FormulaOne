@@ -20,7 +20,7 @@ import TryVal from "../../utility/TryVal.js";
 import { getDisplayTag, getUserTag } from "../../utility/StringUtil.js";
 
 export class UserInfoCommand extends Command {
-  public constructor(context: Command.LoaderContext) {
+  public constructor(context: never) {
     super(context, {
       runIn: CommandOptionsRunTypeEnum.GuildAny,
       preconditions: ["Marshals"],
