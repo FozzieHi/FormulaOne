@@ -73,7 +73,12 @@ jobs:
       - name: Deploy using kubectl
         run: kubectl apply -f $GITHUB_WORKSPACE/deployment.yml
       - name: Verify deployment
-        run: kubectl rollout status deployment/formula-one
+        run: |
+          if ! kubectl rollout status deployment/formula-one; then
+            echo "Deployment failed, rolling back..."
+            kubectl rollout undo deployment/formula-one
+            exit 1
+          fi
       - name: Remove old images from registry
         uses: ripplr-io/docr-image-remove@73f900f94464879edf44ba8d0a75d596d826ad7f
         with:
