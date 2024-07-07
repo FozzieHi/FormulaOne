@@ -63,7 +63,7 @@ export class NewsCommand extends Command {
     const buttons: Array<Array<ButtonBuilder>> = [
       [
         new ButtonBuilder({
-          customId: `publish-${interaction.user.id}`,
+          customId: `publish-`,
           label: "Publish",
           style: ButtonStyle.Secondary,
         }),

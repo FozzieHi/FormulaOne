@@ -1,7 +1,6 @@
 import { InteractionHandler, InteractionHandlerTypes } from "@sapphire/framework";
-import { ButtonInteraction, GuildMember, Snowflake } from "discord.js";
+import { ButtonInteraction } from "discord.js";
 import { replyInteraction, replyInteractionError } from "../../utility/Sender.js";
-import { Constants } from "../../utility/Constants.js";
 import { isModerator } from "../../services/ModerationService.js";
 import Try from "../../utility/Try.js";
 
@@ -12,29 +11,18 @@ export class NewsPublishInteraction extends InteractionHandler {
     });
   }
 
-  public async run(interaction: ButtonInteraction, posterId: Snowflake) {
+  public async run(interaction: ButtonInteraction) {
     if (interaction.guild == null || interaction.member == null) {
       return;
     }
 
     const { message } = interaction;
-    const member = interaction.member as GuildMember;
     if (!(await isModerator(interaction.guild, interaction.user))) {
-      if (!member.roles.cache.has(Constants.ROLES.F1)) {
-        await replyInteractionError(
-          interaction,
-          "You must have the F1 role in order to use this command.",
-        );
-        return;
-      }
-
-      if (interaction.user.id !== posterId) {
-        await replyInteractionError(
-          interaction,
-          "Only the original poster can publish a message.",
-        );
-        return;
-      }
+      await replyInteractionError(
+        interaction,
+        "You must be a Marshal in order to use this command.",
+      );
+      return;
     }
 
     if (!message.crosspostable) {
@@ -74,6 +62,6 @@ export class NewsPublishInteraction extends InteractionHandler {
     if (!interaction.customId.startsWith("publish-")) {
       return this.none();
     }
-    return this.some(interaction.customId.split("-").at(1));
+    return this.some();
   }
 }
