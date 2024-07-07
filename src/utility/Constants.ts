@@ -200,7 +200,6 @@ export class Constants {
 
   static readonly REGEXES = {
     URL: new RE2(/^https?:\/\/([\w[\]:.-]+)\.([A-Za-z\d-]+)(:\d*)?([/#?]\S*)?$/),
-    INVITES: new RE2(/(discord(?:app)?\.com\/invite|discord\.gg)\/([A-Za-z\d-]+)/),
   };
 
   static readonly GLOBAL_REGEXES = {
@@ -208,6 +207,9 @@ export class Constants {
     ESCAPED_MARKDOWN: new RE2(/\\([*~`_\\])/g),
     URL: new RE2(/https?:\/\/([\w[\]:.-]+)\.([A-Za-z\d-]+)(:\d*)?([/#?]\S*)?/g),
     ZERO_WIDTH: new RE2(/[\u200B-\u200D\uFEFF]/g),
+    INVITES: new RE2(
+      /(discord(?:app)?\.com\/invite|discord\.gg)\/(?<code>[A-Za-z\d-]+)/g,
+    ),
   };
 
   static readonly INTERVALS = {

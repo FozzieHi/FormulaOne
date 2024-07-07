@@ -16,52 +16,71 @@ import ViolationService from "./ViolationService.js";
 import MutexManager from "../managers/MutexManager.js";
 
 export async function checkInvites(message: Message): Promise<boolean> {
-  const inviteMatch = Constants.REGEXES.INVITES.match(message.content);
-  if (inviteMatch == null || message.guild == null || message.channel == null) {
+  if (message.guild == null || message.channel == null) {
     return false;
   }
-  const inviteCode = inviteMatch.at(2);
-  if (inviteCode == null) {
-    return false;
+
+  const inviteMatches = [...message.content.matchAll(Constants.GLOBAL_REGEXES.INVITES)];
+  const inviteServerPromises = inviteMatches.map(async (inviteMatch) => {
+    const inviteCode = inviteMatch.groups?.code;
+    if (inviteCode == null) {
+      return null;
+    }
+
+    const invite = (await TryVal(container.client.fetchInvite(inviteCode))) as Invite;
+    if (
+      invite == null ||
+      invite.guild == null ||
+      invite.guild.id === Constants.GUILD_IDS.at(0)
+    ) {
+      return null;
+    }
+
+    return `${invite.guild.name} (${invite.guild.id})`;
+  });
+
+  const inviteServers = [
+    ...new Set(
+      (await Promise.all(inviteServerPromises)).filter(
+        (inviteServer) => inviteServer != null,
+      ),
+    ),
+  ];
+  if (inviteServers.length > 0) {
+    await Try(message.delete());
+    const messages = await TryVal(
+      (message.channel as GuildTextBasedChannel).messages.fetch({ limit: 2 }),
+    );
+    const aboveMessage = messages?.last()?.url;
+    const inviteServerFields = [...inviteServers].flatMap((inviteServer, i) => [
+      `Invite Server${inviteServers.length > 1 ? ` (${i + 1})` : ""}`,
+      inviteServer,
+    ]);
+    await modQueue(
+      message.guild,
+      message.author,
+      message.channel.id,
+      message.id,
+      [
+        "Action",
+        `Filter Trigger${aboveMessage ? ` [Jump to message above](${aboveMessage})` : ""}`,
+        "Filter Name",
+        "Invites",
+        ...inviteServerFields,
+        "Channel",
+        message.channel.toString(),
+        ...getOverflowFields("Content", removeClickableLinks(message.content)),
+      ],
+      Constants.KICK_COLOR,
+      [
+        ModerationQueueButtons.PUNISH,
+        ModerationQueueButtons.BAN,
+        ModerationQueueButtons.IGNORE,
+      ],
+    );
+    return true;
   }
-  const invite = (await TryVal(container.client.fetchInvite(inviteCode))) as Invite;
-  if (invite == null || invite.guild == null) {
-    return false;
-  }
-  if (invite.guild.id === Constants.GUILD_IDS.at(0)) {
-    return false;
-  }
-  await Try(message.delete());
-  const messages = await TryVal(
-    (message.channel as GuildTextBasedChannel).messages.fetch({ limit: 2 }),
-  );
-  const aboveMessage = messages?.last()?.url;
-  await modQueue(
-    message.guild,
-    message.author,
-    message.channel.id,
-    message.id,
-    [
-      "Action",
-      `Filter Trigger${
-        aboveMessage != null ? ` [Jump to message above](${aboveMessage})` : ""
-      }`,
-      "Filter Name",
-      "Invites",
-      "Invite Server",
-      `${invite.guild.name} (${invite.guild.id})`,
-      "Channel",
-      message.channel.toString(),
-      ...getOverflowFields("Content", removeClickableLinks(message.content)),
-    ],
-    Constants.KICK_COLOR,
-    [
-      ModerationQueueButtons.PUNISH,
-      ModerationQueueButtons.BAN,
-      ModerationQueueButtons.IGNORE,
-    ],
-  );
-  return true;
+  return false;
 }
 
 export async function checkEmotes(message: Message, reaction: MessageReaction) {
