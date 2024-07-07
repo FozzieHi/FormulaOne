@@ -52,7 +52,7 @@ export async function checkInvites(message: Message): Promise<boolean> {
       (message.channel as GuildTextBasedChannel).messages.fetch({ limit: 2 }),
     );
     const aboveMessage = messages?.last()?.url;
-    const inviteServerFields = [...inviteServers].flatMap((inviteServer, i) => [
+    const inviteServerFields = inviteServers.flatMap((inviteServer, i) => [
       `Invite Server${inviteServers.length > 1 ? ` (${i + 1})` : ""}`,
       inviteServer,
     ]);
