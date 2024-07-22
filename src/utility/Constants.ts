@@ -212,6 +212,8 @@ export class Constants {
     ),
   };
 
+  static readonly DEBUG_REGEXES = [new RE2(/\[.+]\(https:\/\/.+\)/)];
+
   static readonly INTERVALS = {
     PROTECTION: 60000,
     MUTEX_CLEAR: 60000,

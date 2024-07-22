@@ -9,6 +9,7 @@ import {
   GuildMember,
   GuildTextBasedChannel,
 } from "discord.js";
+import { container } from "@sapphire/framework";
 import { Constants } from "../utility/Constants.js";
 import { checkInvites } from "./FilterService.js";
 import ViolationService from "./ViolationService.js";
@@ -30,6 +31,12 @@ export async function filterCheckMessage(message: Message) {
       message.id,
     );
   }
+}
+
+export function debugFilterLog(message: Message) {
+  Constants.DEBUG_REGEXES.filter((regex) => regex.test(message.content)).forEach(
+    (regex) => container.logger.info(`${regex.source} - ${message.content}`),
+  );
 }
 
 export async function archiveLog(
