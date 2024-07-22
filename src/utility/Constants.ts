@@ -73,7 +73,7 @@ export class Constants {
     "Rule 5.5": "Do not bring in drama or toxicity from other servers or platforms",
     "Rule 6": "Do not enforce the rules on behalf of a moderator",
     "Rule 7": "No self-promotion",
-    "Rule 8": "Agree to disagree",
+    "Rule 8": "\"It's just a joke\" is not an excuse to break the rules",
     "Rule 9": "Usernames must be taggable and appropriate",
     "Rule 10": "Use relevant channels and read the channel topic and pinned messages",
     "Rule 11": "Keep all discussions in English",
