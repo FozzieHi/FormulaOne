@@ -51,6 +51,13 @@ export function removeClickableLinks(str: string) {
   return str.replace(Constants.GLOBAL_REGEXES.URL, (url) => unlinkify(url));
 }
 
+export function replaceNonAscii(str: string) {
+  return str.replace(
+    Constants.GLOBAL_REGEXES.NON_ASCII,
+    (char) => `\\u${char.charCodeAt(0).toString(16).padStart(4, "0")}`,
+  );
+}
+
 export function getDisplayTag(member: GuildMember) {
   const userTag =
     member.user.discriminator === "0" ? member.user.username : member.user.tag;

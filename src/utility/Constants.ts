@@ -210,9 +210,10 @@ export class Constants {
     INVITES: new RE2(
       /(discord(?:app)?\.com\/invite|discord\.gg)\/(?<code>[A-Za-z\d-]+)/g,
     ),
+    NON_ASCII: new RE2(/[\x80-\uFFFF]/gu),
   };
 
-  static readonly DEBUG_REGEXES = [new RE2(/\[.+]\(https:\/\/.+\)/)];
+  static readonly DEBUG_REGEXES = [new RE2(/\[.+]\(https:\/\/.+\)/s)];
 
   static readonly INTERVALS = {
     PROTECTION: 60000,

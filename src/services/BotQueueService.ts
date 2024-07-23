@@ -13,7 +13,7 @@ import { container } from "@sapphire/framework";
 import { Constants } from "../utility/Constants.js";
 import { checkInvites } from "./FilterService.js";
 import ViolationService from "./ViolationService.js";
-import { boldify, getDisplayTag } from "../utility/StringUtil.js";
+import { boldify, getDisplayTag, replaceNonAscii } from "../utility/StringUtil.js";
 import { isModerator } from "./ModerationService.js";
 import TryVal from "../utility/TryVal.js";
 import Try from "../utility/Try.js";
@@ -35,7 +35,8 @@ export async function filterCheckMessage(message: Message) {
 
 export function debugFilterLog(message: Message) {
   Constants.DEBUG_REGEXES.filter((regex) => regex.test(message.content)).forEach(
-    (regex) => container.logger.info(`${regex.source} - ${message.content}`),
+    (regex) =>
+      container.logger.info(`${regex.source} - ${replaceNonAscii(message.content)}`),
   );
 }
 
