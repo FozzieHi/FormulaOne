@@ -1,7 +1,8 @@
 import { Guild, GuildMember, GuildTextBasedChannel, Snowflake } from "discord.js";
 import MutexManager from "../managers/MutexManager.js";
 import { Constants, ModerationQueueButtons } from "../utility/Constants.js";
-import { modQueue } from "./ModerationService.js";
+import { modLog, modQueue } from "./ModerationService.js";
+import { getDisplayTag } from "../utility/StringUtil.js";
 
 export default new (class ViolationService {
   private violations: Map<Snowflake, { violationStart: number; violations: number }>;
@@ -62,6 +63,22 @@ export default new (class ViolationService {
                 ModerationQueueButtons.IGNORE,
               ],
               true,
+            );
+            await modLog(
+              guild,
+              null,
+              [
+                "Action",
+                "Automatic Mute",
+                "Member",
+                `${getDisplayTag(member)} (${member.id})`,
+                "Reason",
+                "Reached 3 violations within 5 minutes",
+                "Channel",
+                channel.toString(),
+              ],
+              Constants.MUTE_COLOR,
+              member.user,
             );
           }
         } else {
