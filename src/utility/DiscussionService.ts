@@ -60,7 +60,7 @@ export async function checkDiscussionEmotes(
         for (let i = 0; i < message.attachments.size; i += 1) {
           const attachment = attachmentVals.at(i);
           if (attachment != null) {
-            fieldsAndValues.push(`Attachment ${i + 1}`);
+            fieldsAndValues.push(`Attachment (${i + 1})`);
             fieldsAndValues.push(`[View](${attachment.proxyURL})`);
           }
         }

@@ -80,7 +80,7 @@ export class ReportCommand extends Command {
         for (let i = 0; i < interaction.targetMessage.attachments.size; i += 1) {
           const attachment = attachmentVals.at(i);
           if (attachment != null) {
-            fieldsAndValues.push(`Attachment ${i + 1}`);
+            fieldsAndValues.push(`Attachment (${i + 1})`);
             fieldsAndValues.push(`[View](${attachment.proxyURL})`);
           }
         }
