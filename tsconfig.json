@@ -6,14 +6,15 @@
   "compilerOptions": {
     "strict": true,
     "resolveJsonModule": true,
-    "module": "nodenext",
-    "moduleResolution": "nodenext",
-    "target": "es2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "target": "ESNext",
     "outDir": "dist",
     "sourceMap": true,
     "inlineSources": true,
     "sourceRoot": "/",
     "noEmitHelpers": true,
-    "importHelpers": true
+    "importHelpers": true,
+    "typeRoots": ["./node_modules/@types", "./src/types"]
   }
 }
