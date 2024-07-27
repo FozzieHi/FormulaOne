@@ -14,9 +14,13 @@ export async function getHistory(
   if (allPunishments == null) {
     return [];
   }
+  const end = Math.min(allPunishments.length, start + 5);
+  const channelPromises = allPunishments
+    .slice(start, end)
+    .map((pun) => TryVal(guild.channels.fetch(pun.channelId)));
+  const channelsMap = await Promise.all(channelPromises);
   const punsMap: Map<number, Array<string>> = new Map();
-  const end = start + 5;
-  for (let i = start; i < Math.min(allPunishments.length, end); i += 1) {
+  for (let i = start; i < end; i += 1) {
     const pun = allPunishments.at(i);
     if (pun != null) {
       const vals = ["Escalation", pun.escalation, "Moderator", pun.mod];
@@ -26,8 +30,7 @@ export async function getHistory(
       if (pun.messageContent != null) {
         vals.push(...getOverflowFields("Content", pun.messageContent));
       }
-      // eslint-disable-next-line no-await-in-loop
-      const channel = await TryVal(guild.channels.fetch(pun.channelId));
+      const channel = channelsMap[i - start];
       if (channel != null) {
         vals.push("Channel", channel.toString());
       }
