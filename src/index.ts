@@ -20,6 +20,10 @@ import { handleError } from "./utility/Logger.js";
     dsn: process.env.SENTRY_DSN,
     release: process.env.RELEASE_HASH,
     beforeSend(event) {
+      if (process.env.RELEASE_HASH === "LOCAL") {
+        return null;
+      }
+
       const newEvent = event;
 
       let newMessage = event.message;
