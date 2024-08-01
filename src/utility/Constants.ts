@@ -66,7 +66,7 @@ export class Constants {
     "Rule 3.2": "Do not provide links, hints, or suggestions to illegal content",
     "Rule 4": "Do not send low-quality messages",
     "Rule 5": "Be respectful and act in good faith",
-    "Rule 5.1": "Do not predict, wish, or suggest any misfortune to competitors",
+    "Rule 5.1": "Do not predict, wish, or suggest any misfortune or harm to anyone",
     "Rule 5.2": "Do not excessively rant about a session",
     "Rule 5.3": "Do not harass, bait, or flame any individuals or communities",
     "Rule 5.4": "Do not spread misinformation or sensationalism",
