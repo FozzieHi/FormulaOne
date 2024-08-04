@@ -36,7 +36,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: formula-one-credentials
-                  key: db-name
+                  key: mongodb-db-name
             - name: TOKEN
               valueFrom:
                 secretKeyRef:
@@ -61,3 +61,75 @@ spec:
               path: /healthz
               port: 8080
             initialDelaySeconds: 3
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongo
+  namespace: formulaone
+spec:
+  serviceName: mongo
+  selector:
+    matchLabels:
+      app: mongo
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mongo
+    spec:
+      containers:
+        - name: mongo
+          image: mongo:7.0.12
+          ports:
+            - containerPort: 27017
+          livenessProbe:
+            exec:
+              command:
+                - mongosh
+                - --eval
+                - "db.adminCommand('ping')"
+            initialDelaySeconds: 5
+          readinessProbe:
+            exec:
+              command:
+                - mongosh
+                - --eval
+                - "db.adminCommand('ping')"
+            initialDelaySeconds: 5
+          env:
+            - name: MONGO_INITDB_ROOT_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: formula-one-credentials
+                  key: mongodb-root-username
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: formula-one-credentials
+                  key: mongodb-root-password
+          volumeMounts:
+            - mountPath: "/data/db"
+              name: mongo-pvc
+  volumeClaimTemplates:
+    - metadata:
+        name: mongo-pvc
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
+        storageClassName: do-block-storage
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo-service
+  namespace: formulaone
+spec:
+  selector:
+    app: mongo
+  ports:
+    - protocol: TCP
+      port: 27017
