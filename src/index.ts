@@ -13,6 +13,7 @@ import "./intervals/AutoUnban.js";
 import "./intervals/AutoUnmute.js";
 import "./intervals/MutexClear.js";
 import "./intervals/Protection.js";
+import "./intervals/YouTubeChannelCache.js";
 import { handleError } from "./utility/Logger.js";
 
 (async () => {

@@ -14,6 +14,9 @@ import TryVal from "../utility/TryVal.js";
 import { getOverflowFields, removeClickableLinks } from "../utility/StringUtil.js";
 import ViolationService from "./ViolationService.js";
 import MutexManager from "../managers/MutexManager.js";
+import lookupYouTubeChannels from "../utility/YouTubeUtil.js";
+import { getDBGuild } from "../utility/DatabaseUtil.js";
+import { dm } from "../utility/Sender.js";
 
 export async function checkInvites(message: Message): Promise<boolean> {
   if (message.guild == null || message.channel == null) {
@@ -81,6 +84,33 @@ export async function checkInvites(message: Message): Promise<boolean> {
     return true;
   }
   return false;
+}
+
+export async function checkYouTubeChannel(message: Message) {
+  const channelMatches = [
+    ...message.content.matchAll(Constants.GLOBAL_REGEXES.YOUTUBE_VIDEOS),
+  ];
+
+  const ids = channelMatches.map((channelMatch) => channelMatch.groups?.id as string);
+  if (ids.length > 0) {
+    const results = await lookupYouTubeChannels(ids);
+    const dbGuild = await getDBGuild((message.guild as Guild).id);
+    const blocklistedChannels = dbGuild?.youtubeChannels.blocklisted || [];
+    if (results.length > 0) {
+      for (let i = 0; i < results.length; i += 1) {
+        if (blocklistedChannels.includes(results[i].channelId)) {
+          // eslint-disable-next-line no-await-in-loop
+          await message.delete();
+          // eslint-disable-next-line no-await-in-loop
+          await dm(
+            message.author,
+            `The YouTube channel ${results[i].channelId} is currently blocklisted.`,
+            message.channel,
+          );
+        }
+      }
+    }
+  }
 }
 
 export async function checkEmotes(message: Message, reaction: MessageReaction) {

@@ -11,7 +11,7 @@ import {
 } from "discord.js";
 import { container } from "@sapphire/framework";
 import { Constants } from "../utility/Constants.js";
-import { checkInvites } from "./FilterService.js";
+import { checkInvites, checkYouTubeChannel } from "./FilterService.js";
 import ViolationService from "./ViolationService.js";
 import { boldify, getDisplayTag, replaceNonAscii } from "../utility/StringUtil.js";
 import { isModerator } from "./ModerationService.js";
@@ -23,6 +23,7 @@ export async function filterCheckMessage(message: Message) {
     return;
   }
   const result = await checkInvites(message);
+  await checkYouTubeChannel(message);
   if (result) {
     await ViolationService.checkViolations(
       message.guild,

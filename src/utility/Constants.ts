@@ -210,6 +210,7 @@ export class Constants {
     INVITES: new RE2(
       /(discord(?:app)?\.com\/invite|discord\.gg)\/(?<code>[A-Za-z\d-]+)/g,
     ),
+    YOUTUBE_VIDEOS: new RE2(/youtu(?:.*\/v\/|.*v=|\.be\/)(?<id>[A-Za-z0-9_-]{11})/g),
     NON_ASCII: new RE2(/[\x80-\uFFFF]/gu),
   };
 
@@ -221,6 +222,7 @@ export class Constants {
     AUTO_UNBAN: 30000,
     AUTO_UNMUTE: 30000,
     AUTO_PUNISHMENT_REMOVAL: 600000,
+    YOUTUBE_CHANNEL_CACHE: 3600000,
   };
 
   static readonly SECONDS_PER_DAY = 86400;
