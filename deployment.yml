@@ -90,6 +90,7 @@ spec:
                 - --eval
                 - "db.adminCommand('ping')"
             initialDelaySeconds: 5
+            timeoutSeconds: 3
           readinessProbe:
             exec:
               command:
@@ -97,6 +98,7 @@ spec:
                 - --eval
                 - "db.adminCommand('ping')"
             initialDelaySeconds: 5
+            timeoutSeconds: 3
           env:
             - name: MONGO_INITDB_ROOT_USERNAME
               valueFrom:
