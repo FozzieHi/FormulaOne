@@ -48,7 +48,7 @@ export default async function lookupYouTubeChannels(ids: string[]) {
               channelId,
             );
           }
-          return undefined;
+          return null;
         })
         .filter(Boolean);
 
