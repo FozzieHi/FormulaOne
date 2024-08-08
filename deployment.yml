@@ -47,6 +47,11 @@ spec:
                 secretKeyRef:
                   name: formula-one-credentials
                   key: sentry-dsn
+            - name: YOUTUBE_DATA_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: formula-one-credentials
+                  key: youtube-data-api-key
             - name: RELEASE_HASH
               value: <RELEASE_HASH>
           ports:
