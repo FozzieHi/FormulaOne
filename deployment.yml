@@ -5,19 +5,18 @@ metadata:
   name: formulaone
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: formula-one
   namespace: formulaone
   labels:
     app: formula-one
 spec:
-  replicas: 1
+  serviceName: "formula-one"
   selector:
     matchLabels:
       app: formula-one
-  strategy:
-    type: Recreate
+  replicas: 1
   template:
     metadata:
       labels:
