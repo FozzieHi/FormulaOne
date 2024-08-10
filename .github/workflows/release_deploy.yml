@@ -74,7 +74,7 @@ jobs:
         run: kubectl apply -f $GITHUB_WORKSPACE/deployment.yml
       - name: Verify deployment
         run: |
-          if ! kubectl rollout status deployment/formula-one -n formulaone; then
+          if ! kubectl rollout status statefulset/formula-one -n formulaone; then
             echo "Deployment failed, rolling back..."
             kubectl rollout undo deployment/formula-one -n formulaone
             exit 1
