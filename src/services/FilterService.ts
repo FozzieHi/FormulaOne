@@ -100,7 +100,7 @@ export async function checkYouTubeChannel(message: Message) {
       for (let i = 0; i < results.length; i += 1) {
         if (blocklistedChannels.includes(results[i].channelId)) {
           // eslint-disable-next-line no-await-in-loop
-          await message.delete();
+          await Try(message.delete());
           // eslint-disable-next-line no-await-in-loop
           await dm(
             message.author,
