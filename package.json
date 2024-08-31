@@ -24,7 +24,7 @@
     "discord.js": "^14.15.3",
     "googleapis": "^142.0.0",
     "mongodb": "^6.8.0",
-    "re2": "^1.21.3",
+    "re2": "^1.21.4",
     "tslib": "^2.7.0",
     "utf-8-validate": "^6.0.4",
     "zlib-sync": "^0.1.9"
