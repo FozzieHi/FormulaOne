@@ -6,6 +6,7 @@ export interface DBGuild extends WithId<Document> {
   caseNumber: number;
   lockdown: boolean;
   enabledChannels: Array<Snowflake>;
+  roles: { muted?: string };
   youtubeChannels: { blocklisted: Array<string> };
   protectionActivatedAt: number;
   images: { guidelines: Binary | null };
@@ -20,6 +21,8 @@ export class Guild {
 
   enabledChannels: Array<Snowflake>;
 
+  roles: { muted?: string };
+
   youtubeChannels: { blocklisted: Array<string> };
 
   protectionActivatedAt: number;
@@ -31,6 +34,9 @@ export class Guild {
     this.caseNumber = 1;
     this.lockdown = false;
     this.enabledChannels = [];
+    this.roles = {
+      muted: undefined,
+    };
     this.youtubeChannels = {
       blocklisted: [],
     };
