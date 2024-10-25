@@ -111,6 +111,8 @@ export class Constants {
     { id: "313677111695245312", score: 0.1 },
   ];
 
+  static readonly EMOTE_REPORT_THRESHOLD_SCORE = 0.25;
+
   static readonly BOTS = {
     MOD_MAIL: "797143867048591370",
   };

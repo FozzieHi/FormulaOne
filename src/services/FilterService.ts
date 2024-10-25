@@ -141,12 +141,12 @@ export async function checkEmotes(message: Message, reaction: MessageReaction) {
         score +=
           Constants.EMOTE_SCORES.find((val) => val.id === user.id)?.score ?? 0.05;
       });
-      if (score >= 0.25) {
+      if (score >= Constants.EMOTE_REPORT_THRESHOLD_SCORE) {
         const fieldsAndValues = [
           "Action",
           `Emote Report [Jump to message](${message.url})`,
           "Score",
-          `${score.toString()} >= 0.25`,
+          `${score.toString()} >= ${Constants.EMOTE_REPORT_THRESHOLD_SCORE.toString()}`,
           "Channel",
           message.channel.toString(),
         ];
