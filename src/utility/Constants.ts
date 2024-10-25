@@ -113,7 +113,7 @@ export class Constants {
 
   static readonly EMOTE_REPORT_ROLELESS_SCORE = 5;
 
-  static readonly EMOTE_REPORT_THRESHOLD_SCORE = 25;
+  static readonly EMOTE_REPORT_THRESHOLD_SCORE = 15;
 
   static readonly BOTS = {
     MOD_MAIL: "797143867048591370",
