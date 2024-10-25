@@ -132,10 +132,10 @@ export async function checkEmotes(message: Message, reaction: MessageReaction) {
     ) {
       return;
     }
-    if (reaction.emoji.id === Constants.EMOTE_ID) {
+    if (reaction.emoji.id === Constants.EMOTE_REPORT_EMOTE_ID) {
       let score = 0;
       const users = await message.reactions.cache
-        .find((msgReaction) => msgReaction.emoji.id === Constants.EMOTE_ID)
+        .find((msgReaction) => msgReaction.emoji.id === Constants.EMOTE_REPORT_EMOTE_ID)
         ?.users.fetch();
       users?.forEach((user) => {
         score +=
