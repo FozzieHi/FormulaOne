@@ -139,7 +139,7 @@ export async function checkEmotes(message: Message, reaction: MessageReaction) {
         ?.users.fetch();
       users?.forEach((user) => {
         score +=
-          Constants.EMOTE_SCORES.find((val) => val.id === user.id)?.score ?? 0.05;
+          Constants.EMOTE_REPORT_ROLE_SCORES.find((val) => val.id === user.id)?.score ?? 0.05;
       });
       if (score >= Constants.EMOTE_REPORT_THRESHOLD_SCORE) {
         const fieldsAndValues = [

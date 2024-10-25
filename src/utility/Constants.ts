@@ -104,7 +104,7 @@ export class Constants {
 
   static readonly EMOTE_REPORT_EMOTE_ID = "299650191835922432";
 
-  static readonly EMOTE_SCORES: Array<{ id: Snowflake; score: number }> = [
+  static readonly EMOTE_REPORT_ROLE_SCORES: Array<{ id: Snowflake; score: number }> = [
     { id: "314910132733739009", score: 0.4 },
     { id: "314910011358707712", score: 0.3 },
     { id: "314909797445271564", score: 0.2 },
