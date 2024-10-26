@@ -102,14 +102,18 @@ export class Constants {
     },
   ];
 
-  static readonly EMOTE_ID = "299650191835922432";
+  static readonly EMOTE_REPORT_EMOTE_ID = "299650191835922432";
 
-  static readonly EMOTE_SCORES: Array<{ id: Snowflake; score: number }> = [
-    { id: "314910132733739009", score: 0.4 },
-    { id: "314910011358707712", score: 0.3 },
-    { id: "314909797445271564", score: 0.2 },
-    { id: "313677111695245312", score: 0.1 },
+  static readonly EMOTE_REPORT_ROLE_SCORES: Array<{ id: Snowflake; score: number }> = [
+    { id: "314910132733739009", score: 40 }, // F1
+    { id: "314910011358707712", score: 30 }, // F2
+    { id: "314909797445271564", score: 20 }, // F3
+    { id: "313677111695245312", score: 10 }, // F4
   ];
+
+  static readonly EMOTE_REPORT_ROLELESS_SCORE = 5;
+
+  static readonly EMOTE_REPORT_THRESHOLD_SCORE = 15;
 
   static readonly BOTS = {
     MOD_MAIL: "797143867048591370",

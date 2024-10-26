@@ -132,21 +132,22 @@ export async function checkEmotes(message: Message, reaction: MessageReaction) {
     ) {
       return;
     }
-    if (reaction.emoji.id === Constants.EMOTE_ID) {
+    if (reaction.emoji.id === Constants.EMOTE_REPORT_EMOTE_ID) {
       let score = 0;
       const users = await message.reactions.cache
-        .find((msgReaction) => msgReaction.emoji.id === Constants.EMOTE_ID)
+        .find((msgReaction) => msgReaction.emoji.id === Constants.EMOTE_REPORT_EMOTE_ID)
         ?.users.fetch();
       users?.forEach((user) => {
         score +=
-          Constants.EMOTE_SCORES.find((val) => val.id === user.id)?.score ?? 0.05;
+          Constants.EMOTE_REPORT_ROLE_SCORES.find((val) => val.id === user.id)?.score ??
+          Constants.EMOTE_REPORT_ROLELESS_SCORE;
       });
-      if (score >= 0.25) {
+      if (score >= Constants.EMOTE_REPORT_THRESHOLD_SCORE) {
         const fieldsAndValues = [
           "Action",
           `Emote Report [Jump to message](${message.url})`,
           "Score",
-          `${score.toString()} >= 0.25`,
+          `${score.toString()} >= ${Constants.EMOTE_REPORT_THRESHOLD_SCORE.toString()}`,
           "Channel",
           message.channel.toString(),
         ];
