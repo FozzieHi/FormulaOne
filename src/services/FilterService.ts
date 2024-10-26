@@ -150,7 +150,7 @@ export async function checkEmotes(message: Message, reaction: MessageReaction) {
       const members = await Promise.all(memberPromises);
 
       let score = 0;
-      members?.forEach((member) => {
+      members.forEach((member) => {
         if (member != null) {
           const highestScore = member.roles.cache.reduce((maxScore, role) => {
             const roleScore =
