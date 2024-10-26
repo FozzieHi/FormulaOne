@@ -114,6 +114,10 @@ export async function checkYouTubeChannel(message: Message) {
 }
 
 export async function checkEmotes(message: Message, reaction: MessageReaction) {
+  if (message.guild == null) {
+    return;
+  }
+
   await MutexManager.getUserPublicMutex(message.author.id).runExclusive(async () => {
     if (
       ViolationService.reports.some(
@@ -133,15 +137,34 @@ export async function checkEmotes(message: Message, reaction: MessageReaction) {
       return;
     }
     if (reaction.emoji.id === Constants.EMOTE_REPORT_EMOTE_ID) {
-      let score = 0;
       const users = await message.reactions.cache
         .find((msgReaction) => msgReaction.emoji.id === Constants.EMOTE_REPORT_EMOTE_ID)
         ?.users.fetch();
-      users?.forEach((user) => {
-        score +=
-          Constants.EMOTE_REPORT_ROLE_SCORES.find((val) => val.id === user.id)?.score ??
-          Constants.EMOTE_REPORT_ROLELESS_SCORE;
+      if (users == null) {
+        return;
+      }
+
+      const memberPromises = users.map((user) =>
+        TryVal((message.guild as Guild).members.fetch(user.id)),
+      );
+      const members = await Promise.all(memberPromises);
+
+      let score = 0;
+      members?.forEach((member) => {
+        if (member != null) {
+          const highestScore = member.roles.cache.reduce((maxScore, role) => {
+            const roleScore =
+              Constants.EMOTE_REPORT_ROLE_SCORES.find((val) => val.id === role.id)
+                ?.score ?? 0;
+            return Math.max(maxScore, roleScore);
+          }, 0);
+
+          score += highestScore || Constants.EMOTE_REPORT_ROLELESS_SCORE;
+        } else {
+          score += Constants.EMOTE_REPORT_ROLELESS_SCORE;
+        }
       });
+
       if (score >= Constants.EMOTE_REPORT_THRESHOLD_SCORE) {
         const fieldsAndValues = [
           "Action",
