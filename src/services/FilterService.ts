@@ -1,5 +1,6 @@
 import {
   Guild,
+  GuildMember,
   GuildTextBasedChannel,
   Invite,
   Message,
@@ -108,6 +109,36 @@ export async function checkYouTubeChannel(message: Message) {
             message.channel,
           );
         }
+      }
+    }
+  }
+}
+
+export async function checkOneWord(message: Message) {
+  if (message.system) {
+    return;
+  }
+  const dbGuild = await getDBGuild((message.guild as Guild).id);
+  if (dbGuild?.enabledChannels.find((channel) => channel === message.channel.id)) {
+    const alphanumeric = message.content
+      .replace(/[?!.]/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+    const stripped = message.content.replaceAll(" ", "");
+    if (
+      (!alphanumeric.includes(" ") && !alphanumeric.includes("\n")) ||
+      Constants.REGEXES.ONLY_EMOJI.test(stripped) ||
+      Constants.REGEXES.ONLY_UNICODE.test(stripped)
+    ) {
+      if (!Constants.REGEXES.URL.test(message.content)) {
+        await message.delete();
+        await ViolationService.checkViolations(
+          message.guild as Guild,
+          message.channel as GuildTextBasedChannel,
+          message.member as GuildMember,
+          message.id,
+          "ONEWORD",
+        );
       }
     }
   }

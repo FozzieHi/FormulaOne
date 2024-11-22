@@ -11,7 +11,7 @@ import {
 } from "discord.js";
 import { container } from "@sapphire/framework";
 import { Constants } from "../utility/Constants.js";
-import { checkInvites, checkYouTubeChannel } from "./FilterService.js";
+import { checkInvites, checkOneWord, checkYouTubeChannel } from "./FilterService.js";
 import ViolationService from "./ViolationService.js";
 import { boldify, getDisplayTag, replaceNonAscii } from "../utility/StringUtil.js";
 import { isModerator } from "./ModerationService.js";
@@ -22,6 +22,7 @@ export async function filterCheckMessage(message: Message) {
   if (message.guild == null || (await isModerator(message.guild, message.author))) {
     return;
   }
+  await checkOneWord(message);
   const result = await checkInvites(message);
   await checkYouTubeChannel(message);
   if (result) {
@@ -30,6 +31,7 @@ export async function filterCheckMessage(message: Message) {
       message.channel as GuildTextBasedChannel,
       message.member as GuildMember,
       message.id,
+      "AUTOMOD",
     );
   }
 }

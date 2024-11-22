@@ -204,6 +204,9 @@ export class Constants {
 
   static readonly REGEXES = {
     URL: new RE2(/^https?:\/\/([\w[\]:.-]+)\.([A-Za-z\d-]+)(:\d*)?([/#?]\S*)?$/),
+    ONLY_EMOJI: new RE2(/^<:\w{2,32}:(\d{17,20})>$/),
+    // eslint-disable-next-line no-control-regex
+    ONLY_UNICODE: new RE2(/^[^\u0000-\u007F]+$/),
   };
 
   static readonly GLOBAL_REGEXES = {

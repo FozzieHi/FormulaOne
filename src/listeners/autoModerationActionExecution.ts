@@ -92,6 +92,7 @@ export class AutoModerationActionExecutionListener extends Listener {
       channel,
       action.member as GuildMember,
       action.messageId,
+      "AUTOMOD",
     );
   }
 }
