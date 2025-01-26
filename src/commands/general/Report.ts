@@ -3,6 +3,7 @@ import {
   ApplicationCommandType,
   GuildMember,
   MessageContextMenuCommandInteraction,
+  Snowflake,
 } from "discord.js";
 import { Constants, ModerationQueueButtons } from "../../utility/Constants.js";
 import { isModerator, modQueue } from "../../services/ModerationService.js";
@@ -10,6 +11,8 @@ import { replyInteraction, replyInteractionError } from "../../utility/Sender.js
 import MutexManager from "../../managers/MutexManager.js";
 import ViolationService from "../../services/ViolationService.js";
 import { getDisplayTag, getOverflowFields } from "../../utility/StringUtil.js";
+
+const modReports = new Map<Snowflake, number>();
 
 export class ReportCommand extends Command {
   public constructor(context: never) {
@@ -47,12 +50,21 @@ export class ReportCommand extends Command {
         await replyInteractionError(interaction, "You may not report yourself.");
         return;
       }
-      if (await isModerator(interaction.guild, interaction.targetMessage.author)) {
-        await replyInteractionError(
-          interaction,
-          "You may not use this command on a moderator.",
-        );
-        return;
+      const targetIsModerator = await isModerator(
+        interaction.guild,
+        interaction.targetMessage.author,
+      );
+      if (targetIsModerator) {
+        const currentReport = modReports.get(interaction.user.id);
+        // 5 minute cooldown
+        if (currentReport != null && Date.now() - currentReport < 300000) {
+          await replyInteractionError(
+            interaction,
+            "You have already reported a moderator recently.",
+          );
+          return;
+        }
+        modReports.set(interaction.user.id, Date.now());
       }
       if (
         !ViolationService.reports.some(
@@ -92,7 +104,7 @@ export class ReportCommand extends Command {
           fieldsAndValues,
           Constants.MUTE_COLOR,
           [
-            ModerationQueueButtons.PUNISH,
+            ...(targetIsModerator ? [] : [ModerationQueueButtons.PUNISH]),
             ModerationQueueButtons.ESCALATE,
             ModerationQueueButtons.IGNORE,
           ],

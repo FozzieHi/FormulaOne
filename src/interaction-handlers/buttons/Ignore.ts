@@ -47,6 +47,13 @@ export class IgnoreInteraction extends InteractionHandler {
       );
       return;
     }
+    if (interaction.user.id === userId) {
+      await replyInteractionError(
+        interaction,
+        "You cannot ignore a log assigned to you.",
+      );
+      return;
+    }
     await MutexManager.getUserMutex(userId).runExclusive(async () => {
       if (ViolationService.handled.has(interaction.message.id)) {
         await replyInteractionError(interaction, "Log has already been handled.");
