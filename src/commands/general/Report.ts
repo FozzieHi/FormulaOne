@@ -50,22 +50,6 @@ export class ReportCommand extends Command {
         await replyInteractionError(interaction, "You may not report yourself.");
         return;
       }
-      const targetIsModerator = await isModerator(
-        interaction.guild,
-        interaction.targetMessage.author,
-      );
-      if (targetIsModerator) {
-        const currentReport = modReports.get(interaction.user.id);
-        // 5 minute cooldown
-        if (currentReport != null && Date.now() - currentReport < 300000) {
-          await replyInteractionError(
-            interaction,
-            "You have already reported a moderator recently.",
-          );
-          return;
-        }
-        modReports.set(interaction.user.id, Date.now());
-      }
       if (
         !ViolationService.reports.some(
           (report) =>
@@ -73,6 +57,22 @@ export class ReportCommand extends Command {
             report.messageId === interaction.targetMessage.id,
         )
       ) {
+        const targetIsModerator = await isModerator(
+          interaction.guild,
+          interaction.targetMessage.author,
+        );
+        if (targetIsModerator) {
+          const currentReport = modReports.get(interaction.user.id);
+          // 5 minute cooldown
+          if (currentReport != null && Date.now() - currentReport < 300000) {
+            await replyInteractionError(
+              interaction,
+              "You have already reported a moderator recently.",
+            );
+            return;
+          }
+          modReports.set(interaction.user.id, Date.now());
+        }
         const fieldsAndValues = [
           "Action",
           `Report [Jump to message](${interaction.targetMessage.url})`,
