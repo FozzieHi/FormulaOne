@@ -129,6 +129,7 @@ export class Constants {
     F1: "314910132733739009",
     F2: "314910011358707712",
     F3: "314909797445271564",
+    F4: "313677111695245312",
     BEGINNERS_QUESTIONS: "941602889221165066",
     MUTED: "292105874158256128",
     NOXP: "314910227306643457",
@@ -142,12 +143,24 @@ export class Constants {
     { id: this.ROLES.MARSHALS, permissionLevel: 1 },
   ];
 
+  static readonly CHANNEL_CATEGORIES = {
+    LIVE_CHAT: "1024052802638577694",
+    MOTORSPORT: "361418703440707585",
+    GENERAL_NO_F1: "360812123095564288",
+  };
+
   static readonly CHANNELS = {
     WELCOME: "435404097055883265",
     RULES: "177387572505346048",
     NEWS: "335167453350854666",
     F1_GENERAL: "876046265111167016",
+    F1_THREADS: "1118609917025210559",
     F1_BEGINNER_QUESTIONS: "955919151849943110",
+    F1_DISCUSSION: "432208507073331201",
+    F1_FEEDER_SERIES: "738455791714959410",
+    F1TV_N_BROADCAST: "431627942766968834",
+    SHITPOST: "242392574193565711",
+    F1_FANTASY_OFFICIAL: "436530724292526081",
     OFF_TOPIC: "242392969213247500",
     EMOJIS: "639401538485485569",
     MOD_QUEUE: "920333278593024071",
@@ -161,6 +174,38 @@ export class Constants {
   static readonly EMOTES = {
     UP: "303230406352699393",
     DOWN: "303230394008993793",
+  };
+
+  static readonly XP = {
+    per_message: { min: 15, max: 25, cooldown: 60000 },
+    level_scale: (level: number) =>
+      Math.round(
+        (1.6666666667 * level ** 3 + 22.5 * level ** 2 + 75.8333333333 * level) / 5,
+      ) * 5,
+    level_roles: {
+      5: this.ROLES.F4,
+      10: this.ROLES.F3,
+      25: this.ROLES.F2,
+      40: this.ROLES.F1,
+    },
+    role_multipliers: {
+      [this.ROLES.NOXP]: 0,
+      [this.ROLES.F1]: 0,
+    },
+    channel_category_multipliers: {
+      [this.CHANNEL_CATEGORIES.LIVE_CHAT]: 0.05,
+      [this.CHANNEL_CATEGORIES.MOTORSPORT]: 0.75,
+      [this.CHANNEL_CATEGORIES.GENERAL_NO_F1]: 0.5,
+    },
+    channel_multipliers: {
+      [this.CHANNELS.F1_GENERAL]: 0.25,
+      [this.CHANNELS.F1_THREADS]: 1.5,
+      [this.CHANNELS.F1_DISCUSSION]: 2,
+      [this.CHANNELS.F1_FEEDER_SERIES]: 0.75,
+      [this.CHANNELS.F1TV_N_BROADCAST]: 0.5,
+      [this.CHANNELS.SHITPOST]: 0,
+      [this.CHANNELS.F1_FANTASY_OFFICIAL]: 0.5,
+    },
   };
 
   static readonly BAN_BUTTON_AUTOMOD_RULES = new Set([
