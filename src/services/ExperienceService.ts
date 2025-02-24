@@ -6,31 +6,31 @@ import {
 } from "discord.js";
 
 import { Constants } from "../utility/Constants.js";
-import db from "../database/index.js";
+// import db from "../database/index.js";
 
-function baseExperience() {
+function getBaseExperience() {
   return Math.round(
     Math.random() * (Constants.XP.per_message.max - Constants.XP.per_message.min) +
       Constants.XP.per_message.min,
   );
 }
 
-function categoryModifier(category: Channel) {
+function getCategoryModifier(category: Channel) {
   return Constants.XP.channel_category_multipliers[category.id] ?? 1;
 }
 
-function channelMultiplier(channel: GuildTextBasedChannel) {
+function getChannelMultiplier(channel: GuildTextBasedChannel) {
   const multiplier = Constants.XP.channel_multipliers[channel.id];
   // If the current channel does not have a explicit multiplier,
   // maybe the Channel Category does.
   if (multiplier === undefined) {
     const category = channel.parent;
-    return category !== null ? categoryModifier(category) : 1;
+    return category !== null ? getCategoryModifier(category) : 1;
   }
   return multiplier;
 }
 
-function roleMultiplier(roles: GuildMemberRoleManager) {
+function getRoleMultiplier(roles: GuildMemberRoleManager) {
   let highestMultiplier = 0;
 
   // eslint-disable-next-line no-restricted-syntax
@@ -51,13 +51,21 @@ export function experienceForMessage(message: Message) {
     return 0;
   }
 
-  const channelExperience = channelMultiplier(message.channel as GuildTextBasedChannel);
-  if (channelExperience === 0) return 0;
+  const baseExperience = getBaseExperience();
 
-  const roleExperience = roleMultiplier(roles);
-  if (roleExperience === 0) return 0;
+  const channelMultiplier = getChannelMultiplier(
+    message.channel as GuildTextBasedChannel,
+  );
+  if (channelMultiplier === 0) return 0;
 
-  return Math.round(baseExperience() * (channelExperience + roleExperience));
+  const roleMultiplier = getRoleMultiplier(roles);
+  if (roleMultiplier === 0) return 0;
+
+  console.log(
+    `Base: ${baseExperience}, Channel: ${channelMultiplier}x, Role: ${roleMultiplier}x`,
+  );
+
+  return Math.round(baseExperience * (channelMultiplier * roleMultiplier));
 }
 
 export async function handleMessageExperience(message: Message) {
@@ -67,10 +75,12 @@ export async function handleMessageExperience(message: Message) {
   const expGained = experienceForMessage(message);
 
   if (expGained === 0) {
-    return;
+    // return;
   }
 
-  await db.userRepo?.upsertUser(message.author.id, message.guildId, {
-    $inc: { experience: expGained },
-  });
+  console.log(`Total ${expGained}`);
+
+  // await db.userRepo?.upsertUser(message.author.id, message.guildId, {
+  //   $inc: { experience: expGained },
+  // });
 }
