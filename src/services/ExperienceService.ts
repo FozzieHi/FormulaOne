@@ -19,39 +19,43 @@ function categoryModifier(category: Channel) {
   return Constants.XP.channel_category_multipliers[category.id] ?? 1;
 }
 
-function channelModifier(channel: GuildTextBasedChannel) {
-  const channelMultiplier = Constants.XP.channel_multipliers[channel.id];
-  if (channelMultiplier === undefined) {
+function channelMultiplier(channel: GuildTextBasedChannel) {
+  const multiplier = Constants.XP.channel_multipliers[channel.id];
+  // If the current channel does not have a explicit multiplier,
+  // maybe the Channel Category does.
+  if (multiplier === undefined) {
     const category = channel.parent;
     return category !== null ? categoryModifier(category) : 1;
   }
-  return channelMultiplier;
+  return multiplier;
 }
 
-function roleModifier(roles: GuildMemberRoleManager) {
-  const availableModifiers = roles.cache
-    .map((_, role) => Constants.XP.role_multipliers[role])
-    .filter((role) => role !== undefined);
+function roleMultiplier(roles: GuildMemberRoleManager) {
+  let highestMultiplier = 0;
 
-  // if no modifier is defined just multiply by 1 keeping the current value.
-  if (availableModifiers.length === 0) {
-    return 1;
+  // eslint-disable-next-line no-restricted-syntax
+  for (const [role] of roles.cache) {
+    const multiplier = Constants.XP.role_multipliers[role];
+    if (multiplier !== undefined) {
+      if (multiplier === 0) return 0;
+      highestMultiplier = Math.max(highestMultiplier, multiplier);
+    }
   }
-  return availableModifiers.reduce((prev, curr) =>
-    prev === 0 ? 0 : Math.max(prev, curr),
-  );
+
+  return highestMultiplier !== 0 ? highestMultiplier : 1;
 }
 
 export function experienceForMessage(message: Message) {
   const roles = message.member?.roles;
-  if (roles === undefined || message.channel.isTextBased()) {
+  if (roles === undefined || !message.channel.isTextBased()) {
     return 0;
   }
-  const channelExperience = channelModifier(message.channel);
-  const roleExperience = roleModifier(roles);
-  if (channelExperience === 0 || roleExperience === 0) {
-    return 0;
-  }
+
+  const channelExperience = channelMultiplier(message.channel as GuildTextBasedChannel);
+  if (channelExperience === 0) return 0;
+
+  const roleExperience = roleMultiplier(roles);
+  if (roleExperience === 0) return 0;
 
   return Math.round(baseExperience() * (channelExperience + roleExperience));
 }
