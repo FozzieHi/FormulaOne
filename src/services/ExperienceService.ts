@@ -15,7 +15,7 @@ function getBaseExperience() {
   );
 }
 
-function getCategoryModifier(category: Channel) {
+function getCategoryMultiplier(category: Channel) {
   return Constants.XP.channel_category_multipliers[category.id] ?? 1;
 }
 
@@ -25,7 +25,7 @@ function getChannelMultiplier(channel: GuildTextBasedChannel) {
   // maybe the Channel Category does.
   if (multiplier === undefined) {
     const category = channel.parent;
-    return category !== null ? getCategoryModifier(category) : 1;
+    return category !== null ? getCategoryMultiplier(category) : 1;
   }
   return multiplier;
 }
