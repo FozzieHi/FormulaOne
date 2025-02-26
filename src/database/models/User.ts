@@ -12,6 +12,7 @@ export interface DBUser extends WithId<Document> {
   punishments: Array<Punishment>;
   blocklisted: boolean;
   leftRoles: Array<Snowflake>;
+  experience: number;
 }
 
 export type Punishment = {
@@ -44,6 +45,8 @@ export class User {
 
   leftRoles: Array<Snowflake>;
 
+  experience: number;
+
   constructor(userId: Snowflake, guildId: Snowflake) {
     this.userId = userId;
     this.guildId = guildId;
@@ -55,5 +58,6 @@ export class User {
     this.punishments = [];
     this.blocklisted = false;
     this.leftRoles = [];
+    this.experience = 0;
   }
 }
