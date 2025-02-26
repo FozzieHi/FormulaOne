@@ -13,6 +13,7 @@ export interface DBUser extends WithId<Document> {
   blocklisted: boolean;
   leftRoles: Array<Snowflake>;
   experience: number;
+  level: number;
 }
 
 export type Punishment = {
@@ -29,23 +30,31 @@ export class User {
 
   guildId: Snowflake;
 
+  /** The amount of active Punishments. */
   currentPunishment: number;
 
+  /** All-Time warnings this User received. */
   warns: number;
 
+  /** All-Time mutes this User received. */
   mutes: number;
 
+  /** All-Time kicks this User received. */
   kicks: number;
 
+  /** All-Time bans this User received. */
   bans: number;
 
   punishments: Array<Punishment>;
 
   blocklisted: boolean;
 
+  /** Roles this User had when they left the Guild. */
   leftRoles: Array<Snowflake>;
 
   experience: number;
+
+  level: number;
 
   constructor(userId: Snowflake, guildId: Snowflake) {
     this.userId = userId;
@@ -59,5 +68,6 @@ export class User {
     this.blocklisted = false;
     this.leftRoles = [];
     this.experience = 0;
+    this.level = 0;
   }
 }

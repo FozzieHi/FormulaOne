@@ -96,7 +96,20 @@ export async function handleMessageExperience(message: Message) {
 
   console.log(`Total ${expGained}`);
 
-  // await db.userRepo?.upsertUser(message.author.id, message.guildId, {
-  //   $inc: { experience: expGained },
-  // });
+  // const updatedUser = await db.userRepo?.findUserAndUpsert(
+  //   authorId, message.guildId,
+  //   { $inc: { experience: expGained } },
+  // );
+
+  // if (updatedUser == null || updatedUser.level >= Constants.XP.levels.length) {
+  //   return;
+  // }
+  //
+  // if (updatedUser.experience + expGained > Constants.XP.levels[updatedUser.level]) {
+  //   await db.userRepo?.upsertUser(authorId, message.guildId, {
+  //     $inc: {
+  //       level: 1,
+  //     },
+  //   });
+  // }
 }
