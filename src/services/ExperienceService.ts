@@ -3,10 +3,13 @@ import {
   GuildMemberRoleManager,
   GuildTextBasedChannel,
   Message,
+  Snowflake,
 } from "discord.js";
 
 import { Constants } from "../utility/Constants.js";
 // import db from "../database/index.js";
+
+const cooldowns: Map<Snowflake, number> = new Map();
 
 function getBaseExperience() {
   return Math.round(
@@ -76,6 +79,19 @@ export async function handleMessageExperience(message: Message) {
 
   if (expGained === 0) {
     // return;
+  }
+
+  const authorId = message.author.id;
+  const cooldown = cooldowns.get(authorId);
+  const now = new Date().getTime();
+
+  if (
+    cooldown === undefined ||
+    now - cooldown > Constants.XP.per_message.cooldown * 1000
+  ) {
+    cooldowns.set(authorId, now);
+  } else {
+    return;
   }
 
   console.log(`Total ${expGained}`);
