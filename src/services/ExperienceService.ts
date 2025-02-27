@@ -1,5 +1,6 @@
 import {
   Channel,
+  GuildMember,
   GuildMemberRoleManager,
   GuildTextBasedChannel,
   Message,
@@ -7,7 +8,9 @@ import {
 } from "discord.js";
 
 import { Constants } from "../utility/Constants.js";
-// import db from "../database/index.js";
+import db from "../database/index.js";
+import { modLog } from "./ModerationService.js";
+import { getUserTag } from "../utility/StringUtil.js";
 
 const cooldowns: Map<Snowflake, number> = new Map();
 
@@ -71,6 +74,10 @@ export function experienceForMessage(message: Message) {
   return Math.round(baseExperience * (channelMultiplier * roleMultiplier));
 }
 
+async function assignUserRole(member: GuildMember, roleId: Snowflake) {
+  await member.roles.add(roleId, "User Leveled Up");
+}
+
 export async function handleMessageExperience(message: Message) {
   if (message.author.bot || !message.inGuild()) {
     return;
@@ -96,20 +103,45 @@ export async function handleMessageExperience(message: Message) {
 
   console.log(`Total ${expGained}`);
 
-  // const updatedUser = await db.userRepo?.findUserAndUpsert(
-  //   authorId, message.guildId,
-  //   { $inc: { experience: expGained } },
-  // );
+  // TODO: Make this all a little nicer.
 
-  // if (updatedUser == null || updatedUser.level >= Constants.XP.levels.length) {
-  //   return;
-  // }
-  //
-  // if (updatedUser.experience + expGained > Constants.XP.levels[updatedUser.level]) {
-  //   await db.userRepo?.upsertUser(authorId, message.guildId, {
-  //     $inc: {
-  //       level: 1,
-  //     },
-  //   });
-  // }
+  const updatedUser = await db.userRepo?.findUserAndUpsert(authorId, message.guildId, {
+    $inc: { experience: expGained },
+  });
+
+  if (updatedUser == null || updatedUser.level >= Constants.XP.levels.length) {
+    return;
+  }
+
+  if (updatedUser.experience > Constants.XP.levels[updatedUser.level]) {
+    await db.userRepo?.upsertUser(authorId, message.guildId, {
+      $inc: {
+        level: 1,
+      },
+    });
+  }
+
+  const roleToAssign = Object.keys(Constants.XP.level_roles).find(
+    (levelRequired) => updatedUser.level === +levelRequired,
+  );
+  if (roleToAssign == null) {
+    return;
+  }
+
+  await assignUserRole(message.member as GuildMember, roleToAssign);
+
+  await modLog(
+    message.guild,
+    null,
+    [
+      "Action",
+      "AssignRole",
+      "User",
+      `${getUserTag(message.author)} (${authorId})`,
+      "Reason",
+      "Leveled Up",
+    ],
+    Constants.GREEN_COLOR,
+    message.author,
+  );
 }
