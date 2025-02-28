@@ -52,7 +52,7 @@ function getRoleMultiplier(roles: GuildMemberRoleManager) {
   return highestMultiplier !== 0 ? highestMultiplier : 1;
 }
 
-export function experienceForMessage(message: Message) {
+function experienceForMessage(message: Message) {
   const roles = message.member?.roles;
   if (roles === undefined || !message.channel.isTextBased()) {
     return 0;
@@ -89,10 +89,7 @@ export async function handleMessageExperience(message: Message) {
   const cooldown = cooldowns.get(authorId);
   const now = new Date().getTime();
 
-  if (
-    cooldown === undefined ||
-    now - cooldown > Constants.XP.per_message.cooldown * 1000
-  ) {
+  if (cooldown === undefined || now - cooldown > Constants.XP.per_message.cooldown) {
     cooldowns.set(authorId, now);
   } else {
     return;
@@ -115,9 +112,11 @@ export async function handleMessageExperience(message: Message) {
     });
   }
 
+  const newLevel = updatedUser.level + 1;
+
   await dm(
     message.author,
-    `You just leveled up!\nYou are now level ${updatedUser.level + 1}`,
+    `You just leveled up!\nYou are now level ${newLevel}`,
     undefined,
     false,
   );
@@ -138,7 +137,7 @@ export async function handleMessageExperience(message: Message) {
       "User",
       `${getUserTag(message.author)} (${authorId})`,
       "Reason",
-      "Leveled Up",
+      `Leveled Up (Lvl ${updatedUser.level + 1})`,
     ],
     Constants.GREEN_COLOR,
     message.author,
