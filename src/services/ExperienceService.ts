@@ -11,6 +11,7 @@ import { Constants } from "../utility/Constants.js";
 import db from "../database/index.js";
 import { modLog } from "./ModerationService.js";
 import { getUserTag } from "../utility/StringUtil.js";
+import { dm } from "../utility/Sender.js";
 
 const cooldowns: Map<Snowflake, number> = new Map();
 
@@ -67,10 +68,6 @@ export function experienceForMessage(message: Message) {
   const roleMultiplier = getRoleMultiplier(roles);
   if (roleMultiplier === 0) return 0;
 
-  console.log(
-    `Base: ${baseExperience}, Channel: ${channelMultiplier}x, Role: ${roleMultiplier}x`,
-  );
-
   return Math.round(baseExperience * (channelMultiplier * roleMultiplier));
 }
 
@@ -85,7 +82,7 @@ export async function handleMessageExperience(message: Message) {
   const expGained = experienceForMessage(message);
 
   if (expGained === 0) {
-    // return;
+    return;
   }
 
   const authorId = message.author.id;
@@ -101,15 +98,11 @@ export async function handleMessageExperience(message: Message) {
     return;
   }
 
-  console.log(`Total ${expGained}`);
-
-  // TODO: Make this all a little nicer.
-
   const updatedUser = await db.userRepo?.findUserAndUpsert(authorId, message.guildId, {
     $inc: { experience: expGained },
   });
 
-  if (updatedUser == null || updatedUser.level >= Constants.XP.levels.length) {
+  if (updatedUser == null || updatedUser.level > Constants.XP.levels.length) {
     return;
   }
 
@@ -121,14 +114,19 @@ export async function handleMessageExperience(message: Message) {
     });
   }
 
+  await dm(
+    message.author,
+    `You just leveled up!\nYou are now level ${updatedUser.level + 1}`,
+    undefined,
+    false,
+  );
+
   const roleToAssign = Object.keys(Constants.XP.level_roles).find(
     (levelRequired) => updatedUser.level === +levelRequired,
   );
-  if (roleToAssign == null) {
-    return;
+  if (roleToAssign != null) {
+    await assignUserRole(message.member as GuildMember, roleToAssign);
   }
-
-  await assignUserRole(message.member as GuildMember, roleToAssign);
 
   await modLog(
     message.guild,

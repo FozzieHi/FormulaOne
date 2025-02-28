@@ -68,6 +68,6 @@ export class User {
     this.blocklisted = false;
     this.leftRoles = [];
     this.experience = 0;
-    this.level = 0;
+    this.level = 1;
   }
 }
