@@ -207,8 +207,10 @@ export class Constants {
       [this.CHANNELS.SHITPOST]: 0,
       [this.CHANNELS.F1_FANTASY_OFFICIAL]: 0.5,
     },
-    // Levels start at 1, so we have one 'dead' entry in this array.
-    levels: Array.from({ length: 41 }, (_, i): number => Constants.XP.level_scale(i)),
+    levels: Array.from({ length: 40 }, (_, i): { level: number; xp: number } => ({
+      level: i + 1,
+      xp: Constants.XP.level_scale(i),
+    })),
   };
 
   static readonly BAN_BUTTON_AUTOMOD_RULES = new Set([

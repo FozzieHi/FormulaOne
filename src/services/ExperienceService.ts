@@ -106,7 +106,8 @@ export async function handleMessageExperience(message: Message) {
     return;
   }
 
-  if (updatedUser.experience > Constants.XP.levels[updatedUser.level]) {
+  const requiredXp = Constants.XP.levels.find((f) => f.level === updatedUser.level);
+  if (requiredXp != null && updatedUser.experience > requiredXp.xp) {
     await db.userRepo?.upsertUser(authorId, message.guildId, {
       $inc: {
         level: 1,
