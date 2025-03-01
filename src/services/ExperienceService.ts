@@ -9,8 +9,7 @@ import {
 
 import { Constants } from "../utility/Constants.js";
 import db from "../database/index.js";
-import { modLog } from "./ModerationService.js";
-import { getUserTag } from "../utility/StringUtil.js";
+import { genericLog } from "./ModerationService.js";
 import { dm } from "../utility/Sender.js";
 
 const cooldowns: Map<Snowflake, number> = new Map();
@@ -71,10 +70,6 @@ function experienceForMessage(message: Message) {
   return Math.round(baseExperience * (channelMultiplier * roleMultiplier));
 }
 
-async function assignUserRole(member: GuildMember, roleId: Snowflake) {
-  await member.roles.add(roleId, "User Leveled Up");
-}
-
 export async function handleMessageExperience(message: Message) {
   if (message.author.bot || !message.inGuild()) {
     return;
@@ -87,7 +82,7 @@ export async function handleMessageExperience(message: Message) {
 
   const authorId = message.author.id;
   const cooldown = cooldowns.get(authorId);
-  const now = new Date().getTime();
+  const now = Date.now();
 
   if (cooldown === undefined || now - cooldown > Constants.XP.per_message.cooldown) {
     cooldowns.set(authorId, now);
@@ -125,21 +120,13 @@ export async function handleMessageExperience(message: Message) {
     (levelRequired) => updatedUser.level === +levelRequired,
   );
   if (roleToAssign != null) {
-    await assignUserRole(message.member as GuildMember, roleToAssign);
+    await (message.member as GuildMember).roles.add(roleToAssign, "Member Leveled Up");
   }
 
-  await modLog(
+  await genericLog(
     message.guild,
-    null,
-    [
-      "Action",
-      "AssignRole",
-      "User",
-      `${getUserTag(message.author)} (${authorId})`,
-      "Reason",
-      `Leveled Up (Lvl ${updatedUser.level + 1})`,
-    ],
+    message.member as GuildMember,
+    ["Action", `Levelled up to ${newLevel}`],
     Constants.GREEN_COLOR,
-    message.author,
   );
 }

@@ -197,6 +197,7 @@ export class Constants {
       [this.CHANNEL_CATEGORIES.LIVE_CHAT]: 0.05,
       [this.CHANNEL_CATEGORIES.MOTORSPORT]: 0.75,
       [this.CHANNEL_CATEGORIES.GENERAL_NO_F1]: 0.5,
+      [this.CHANNEL_CATEGORIES.BOT]: 0,
     },
     channel_multipliers: {
       [this.CHANNELS.F1_GENERAL]: 0.25,
@@ -209,7 +210,7 @@ export class Constants {
     },
     levels: Array.from({ length: 40 }, (_, i): { level: number; xp: number } => ({
       level: i + 1,
-      xp: Constants.XP.level_scale(i),
+      xp: this.XP.level_scale(i),
     })),
   };
 

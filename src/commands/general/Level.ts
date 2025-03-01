@@ -19,7 +19,7 @@ export class LevelCommand extends Command {
       },
       {
         guildIds: Constants.GUILD_IDS,
-        idHints: ["977147655698403328"],
+        // idHints: [""],
       },
     );
   }
@@ -28,6 +28,6 @@ export class LevelCommand extends Command {
     const userId = interaction.user.id;
     const guildId = interaction.guildId as Snowflake;
     const userData = await db.userRepo?.getUser(userId, guildId);
-    await replyInteraction(interaction, `You are Level ${userData?.level}.`);
+    await replyInteraction(interaction, `You are currently level ${userData?.level}.`);
   }
 }
