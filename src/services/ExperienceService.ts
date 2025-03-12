@@ -93,40 +93,43 @@ export async function handleMessageExperience(message: Message) {
   const updatedUser = await db.userRepo?.findUserAndUpsert(authorId, message.guildId, {
     $inc: { experience: expGained },
   });
+  const currentLevel = updatedUser?.level ?? 1;
+  const nextLevel = currentLevel + 1;
 
-  if (updatedUser == null || updatedUser.level > Constants.XP.levels.length) {
+  if (updatedUser == null || nextLevel > Constants.XP.levels.length) {
     return;
   }
 
-  const requiredXp = Constants.XP.levels.find((f) => f.level === updatedUser.level);
+  const requiredXp = Constants.XP.levels.find((f) => f.level === nextLevel);
   if (requiredXp != null && updatedUser.experience > requiredXp.xp) {
     await db.userRepo?.upsertUser(authorId, message.guildId, {
       $inc: {
         level: 1,
       },
     });
+
+    await dm(
+      message.author,
+      `You have just leveled up in the XP system!\nYou are now level ${nextLevel}`,
+      undefined,
+      false,
+    );
+
+    const roleToAssign = Object.keys(Constants.XP.level_roles).find(
+      (levelRequired) => nextLevel === +levelRequired,
+    );
+    if (roleToAssign != null) {
+      await (message.member as GuildMember).roles.add(
+        roleToAssign,
+        "Member Leveled Up",
+      );
+    }
+
+    await genericLog(
+      message.guild,
+      message.member as GuildMember,
+      ["Action", `Leveled up to level ${nextLevel}`],
+      Constants.GREEN_COLOR,
+    );
   }
-
-  const newLevel = updatedUser.level + 1;
-
-  await dm(
-    message.author,
-    `You just leveled up!\nYou are now level ${newLevel}`,
-    undefined,
-    false,
-  );
-
-  const roleToAssign = Object.keys(Constants.XP.level_roles).find(
-    (levelRequired) => updatedUser.level === +levelRequired,
-  );
-  if (roleToAssign != null) {
-    await (message.member as GuildMember).roles.add(roleToAssign, "Member Leveled Up");
-  }
-
-  await genericLog(
-    message.guild,
-    message.member as GuildMember,
-    ["Action", `Levelled up to ${newLevel}`],
-    Constants.GREEN_COLOR,
-  );
 }

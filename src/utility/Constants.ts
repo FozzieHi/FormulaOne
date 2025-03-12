@@ -177,12 +177,13 @@ export class Constants {
     DOWN: "303230394008993793",
   };
 
+  static readonly level_scale = (level: number) =>
+    Math.round(
+      (1.6666666667 * level ** 3 + 22.5 * level ** 2 + 75.8333333333 * level) / 5,
+    ) * 5;
+
   static readonly XP = {
     per_message: { min: 15, max: 25, cooldown: 60000 },
-    level_scale: (level: number) =>
-      Math.round(
-        (1.6666666667 * level ** 3 + 22.5 * level ** 2 + 75.8333333333 * level) / 5,
-      ) * 5,
     level_roles: {
       5: this.ROLES.F4,
       10: this.ROLES.F3,
@@ -210,7 +211,7 @@ export class Constants {
     },
     levels: Array.from({ length: 40 }, (_, i): { level: number; xp: number } => ({
       level: i + 1,
-      xp: this.XP.level_scale(i),
+      xp: this.level_scale(i),
     })),
   };
 
