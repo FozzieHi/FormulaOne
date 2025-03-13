@@ -22,8 +22,15 @@ export class UserRepository extends BaseRepository {
     return this.updateOne(new UserQuery(userId, guildId), update);
   }
 
-  async findUserAndUpdate(userId: Snowflake, guildId: Snowflake, update: object) {
-    return this.findOneAndUpdate(new UserQuery(userId, guildId), update);
+  async findUserAndUpdate(
+    userId: Snowflake,
+    guildId: Snowflake,
+    update: object,
+  ): Promise<DBUser | null> {
+    return this.findOneAndUpdate(
+      new UserQuery(userId, guildId),
+      update,
+    ) as Promise<DBUser | null>;
   }
 
   async upsertUser(userId: Snowflake, guildId: Snowflake, update: object) {
@@ -34,12 +41,20 @@ export class UserRepository extends BaseRepository {
     return this.updateOne(new User(userId, guildId), update, true);
   }
 
-  async findUserAndUpsert(userId: Snowflake, guildId: Snowflake, update: object) {
+  async findUserAndUpsert(
+    userId: Snowflake,
+    guildId: Snowflake,
+    update: object,
+  ): Promise<DBUser | null> {
     if (await this.anyUser(userId, guildId)) {
       return this.findUserAndUpdate(userId, guildId, update);
     }
 
-    return this.findOneAndUpdate(new User(userId, guildId), update, true);
+    return this.findOneAndUpdate(
+      new User(userId, guildId),
+      update,
+      true,
+    ) as Promise<DBUser | null>;
   }
 
   async deleteUser(userId: Snowflake, guildId: Snowflake) {

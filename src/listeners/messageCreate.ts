@@ -1,6 +1,7 @@
 import { Listener } from "@sapphire/framework";
 import { Message } from "discord.js";
 import { debugFilterLog, filterCheckMessage } from "../services/BotQueueService.js";
+import { handleMessageExperience } from "../services/ExperienceService.js";
 
 export class MessageCreateListener extends Listener {
   /*
@@ -8,6 +9,7 @@ export class MessageCreateListener extends Listener {
    */
   public async run(message: Message) {
     await filterCheckMessage(message);
+    await handleMessageExperience(message);
     debugFilterLog(message);
   }
 }
