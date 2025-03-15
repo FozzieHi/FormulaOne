@@ -115,14 +115,12 @@ export async function handleMessageExperience(message: Message) {
       false,
     );
 
-    const roleToAssign = Object.keys(Constants.XP.level_roles).find(
-      (levelRequired) => nextLevel === +levelRequired,
+    const roleToAssign = Object.entries(Constants.XP.level_roles).find(
+      ([levelRequired]) => nextLevel === +levelRequired,
     );
     if (roleToAssign != null) {
-      await (message.member as GuildMember).roles.add(
-        roleToAssign,
-        "Member Leveled Up",
-      );
+      const [, roleId] = roleToAssign;
+      await (message.member as GuildMember).roles.add(roleId, "Member Leveled Up");
     }
 
     await genericLog(
