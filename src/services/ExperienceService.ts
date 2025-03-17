@@ -115,18 +115,16 @@ export async function handleMessageExperience(message: Message) {
       false,
     );
 
+    const member = message.member as GuildMember;
     const rolesToAssign = Object.entries(Constants.XP.level_roles)
-      .filter(([levelRequired]) => nextLevel === +levelRequired)
+      .filter(
+        ([levelRequired, roleId]) =>
+          nextLevel >= +levelRequired && !member.roles.cache.has(roleId),
+      )
       .map(([, foundLevel]) => foundLevel);
 
     if (rolesToAssign.length > 0) {
-      const member = message.member as GuildMember;
-
-      await Promise.allSettled(
-        rolesToAssign
-          .filter((roleId) => !member.roles.cache.has(roleId))
-          .map(async (roleId) => member.roles.add(roleId, "Member Leveled Up")),
-      );
+      await member.roles.add(rolesToAssign, "Member Leveled Up");
     }
 
     await genericLog(
