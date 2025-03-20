@@ -120,6 +120,8 @@ export class UserInfoCommand extends Command {
             member.communicationDisabledUntilTimestamp > Date.now())
             ? "Yes"
             : "No",
+          "Level/XP",
+          `${dbUser.level}/${dbUser.experience}`,
         ],
         {
           author: { name: getDisplayTag(member), icon_url: user.displayAvatarURL() },
