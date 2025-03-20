@@ -121,7 +121,7 @@ export class UserInfoCommand extends Command {
             ? "Yes"
             : "No",
           "Level/XP",
-          `Level: ${dbUser.level}\nExp: ${dbUser.experience}`,
+          `${dbUser.level}/${dbUser.experience}`,
         ],
         {
           author: { name: getDisplayTag(member), icon_url: user.displayAvatarURL() },
