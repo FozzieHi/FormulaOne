@@ -203,7 +203,7 @@ export class Constants {
     },
     channel_multipliers: {
       [this.CHANNELS.DRIVE_TO_SURVIVE]: 0.5,
-      [this.CHANNELS.F1_GENERAL]: 0.25,
+      [this.CHANNELS.F1_GENERAL]: 0.05,
       [this.CHANNELS.F1_THREADS]: 1.5,
       [this.CHANNELS.F1_DISCUSSION]: 2,
       [this.CHANNELS.F1_FEEDER_SERIES]: 0.75,
