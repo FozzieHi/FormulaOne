@@ -71,7 +71,7 @@ function experienceForMessage(message: Message) {
 }
 
 export async function handleMessageExperience(message: Message) {
-  if (message.author.bot || !message.inGuild()) {
+  if (message.author.bot || !message.inGuild() || !message.content.includes(" ")) {
     return;
   }
   const expGained = experienceForMessage(message);
