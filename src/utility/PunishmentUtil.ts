@@ -30,7 +30,7 @@ export async function getHistory(
         vals.push("Reason", pun.reason);
       }
       if (pun.messageContent != null) {
-        vals.push(...getOverflowFields("Content", pun.messageContent));
+        vals.push("Content", getOverflowFields("Content", pun.messageContent, 800)[1]);
       }
       const channel = channelsMap[i - start];
       if (channel != null) {
