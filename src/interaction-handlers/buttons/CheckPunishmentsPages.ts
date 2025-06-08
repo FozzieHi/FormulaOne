@@ -7,7 +7,10 @@ import {
   ButtonStyle,
   ComponentType,
 } from "discord.js";
-import { getHistory } from "../../utility/PunishmentUtil.js";
+import {
+  getHistory,
+  PUNISHMENTS_PER_HISTORY_PAGE,
+} from "../../utility/PunishmentUtil.js";
 import { Embed } from "../../structures/Embed.js";
 import { getFields, updateInteraction } from "../../utility/Sender.js";
 import TryVal from "../../utility/TryVal.js";
@@ -38,7 +41,7 @@ export class CheckPunishmentsPagesInteraction extends InteractionHandler {
     const fieldsAndValues = await getHistory(
       user,
       interaction.guild,
-      (newPage - 1) * 5,
+      (newPage - 1) * PUNISHMENTS_PER_HISTORY_PAGE,
     );
     const embed = interaction.message.embeds.at(0);
     if (embed == null) {

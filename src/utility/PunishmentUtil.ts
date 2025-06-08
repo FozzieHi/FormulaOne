@@ -4,6 +4,8 @@ import { isEven } from "./NumberUtil.js";
 import { boldify, getOverflowFields } from "./StringUtil.js";
 import TryVal from "./TryVal.js";
 
+export const PUNISHMENTS_PER_HISTORY_PAGE = 4;
+
 export async function getHistory(
   user: User,
   guild: Guild,
@@ -14,7 +16,7 @@ export async function getHistory(
   if (allPunishments == null) {
     return [];
   }
-  const end = Math.min(allPunishments.length, start + 5);
+  const end = Math.min(allPunishments.length, start + PUNISHMENTS_PER_HISTORY_PAGE);
   const channelPromises = allPunishments
     .slice(start, end)
     .map((pun) => TryVal(guild.channels.fetch(pun.channelId)));
