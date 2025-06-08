@@ -17,7 +17,10 @@ import {
   replyInteractionPublicFields,
 } from "../../utility/Sender.js";
 import { Constants } from "../../utility/Constants.js";
-import { getHistory } from "../../utility/PunishmentUtil.js";
+import {
+  getHistory,
+  PUNISHMENTS_PER_HISTORY_PAGE,
+} from "../../utility/PunishmentUtil.js";
 import { getDBUser } from "../../utility/DatabaseUtil.js";
 import { boldify, getUserTag } from "../../utility/StringUtil.js";
 
@@ -68,7 +71,10 @@ export class CheckPunishmentsCommand extends Command {
       return;
     }
     const fieldsAndValues = await getHistory(user, interaction.guild);
-    const maxPages = Math.max(1, Math.ceil(dbUser.punishments.length / 5));
+    const maxPages = Math.max(
+      1,
+      Math.ceil(dbUser.punishments.length / PUNISHMENTS_PER_HISTORY_PAGE),
+    );
     const embedOptions: APIEmbed = {
       title: `${getUserTag(user)}'s Punishment History (1/${maxPages})`,
       footer: {
@@ -90,7 +96,7 @@ export class CheckPunishmentsCommand extends Command {
           customId: `npage-1-${maxPages}-${dbUser.currentPunishment}-${user.id}`,
           emoji: "➡",
           style: ButtonStyle.Secondary,
-          disabled: dbUser.punishments.length <= 5,
+          disabled: dbUser.punishments.length <= PUNISHMENTS_PER_HISTORY_PAGE,
         }),
       ],
     ];
