@@ -21,7 +21,7 @@
     "@sentry/node": "^9.1.0",
     "async-mutex": "^0.5.0",
     "bufferutil": "^4.0.9",
-    "discord.js": "^14.15.3",
+    "discord.js": "^14.20.0",
     "googleapis": "^144.0.0",
     "mongodb": "^6.10.0",
     "re2": "^1.21.4",
