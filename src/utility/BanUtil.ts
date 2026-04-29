@@ -9,15 +9,16 @@ import { getDisplayTag, getUserTag } from "./StringUtil.js";
 export async function ban(
   guild: Guild,
   targetUser: User,
-  moderator: GuildMember,
+  moderator: GuildMember | null,
   reason: string,
   originChannel: GuildTextBasedChannel,
   targetChannel?: GuildTextBasedChannel,
   deleteMessageSeconds?: number,
 ): Promise<boolean> {
   if (
+    originChannel.id !== Constants.CHANNELS.HONEYPOT ||
     reason == null ||
-    (await getPermLevel(guild, moderator.user)) <
+    (await getPermLevel(guild, moderator!.user)) <
       (originChannel.id === Constants.CHANNELS.MOD_QUEUE ? 1 : 2) ||
     (await isModerator(guild, targetUser))
   ) {
@@ -33,7 +34,7 @@ export async function ban(
     guild.members.cache.has(targetUser.id),
   );
   await guild.members.ban(targetUser, {
-    reason: `(${getDisplayTag(moderator)}) ${reason}`,
+    reason: `${moderator !== null ? `(${getDisplayTag(moderator)})` : ""} ${reason}`,
     deleteMessageSeconds,
   });
   await db.userRepo?.upsertUser(targetUser.id, guild.id, {
@@ -46,7 +47,7 @@ export async function ban(
       date: Date.now(),
       escalation: "Ban",
       reason,
-      mod: getUserTag(moderator.user),
+      mod: moderator !== null ? getUserTag(moderator.user) : null,
       channelId: targetChannel?.id ?? originChannel.id,
     }),
   );
@@ -57,7 +58,7 @@ export async function ban(
       "Action",
       "Ban",
       "User",
-      `${getUserTag(targetUser)} (${targetUser.id})`,
+      `${getUserTag(targetUser)}(${targetUser.id})`,
       "Reason",
       reason,
       "Channel",

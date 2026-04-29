@@ -20,7 +20,7 @@ export type Punishment = {
   date: number;
   escalation: string;
   reason: string;
-  mod: string;
+  mod: string | null;
   channelId: Snowflake;
   messageContent?: string;
 };
