@@ -99,7 +99,7 @@ export class RuleSelect extends InteractionHandler {
         if (logMessage != null) {
           // If this is a mod queue message, we now need to "move" the message to the Archive thread.
           // When we repost it, we want to include extra information about the details of the punish.
-          // This makes it easier for moderators to review the Archive and understand what happemed.
+          // This makes it easier for moderators to review the Archive and understand what happened.
 
           // By waiting until after we punish the user, we can get the "outcome" of the punish
           // by getting the user from the DB and just checking their current punishment level,
