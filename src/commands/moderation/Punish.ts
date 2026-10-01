@@ -103,7 +103,7 @@ export class PunishCommand extends Command {
       if (rule == null) {
         return;
       }
-      reason = `${rule} - ${Constants.RULES[rule].description}`;
+      reason = Constants.RULES[rule].reason;
       dryRun = Constants.RULES[rule].dryRun ?? false;
     } else if (subcommand === "remove") {
       reason = interaction.options.getString("reason");

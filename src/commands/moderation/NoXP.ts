@@ -109,7 +109,7 @@ export class NoXP extends Command {
         if (rule == null) {
           return;
         }
-        reason = `${rule} - ${Constants.RULES[rule].description}`;
+        reason = Constants.RULES[rule].reason;
 
         if (targetMember.roles.cache.has(Constants.ROLES.NOXP)) {
           await replyInteractionError(

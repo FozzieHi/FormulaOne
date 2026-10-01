@@ -113,7 +113,7 @@ export class BanishCommand extends Command {
       if (rule == null) {
         return;
       }
-      reason = `${rule} - ${Constants.RULES[rule].description}`;
+      reason = Constants.RULES[rule].reason;
     } else if (subcommand === "remove") {
       reason = interaction.options.getString("reason");
     }
