@@ -200,7 +200,7 @@ export async function punish(
     let color = Constants.WARN_COLOR;
     if (punishment.type === PunishmentType.WARN) {
       await db.userRepo?.upsertUser(targetUser.id, interaction.guild.id, {
-        $inc: { warnings: 1 },
+        $inc: { warns: 1 },
       });
       color = Constants.WARN_COLOR;
     } else if (punishment.type === PunishmentType.MUTE) {
