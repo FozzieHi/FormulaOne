@@ -10,7 +10,8 @@ import {
 } from "discord.js";
 import { banish } from "../../utility/BanishUtil.js";
 import { Constants } from "../../utility/Constants.js";
-import { punish } from "../../utility/PunishUtil.js";
+import { getDBUser } from "../../utility/DatabaseUtil.js";
+import { punish, getPunishmentDisplay } from "../../utility/PunishUtil.js";
 import Try from "../../utility/Try.js";
 import TryVal from "../../utility/TryVal.js";
 import { replyInteractionError } from "../../utility/Sender.js";
@@ -94,7 +95,31 @@ export class RuleSelect extends InteractionHandler {
           message,
           channel,
         )) as Message;
+
         if (logMessage != null) {
+          // If this is a mod queue message, we now need to "move" the message to the Archive thread.
+          // When we repost it, we want to include extra information about the details of the punish.
+          // This makes it easier for moderators to review the Archive and understand what happemed.
+
+          // By waiting until after we punish the user, we can get the "outcome" of the punish
+          // by getting the user from the DB and just checking their current punishment level,
+          // instead of having to do math with the punishment amount.
+          const dbUser = await getDBUser(targetUser.id, interaction.guild.id);
+          const pprintAmount = `${parsedData.amount} punishment${parsedData.amount !== 1 ? "s" : ""}`;
+          let severity: string;
+          if (dbUser == null) {
+            severity = pprintAmount;
+          } else {
+            const currentPunLvl = Constants.PUNISHMENTS.at(dbUser.currentPunishment);
+            if (currentPunLvl == null) {
+              severity = pprintAmount;
+            } else {
+              const outcome = getPunishmentDisplay(currentPunLvl).displayLog;
+              severity = `${pprintAmount} (${outcome})`;
+            }
+          }
+          const extraDetails = `Severity: ${severity}\nRule: ${reason}`;
+
           await archiveLog(
             interaction.guild,
             interaction.channel as TextChannel,
@@ -102,6 +127,7 @@ export class RuleSelect extends InteractionHandler {
             interaction.member as GuildMember,
             logMessage,
             "Punished",
+            extraDetails,
           );
           await setTimeout(10000, "result");
           await Try(messageSent.delete());
