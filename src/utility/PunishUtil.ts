@@ -255,6 +255,7 @@ export async function punish(
 
     const punishData: Punishment = {
       date: Date.now(),
+      dryRun,
       escalation: `${currentPun + escalations} (${punishmentDisplay.displayLog})${
         escalations > 1 ? ` (${escalations} punishments)` : ""
       }`,
@@ -290,31 +291,36 @@ export async function punish(
     }
     await modLog(interaction.guild, moderator, modLogFieldAndValues, color, targetUser);
   } else if (action === "remove") {
-    const role = await TryVal(interaction.guild.roles.fetch(Constants.ROLES.MUTED));
-    if (role == null) {
-      return null;
-    }
-    if (db.muteRepo?.anyMute(targetUser.id, interaction.guild.id)) {
-      const targetMember = await TryVal(interaction.guild.members.fetch(targetUser.id));
-      if (targetMember != null) {
-        await targetMember.roles.remove(
-          role,
-          `Unpunished by ${getDisplayTag(moderator)}`,
-        );
-        await targetMember.disableCommunicationUntil(
-          null,
-          `Unpunished by ${getDisplayTag(moderator)}`,
-        );
-        await db.muteRepo?.deleteMute(targetMember.id, interaction.guild.id);
+    const lastPunishment = dbUser.punishments.at(-1);
+    if (!lastPunishment?.dryRun) {
+      if (currentPun === 0) {
+        await replyInteractionError(interaction, "User has no active punishments.");
+        return null;
       }
-    }
 
-    if (currentPun === 0) {
-      await replyInteractionError(interaction, "User has no active punishments.");
-      return null;
-    }
+      const role = await TryVal(interaction.guild.roles.fetch(Constants.ROLES.MUTED));
+      if (role == null) {
+        return null;
+      }
+      if (await db.muteRepo?.anyMute(targetUser.id, interaction.guild.id)) {
+        const targetMember = await TryVal(
+          interaction.guild.members.fetch(targetUser.id),
+        );
+        if (targetMember != null) {
+          await targetMember.roles.remove(
+            role,
+            `Unpunished by ${getDisplayTag(moderator)}`,
+          );
+          await targetMember.disableCommunicationUntil(
+            null,
+            `Unpunished by ${getDisplayTag(moderator)}`,
+          );
+          await db.muteRepo?.deleteMute(targetMember.id, interaction.guild.id);
+        }
+      }
 
-    await decreasePunishment(targetUser.id, interaction.guild.id);
+      await decreasePunishment(targetUser.id, interaction.guild.id);
+    }
     await modLog(
       interaction.guild,
       moderator,

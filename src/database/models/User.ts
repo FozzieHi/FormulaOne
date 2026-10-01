@@ -23,6 +23,7 @@ export type Punishment = {
   mod: string;
   channelId: Snowflake;
   messageContent?: string;
+  dryRun?: boolean;
 };
 
 export class User {
