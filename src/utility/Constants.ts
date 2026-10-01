@@ -58,27 +58,54 @@ export class Constants {
 
   static readonly GUILD_IDS: Array<Snowflake> = ["177387572505346048"];
 
-  static readonly RULES: { [key: string]: string } = {
-    "Rule 1": "Adhere to the Discord community guidelines and Terms of Service",
-    "Rule 2": "Circumventing moderation action is prohibited",
-    "Rule 3": "Illegal, harmful and NSFW/NSFL content is prohibited",
-    "Rule 3.1": "Do not ask for links or references to illegal content",
-    "Rule 3.2": "Do not provide links, hints, or suggestions to illegal content",
-    "Rule 4": "Do not send low-quality messages",
-    "Rule 5": "Be respectful and act in good faith",
-    "Rule 5.1": "Do not predict, wish, or suggest any misfortune or harm to anyone",
-    "Rule 5.2": "Do not excessively rant about a session",
-    "Rule 5.3": "Do not harass, bait, or flame any individuals or communities",
-    "Rule 5.4": "Do not spread misinformation or sensationalism",
-    "Rule 5.5": "Do not bring in drama or toxicity from other servers or platforms",
-    "Rule 6": "Do not enforce the rules on behalf of a moderator",
-    "Rule 7": "No self-promotion",
-    "Rule 8": '"It\'s just a joke" is not an excuse to break the rules',
-    "Rule 9": "Usernames must be taggable and appropriate",
-    "Rule 10": "Use relevant channels and read the channel topic and pinned messages",
-    "Rule 11": "Keep all discussions in English",
-    "Rule 12": "Everyone is welcome",
-  };
+  static readonly RULES: {
+    [key: string]: { description: string; reason: string; dryRun?: boolean };
+  } = Object.fromEntries(
+    Object.entries({
+      "Rule 1": {
+        description: "Adhere to the Discord community guidelines and Terms of Service",
+      },
+      "Rule 2": { description: "Circumventing moderation action is prohibited" },
+      "Rule 3": { description: "Illegal, harmful and NSFW/NSFL content is prohibited" },
+      "Rule 3.1": {
+        description: "Do not ask for links or references to illegal content",
+      },
+      "Rule 3.2": {
+        description: "Do not provide links, hints, or suggestions to illegal content",
+      },
+      "Rule 4": { description: "Do not send low-quality messages" },
+      "Rule 5": { description: "Be respectful and act in good faith" },
+      "Rule 5.1": {
+        description:
+          "Do not predict, wish, or suggest any misfortune or harm to anyone",
+      },
+      "Rule 5.2": { description: "Do not excessively rant about a session" },
+      "Rule 5.3": {
+        description: "Do not harass, bait, or flame any individuals or communities",
+      },
+      "Rule 5.4": { description: "Do not spread misinformation or sensationalism" },
+      "Rule 5.5": {
+        description:
+          "Do not bring in drama or toxicity from other servers or platforms",
+      },
+      "Rule 6": { description: "Do not enforce the rules on behalf of a moderator" },
+      "Rule 7": { description: "No self-promotion" },
+      "Rule 8": {
+        description: '"It\'s just a joke" is not an excuse to break the rules',
+      },
+      "Rule 9": { description: "Usernames must be taggable and appropriate" },
+      "Rule 10": {
+        description:
+          "Use relevant channels and read the channel topic and pinned messages",
+      },
+      "Rule 11": { description: "Keep all discussions in English" },
+      "Rule 12": { description: "Everyone is welcome" },
+      "Rule 13": { description: "No AI-generated content", dryRun: true },
+    }).map(([name, rule]) => [
+      name,
+      { ...rule, reason: `${name} - ${rule.description}` },
+    ]),
+  );
 
   static readonly PUNISHMENTS: Array<PunishmentLevel> = [
     {

@@ -3,7 +3,7 @@ import { Constants } from "./Constants.js";
 
 export function getRuleChoices(): Array<ApplicationCommandOptionChoiceData<string>> {
   return Object.entries(Constants.RULES).map(([name, rule]) => ({
-    name: `${name} - ${rule}`,
+    name: rule.reason,
     value: name,
   }));
 }
