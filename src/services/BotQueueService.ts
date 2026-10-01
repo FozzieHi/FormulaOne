@@ -77,7 +77,7 @@ export async function archiveLog(
   ];
 
   const escalationPrefix =
-    channel.id === Constants.CHANNELS.STEWARDS_QUEUE ? "Escalation result - " : "";
+    channel.id === Constants.CHANNELS.STEWARDS_QUEUE ? "Escalation result: " : "";
   const pprintModerator =
     moderator != null ? ` by ${boldify(getDisplayTag(moderator))}` : "";
   const extraDetailsSuffix =
