@@ -97,12 +97,14 @@ export class PunishCommand extends Command {
     const subcommand = interaction.options.getSubcommand();
     const targetUser = interaction.options.getUser("user") as User;
     let reason: string | null;
+    let dryRun = false;
     if (subcommand === "add") {
       const rule = interaction.options.getString("reason");
       if (rule == null) {
         return;
       }
-      reason = `${rule} - ${Constants.RULES[rule]}`;
+      reason = `${rule} - ${Constants.RULES[rule].description}`;
+      dryRun = Constants.RULES[rule].dryRun ?? false;
     } else if (subcommand === "remove") {
       reason = interaction.options.getString("reason");
     }
@@ -117,6 +119,9 @@ export class PunishCommand extends Command {
         subcommand,
         reason,
         1,
+        undefined,
+        undefined,
+        dryRun,
       );
     });
   }

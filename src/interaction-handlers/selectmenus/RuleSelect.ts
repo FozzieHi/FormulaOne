@@ -40,7 +40,7 @@ export class RuleSelect extends InteractionHandler {
         await replyInteractionError(interaction, "Member not found.");
         return;
       }
-      const reason = `${parsedData.rule} - ${Constants.RULES[parsedData.rule]}`;
+      const reason = `${parsedData.rule} - ${Constants.RULES[parsedData.rule].description}`;
       await banish(interaction, targetMember, "add", "interaction", reason);
     } else if (parsedData.commandName === "punish") {
       await MutexManager.getUserMutex(
@@ -83,7 +83,7 @@ export class RuleSelect extends InteractionHandler {
             `Channel is null - Channel ID: ${parsedData.channelId as Snowflake}`,
           );
         }
-        const reason = `${parsedData.rule} - ${Constants.RULES[parsedData.rule]}`;
+        const reason = `${parsedData.rule} - ${Constants.RULES[parsedData.rule].description}`;
         const messageSent: Message = (await punish(
           interaction,
           interaction.member as GuildMember,
@@ -93,6 +93,7 @@ export class RuleSelect extends InteractionHandler {
           parsedData.amount as number,
           message,
           channel,
+          Constants.RULES[parsedData.rule].dryRun ?? false,
         )) as Message;
         if (logMessage != null) {
           await archiveLog(

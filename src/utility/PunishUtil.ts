@@ -152,6 +152,7 @@ export async function punish(
   amount: number,
   message?: Message | null,
   channel?: GuildTextBasedChannel,
+  dryRun = false,
 ): Promise<Message | null> {
   let messageSent;
   if (interaction.guild == null || interaction.channel == null) {
@@ -165,7 +166,7 @@ export async function punish(
   const currentPun = dbUser.currentPunishment;
 
   if (action === "add") {
-    if (currentPun > Constants.PUNISHMENTS.length - 1) {
+    if (!dryRun && currentPun > Constants.PUNISHMENTS.length - 1) {
       await replyInteractionError(
         interaction,
         `${boldify(getUserTag(targetUser))} has exceeded ${
@@ -175,9 +176,11 @@ export async function punish(
     }
 
     const maxEscalations = Math.min(currentPun + amount, Constants.PUNISHMENTS.length);
-    const escalations = maxEscalations - currentPun;
+    const escalations = dryRun ? 0 : maxEscalations - currentPun;
 
-    const punishment = Constants.PUNISHMENTS.at(maxEscalations - 1);
+    const punishment = dryRun
+      ? { type: PunishmentType.WARN }
+      : Constants.PUNISHMENTS.at(maxEscalations - 1);
     if (punishment == null) {
       return null;
     }
@@ -267,7 +270,9 @@ export async function punish(
       interaction.guild.id,
       new PushUpdate("punishments", punishData),
     );
-    await increasePunishment(targetUser.id, interaction.guild.id, escalations);
+    if (!dryRun) {
+      await increasePunishment(targetUser.id, interaction.guild.id, escalations);
+    }
     const modLogFieldAndValues = [
       "Action",
       `${punishmentDisplay.displayLog}${
