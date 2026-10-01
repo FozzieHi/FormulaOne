@@ -50,6 +50,7 @@ export async function archiveLog(
   moderator: GuildMember | null,
   message: Message,
   action: string,
+  extraDetails?: string,
 ): Promise<Message | null> {
   const modQueueChannel = (await TryVal(
     guild.channels.fetch(Constants.CHANNELS.MOD_QUEUE),
@@ -75,10 +76,15 @@ export async function archiveLog(
     ],
   ];
 
+  const escalationPrefix =
+    channel.id === Constants.CHANNELS.STEWARDS_QUEUE ? "Escalation result - " : "";
+  const pprintModerator =
+    moderator != null ? ` by ${boldify(getDisplayTag(moderator))}` : "";
+  const extraDetailsSuffix =
+    typeof extraDetails !== "undefined" ? `\n${extraDetails}` : "";
+
   const messageSent = await archiveThread.send({
-    content: `${
-      channel.id === Constants.CHANNELS.STEWARDS_QUEUE ? "Escalation result - " : ""
-    }${action}${moderator != null ? ` by ${boldify(getDisplayTag(moderator))}` : ""}`,
+    content: `${escalationPrefix}${action}${pprintModerator}${extraDetailsSuffix}`,
     embeds: [EmbedBuilder],
     components: buttons.map((button) => ({
       type: ComponentType.ActionRow,
