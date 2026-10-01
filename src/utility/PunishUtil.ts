@@ -23,7 +23,7 @@ import { PushUpdate } from "../database/updates/PushUpdate.js";
 import { getDBGuild, getDBUser } from "./DatabaseUtil.js";
 import { millisecondsToUnits } from "./NumberUtil.js";
 import { PopUpdate } from "../database/updates/PopUpdate.js";
-import { Punishment } from "../database/models/User.js";
+import { DBUser, Punishment } from "../database/models/User.js";
 import { Pun } from "../database/models/Pun.js";
 import { boldify, getDisplayTag, getOverflowFields, getUserTag } from "./StringUtil.js";
 import TryVal from "./TryVal.js";
@@ -152,7 +152,7 @@ export async function punish(
   amount: number,
   message?: Message | null,
   channel?: GuildTextBasedChannel,
-): Promise<Message | null> {
+): Promise<{ message: Message | null; dbUser: DBUser } | null> {
   let messageSent;
   if (interaction.guild == null || interaction.channel == null) {
     return null;
@@ -179,7 +179,7 @@ export async function punish(
 
     const punishment = Constants.PUNISHMENTS.at(maxEscalations - 1);
     if (punishment == null) {
-      return null;
+      return { message: null, dbUser };
     }
     const punishmentDisplay = getPunishmentDisplay(punishment);
 
@@ -287,7 +287,7 @@ export async function punish(
   } else if (action === "remove") {
     const role = await TryVal(interaction.guild.roles.fetch(Constants.ROLES.MUTED));
     if (role == null) {
-      return null;
+      return { message: null, dbUser };
     }
     if (db.muteRepo?.anyMute(targetUser.id, interaction.guild.id)) {
       const targetMember = await TryVal(interaction.guild.members.fetch(targetUser.id));
@@ -306,7 +306,7 @@ export async function punish(
 
     if (currentPun === 0) {
       await replyInteractionError(interaction, "User has no active punishments.");
-      return null;
+      return { message: null, dbUser };
     }
 
     await decreasePunishment(targetUser.id, interaction.guild.id);
@@ -338,7 +338,7 @@ export async function punish(
     );
   }
   if (messageSent != null) {
-    return messageSent;
+    return { message: messageSent, dbUser };
   }
-  return null;
+  return { message: null, dbUser };
 }
