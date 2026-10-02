@@ -152,7 +152,7 @@ export async function punish(
   amount: number,
   message?: Message | null,
   channel?: GuildTextBasedChannel,
-): Promise<{ message: Message | null; dbUser: DBUser } | null> {
+): Promise<{ message: Message | null, dbUser: DBUser } | null> {
   let messageSent;
   if (interaction.guild == null || interaction.channel == null) {
     return null;
