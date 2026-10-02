@@ -10,7 +10,7 @@ import {
 } from "discord.js";
 import { banish } from "../../utility/BanishUtil.js";
 import { Constants } from "../../utility/Constants.js";
-import { punish } from "../../utility/PunishUtil.js";
+import { punish, getPunishmentDisplay } from "../../utility/PunishUtil.js";
 import Try from "../../utility/Try.js";
 import TryVal from "../../utility/TryVal.js";
 import { replyInteractionError } from "../../utility/Sender.js";
@@ -84,17 +84,43 @@ export class RuleSelect extends InteractionHandler {
           );
         }
         const reason = `${parsedData.rule} - ${Constants.RULES[parsedData.rule]}`;
-        const messageSent: Message = (await punish(
-          interaction,
-          interaction.member as GuildMember,
-          targetUser,
-          "add",
-          reason,
-          parsedData.amount as number,
-          message,
-          channel,
-        )) as Message;
+        const { message: messageSent, dbUser } =
+          (await punish(
+            interaction,
+            interaction.member as GuildMember,
+            targetUser,
+            "add",
+            reason,
+            parsedData.amount as number,
+            message,
+            channel,
+          )) || {};
+
         if (logMessage != null) {
+          // If this is a mod queue message, we now need to "move" the message to the Archive thread.
+          // When we repost it, we want to include extra information about the details of the punish.
+          // This makes it easier for moderators to review the Archive and understand what happened.
+          const pprintAmount = `${parsedData.amount} punishment${parsedData.amount !== 1 ? "s" : ""}`;
+          let severity: string;
+          if (dbUser == null) {
+            severity = pprintAmount;
+          } else {
+            // We want to include the user's current punish status in the extra details. To do this,
+            // we need to get the user's current punishment level - ideally, without querying the DB.
+            // `punish` MUST query the user from the DB; to help other code save DB calls, it returns
+            // the DBUser. We can use that DBUser, but that database call is from BEFORE the punish is
+            // applied! To get the NEW punish level, add `amount` to the DBUser's currentPunishment.
+            const newPunishInt = dbUser.currentPunishment + (parsedData.amount || 0);
+            const newPunishLevel = Constants.PUNISHMENTS.at(newPunishInt);
+            if (newPunishLevel == null) {
+              severity = pprintAmount;
+            } else {
+              const outcome = getPunishmentDisplay(newPunishLevel).displayLog;
+              severity = `${pprintAmount} (${outcome})`;
+            }
+          }
+          const extraDetails = `Severity: ${severity}\nRule: ${reason}`;
+
           await archiveLog(
             interaction.guild,
             interaction.channel as TextChannel,
@@ -102,9 +128,12 @@ export class RuleSelect extends InteractionHandler {
             interaction.member as GuildMember,
             logMessage,
             "Punished",
+            extraDetails,
           );
           await setTimeout(10000, "result");
-          await Try(messageSent.delete());
+          if (messageSent != null) {
+            await Try(messageSent.delete());
+          }
           ViolationService.handled.add(logMessage.id);
         }
       });
