@@ -175,6 +175,7 @@ export async function punish(
           Constants.PUNISHMENTS.length
         } punishments in the last 30 days, escalate their punishment manually.`,
       );
+      return null;
     }
 
     const maxEscalations = Math.min(currentPun + amount, Constants.PUNISHMENTS.length);

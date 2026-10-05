@@ -80,7 +80,7 @@ export async function archiveLog(
     channel.id === Constants.CHANNELS.STEWARDS_QUEUE ? "Escalation result: " : "";
   const moderatorSuffix =
     moderator != null ? ` by ${boldify(getDisplayTag(moderator))}` : "";
-  const extraDetailsSuffix = extraDetails != null ? ` ${extraDetails}` : "";
+  const extraDetailsSuffix = extraDetails != null ? `\n${extraDetails}` : "";
 
   const messageSent = await archiveThread.send({
     content: `${escalationPrefix}${action}${moderatorSuffix}${extraDetailsSuffix}`,

@@ -101,7 +101,7 @@ export class RuleSelect extends InteractionHandler {
         if (logMessage != null) {
           const amountDisplay = `${result.escalations} punishment${result.escalations !== 1 ? "s" : ""}`;
           const severity = `${amountDisplay} (${result.displayLog})`;
-          const extraDetails = `\nSeverity: ${severity}\nRule: ${reason}`;
+          const extraDetails = `Severity: ${severity}\nRule: ${reason}`;
 
           await archiveLog(
             interaction.guild,
