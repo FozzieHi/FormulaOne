@@ -23,7 +23,7 @@ import { PushUpdate } from "../database/updates/PushUpdate.js";
 import { getDBGuild, getDBUser } from "./DatabaseUtil.js";
 import { millisecondsToUnits } from "./NumberUtil.js";
 import { PopUpdate } from "../database/updates/PopUpdate.js";
-import { DBUser, Punishment } from "../database/models/User.js";
+import { Punishment } from "../database/models/User.js";
 import { Pun } from "../database/models/Pun.js";
 import { boldify, getDisplayTag, getOverflowFields, getUserTag } from "./StringUtil.js";
 import TryVal from "./TryVal.js";
@@ -152,8 +152,7 @@ export async function punish(
   amount: number,
   message?: Message | null,
   channel?: GuildTextBasedChannel,
-): Promise<{ message: Message | null; dbUser: DBUser } | null> {
-  let messageSent;
+): Promise<{ message: Message | null; displayLog: string } | null> {
   if (interaction.guild == null || interaction.channel == null) {
     return null;
   }
@@ -179,7 +178,7 @@ export async function punish(
 
     const punishment = Constants.PUNISHMENTS.at(maxEscalations - 1);
     if (punishment == null) {
-      return { message: null, dbUser };
+      return null;
     }
     const punishmentDisplay = getPunishmentDisplay(punishment);
 
@@ -248,7 +247,7 @@ export async function punish(
     if (channel != null && interaction.channel.id !== channel.id) {
       await Try(send(channel, messageDescription));
     }
-    messageSent = await TryVal(send(interaction.channel, messageDescription));
+    const messageSent = await TryVal(send(interaction.channel, messageDescription));
 
     const punishData: Punishment = {
       date: Date.now(),
@@ -284,10 +283,12 @@ export async function punish(
       modLogFieldAndValues.push(...getOverflowFields("Content", message.content));
     }
     await modLog(interaction.guild, moderator, modLogFieldAndValues, color, targetUser);
-  } else if (action === "remove") {
+    return { message: messageSent, displayLog: punishmentDisplay.displayLog };
+  }
+  if (action === "remove") {
     const role = await TryVal(interaction.guild.roles.fetch(Constants.ROLES.MUTED));
     if (role == null) {
-      return { message: null, dbUser };
+      return null;
     }
     if (db.muteRepo?.anyMute(targetUser.id, interaction.guild.id)) {
       const targetMember = await TryVal(interaction.guild.members.fetch(targetUser.id));
@@ -306,7 +307,7 @@ export async function punish(
 
     if (currentPun === 0) {
       await replyInteractionError(interaction, "User has no active punishments.");
-      return { message: null, dbUser };
+      return null;
     }
 
     await decreasePunishment(targetUser.id, interaction.guild.id);
@@ -337,8 +338,5 @@ export async function punish(
       `Successfully unpunished ${boldify(getUserTag(targetUser))}.`,
     );
   }
-  if (messageSent != null) {
-    return { message: messageSent, dbUser };
-  }
-  return { message: null, dbUser };
+  return null;
 }

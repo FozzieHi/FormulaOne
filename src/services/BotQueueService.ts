@@ -78,13 +78,12 @@ export async function archiveLog(
 
   const escalationPrefix =
     channel.id === Constants.CHANNELS.STEWARDS_QUEUE ? "Escalation result: " : "";
-  const pprintModerator =
+  const moderatorSuffix =
     moderator != null ? ` by ${boldify(getDisplayTag(moderator))}` : "";
-  const extraDetailsSuffix =
-    typeof extraDetails !== "undefined" ? `\n${extraDetails}` : "";
+  const extraDetailsSuffix = extraDetails != null ? ` ${extraDetails}` : "";
 
   const messageSent = await archiveThread.send({
-    content: `${escalationPrefix}${action}${pprintModerator}${extraDetailsSuffix}`,
+    content: `${escalationPrefix}${action}${moderatorSuffix}${extraDetailsSuffix}`,
     embeds: [EmbedBuilder],
     components: buttons.map((button) => ({
       type: ComponentType.ActionRow,
