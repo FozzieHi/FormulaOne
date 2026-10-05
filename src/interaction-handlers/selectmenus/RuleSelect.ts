@@ -84,7 +84,7 @@ export class RuleSelect extends InteractionHandler {
           );
         }
         const reason = `${parsedData.rule} - ${Constants.RULES[parsedData.rule]}`;
-        const messageSent: Message = (await punish(
+        const result = await punish(
           interaction,
           interaction.member as GuildMember,
           targetUser,
@@ -93,8 +93,16 @@ export class RuleSelect extends InteractionHandler {
           parsedData.amount as number,
           message,
           channel,
-        )) as Message;
+        );
+        if (result == null) {
+          return;
+        }
+
         if (logMessage != null) {
+          const amountDisplay = `${result.escalations} punishment${result.escalations !== 1 ? "s" : ""}`;
+          const severity = `${amountDisplay} (${result.displayLog})`;
+          const extraDetails = `Severity: ${severity}\nRule: ${reason}`;
+
           await archiveLog(
             interaction.guild,
             interaction.channel as TextChannel,
@@ -102,9 +110,12 @@ export class RuleSelect extends InteractionHandler {
             interaction.member as GuildMember,
             logMessage,
             "Punished",
+            extraDetails,
           );
           await setTimeout(10000, "result");
-          await Try(messageSent.delete());
+          if (result.message != null) {
+            await Try(result.message.delete());
+          }
           ViolationService.handled.add(logMessage.id);
         }
       });
