@@ -3,3 +3,4 @@ services:
     container_name: formula-one
     build: .
     env_file: .env
+    network_mode: host
