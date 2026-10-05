@@ -152,7 +152,11 @@ export async function punish(
   amount: number,
   message?: Message | null,
   channel?: GuildTextBasedChannel,
-): Promise<{ message: Message | null; displayLog: string } | null> {
+): Promise<{
+  message: Message | null;
+  displayLog: string;
+  escalations: number;
+} | null> {
   if (interaction.guild == null || interaction.channel == null) {
     return null;
   }
@@ -283,7 +287,11 @@ export async function punish(
       modLogFieldAndValues.push(...getOverflowFields("Content", message.content));
     }
     await modLog(interaction.guild, moderator, modLogFieldAndValues, color, targetUser);
-    return { message: messageSent, displayLog: punishmentDisplay.displayLog };
+    return {
+      message: messageSent,
+      displayLog: punishmentDisplay.displayLog,
+      escalations,
+    };
   }
   if (action === "remove") {
     const role = await TryVal(interaction.guild.roles.fetch(Constants.ROLES.MUTED));

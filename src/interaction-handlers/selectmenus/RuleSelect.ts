@@ -99,7 +99,7 @@ export class RuleSelect extends InteractionHandler {
         }
 
         if (logMessage != null) {
-          const amountDisplay = `${parsedData.amount} punishment${parsedData.amount !== 1 ? "s" : ""}`;
+          const amountDisplay = `${result.escalations} punishment${result.escalations !== 1 ? "s" : ""}`;
           const severity = `${amountDisplay} (${result.displayLog})`;
           const extraDetails = `\nSeverity: ${severity}\nRule: ${reason}`;
 
