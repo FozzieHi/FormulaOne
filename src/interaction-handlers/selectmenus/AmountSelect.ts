@@ -26,7 +26,7 @@ export class AmountSelect extends InteractionHandler {
     Object.entries(Constants.RULES).forEach(([name, rule]) => {
       ruleOptions.push({
         label: name,
-        description: rule,
+        description: rule.description,
         value: name,
       });
     });

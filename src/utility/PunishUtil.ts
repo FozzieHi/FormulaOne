@@ -152,6 +152,7 @@ export async function punish(
   amount: number,
   message?: Message | null,
   channel?: GuildTextBasedChannel,
+  dryRun = false,
 ): Promise<{
   message: Message | null;
   displayLog: string;
@@ -179,9 +180,11 @@ export async function punish(
     }
 
     const maxEscalations = Math.min(currentPun + amount, Constants.PUNISHMENTS.length);
-    const escalations = maxEscalations - currentPun;
+    const escalations = dryRun ? 0 : maxEscalations - currentPun;
 
-    const punishment = Constants.PUNISHMENTS.at(maxEscalations - 1);
+    const punishment = dryRun
+      ? { type: PunishmentType.WARN }
+      : Constants.PUNISHMENTS.at(maxEscalations - 1);
     if (punishment == null) {
       return null;
     }
@@ -201,7 +204,7 @@ export async function punish(
     let color = Constants.WARN_COLOR;
     if (punishment.type === PunishmentType.WARN) {
       await db.userRepo?.upsertUser(targetUser.id, interaction.guild.id, {
-        $inc: { warnings: 1 },
+        $inc: { warns: 1 },
       });
       color = Constants.WARN_COLOR;
     } else if (punishment.type === PunishmentType.MUTE) {
@@ -256,6 +259,7 @@ export async function punish(
 
     const punishData: Punishment = {
       date: Date.now(),
+      dryRun,
       escalation: `${currentPun + escalations} (${punishmentDisplay.displayLog})${
         escalations > 1 ? ` (${escalations} punishments)` : ""
       }`,
@@ -271,7 +275,9 @@ export async function punish(
       interaction.guild.id,
       new PushUpdate("punishments", punishData),
     );
-    await increasePunishment(targetUser.id, interaction.guild.id, escalations);
+    if (!dryRun) {
+      await increasePunishment(targetUser.id, interaction.guild.id, escalations);
+    }
     const modLogFieldAndValues = [
       "Action",
       `${punishmentDisplay.displayLog}${
@@ -295,31 +301,36 @@ export async function punish(
     };
   }
   if (action === "remove") {
-    const role = await TryVal(interaction.guild.roles.fetch(Constants.ROLES.MUTED));
-    if (role == null) {
-      return null;
-    }
-    if (db.muteRepo?.anyMute(targetUser.id, interaction.guild.id)) {
-      const targetMember = await TryVal(interaction.guild.members.fetch(targetUser.id));
-      if (targetMember != null) {
-        await targetMember.roles.remove(
-          role,
-          `Unpunished by ${getDisplayTag(moderator)}`,
-        );
-        await targetMember.disableCommunicationUntil(
-          null,
-          `Unpunished by ${getDisplayTag(moderator)}`,
-        );
-        await db.muteRepo?.deleteMute(targetMember.id, interaction.guild.id);
+    const lastPunishment = dbUser.punishments.at(-1);
+    if (!lastPunishment?.dryRun) {
+      if (currentPun === 0) {
+        await replyInteractionError(interaction, "User has no active punishments.");
+        return null;
       }
-    }
 
-    if (currentPun === 0) {
-      await replyInteractionError(interaction, "User has no active punishments.");
-      return null;
-    }
+      const role = await TryVal(interaction.guild.roles.fetch(Constants.ROLES.MUTED));
+      if (role == null) {
+        return null;
+      }
+      if (await db.muteRepo?.anyMute(targetUser.id, interaction.guild.id)) {
+        const targetMember = await TryVal(
+          interaction.guild.members.fetch(targetUser.id),
+        );
+        if (targetMember != null) {
+          await targetMember.roles.remove(
+            role,
+            `Unpunished by ${getDisplayTag(moderator)}`,
+          );
+          await targetMember.disableCommunicationUntil(
+            null,
+            `Unpunished by ${getDisplayTag(moderator)}`,
+          );
+          await db.muteRepo?.deleteMute(targetMember.id, interaction.guild.id);
+        }
+      }
 
-    await decreasePunishment(targetUser.id, interaction.guild.id);
+      await decreasePunishment(targetUser.id, interaction.guild.id);
+    }
     await modLog(
       interaction.guild,
       moderator,
