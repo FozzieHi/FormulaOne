@@ -153,8 +153,11 @@ export async function punish(
   message?: Message | null,
   channel?: GuildTextBasedChannel,
   dryRun = false,
-): Promise<Message | null> {
-  let messageSent;
+): Promise<{
+  message: Message | null;
+  displayLog: string;
+  escalations: number;
+} | null> {
   if (interaction.guild == null || interaction.channel == null) {
     return null;
   }
@@ -173,6 +176,7 @@ export async function punish(
           Constants.PUNISHMENTS.length
         } punishments in the last 30 days, escalate their punishment manually.`,
       );
+      return null;
     }
 
     const maxEscalations = Math.min(currentPun + amount, Constants.PUNISHMENTS.length);
@@ -251,7 +255,7 @@ export async function punish(
     if (channel != null && interaction.channel.id !== channel.id) {
       await Try(send(channel, messageDescription));
     }
-    messageSent = await TryVal(send(interaction.channel, messageDescription));
+    const messageSent = await TryVal(send(interaction.channel, messageDescription));
 
     const punishData: Punishment = {
       date: Date.now(),
@@ -290,7 +294,13 @@ export async function punish(
       modLogFieldAndValues.push(...getOverflowFields("Content", message.content));
     }
     await modLog(interaction.guild, moderator, modLogFieldAndValues, color, targetUser);
-  } else if (action === "remove") {
+    return {
+      message: messageSent,
+      displayLog: punishmentDisplay.displayLog,
+      escalations,
+    };
+  }
+  if (action === "remove") {
     const lastPunishment = dbUser.punishments.at(-1);
     if (!lastPunishment?.dryRun) {
       if (currentPun === 0) {
@@ -347,9 +357,6 @@ export async function punish(
       interaction,
       `Successfully unpunished ${boldify(getUserTag(targetUser))}.`,
     );
-  }
-  if (messageSent != null) {
-    return messageSent;
   }
   return null;
 }
