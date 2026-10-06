@@ -169,7 +169,7 @@ export async function punish(
   const currentPun = dbUser.currentPunishment;
 
   if (action === "add") {
-    if (!dryRun && currentPun > Constants.PUNISHMENTS.length - 1) {
+    if (currentPun > Constants.PUNISHMENTS.length - 1) {
       await replyInteractionError(
         interaction,
         `${boldify(getUserTag(targetUser))} has exceeded ${
