@@ -64,7 +64,7 @@ export class GuildMemberAddListener extends Listener {
           getDisplayTag(member),
         )}, welcome to the r/formula1 Discord server!` +
           ` You should be given access to the server after you read and agree to the <#${Constants.CHANNELS.RULES}>.` +
-          `\n\nDM <@${Constants.BOTS.MOD_MAIL}> if you have issues after verifying and refreshing your browser / restarting the app.` +
+          `\nPlease read the rules+info section to get familiar with the server.` +
           `\n\nSay hi in <#${Constants.CHANNELS.OFF_TOPIC}> or dive right into F1 chat in <#${Constants.CHANNELS.F1_GENERAL}>. We look forward to talking to you.`,
       );
     }

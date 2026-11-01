@@ -142,10 +142,6 @@ export class Constants {
 
   static readonly EMOTE_REPORT_THRESHOLD_SCORE = 15;
 
-  static readonly BOTS = {
-    MOD_MAIL: "797143867048591370",
-  };
-
   static readonly ROLES = {
     BOT_DEV: "424590836777484291",
     ADMIN: "177408413381165056",
