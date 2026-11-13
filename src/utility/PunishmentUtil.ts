@@ -25,7 +25,12 @@ export async function getHistory(
   for (let i = start; i < end; i += 1) {
     const pun = allPunishments.at(i);
     if (pun != null) {
-      const vals = ["Escalation", pun.escalation, "Moderator", pun.mod];
+      const vals = [
+        "Escalation",
+        pun.escalation,
+        "Moderator",
+        pun.mod ?? "Automatic (Bot)",
+      ];
       if (pun.reason != null) {
         vals.push("Reason", pun.reason);
       }
